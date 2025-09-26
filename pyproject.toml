@@ -73,7 +73,6 @@ unfixable = []
 
 # Exclude a variety of commonly ignored directories
 exclude = [
-    "/experiments/notebook",
     ".bzr",
     ".direnv",
     ".eggs",
