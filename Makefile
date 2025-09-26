@@ -24,19 +24,19 @@ setup-venv:
 # Run linting checks with Ruff
 lint:
 	@echo "Running Ruff linter..."
-	ruff format --check .
-	ruff check .
+	uv run ruff format --check .
+	uv run ruff check .
 
 # Run code formatting with Ruff
 format:
 	@echo "Running Ruff linter with auto-fix..."
-	ruff format .
-	ruff check --fix .
+	uv run ruff format .
+	uv run ruff check --fix .
 
 # Run all tests
 test:
 	@echo "Running tests..."
-	doppler run -c dev -- uv run pytest .
+	uv run pytest tests/ --ignore=tests/evaluations/ -v -n auto
 
 # Clean up build artifacts
 clean:
@@ -63,8 +63,8 @@ dev:
 # Run the Flask application with Doppler
 run:
 	@echo "Starting Flask application with Doppler..."
-	doppler run -c dev -- uv run flask run
+	uv run flask run
 
 run-worker:
 	@echo "Starting worker..."
-	doppler run -c dev -- uv run celery -A textlayer.applications.worker.app worker --loglevel=info
+	uv run celery -A textlayer.applications.worker.app worker --loglevel=info
