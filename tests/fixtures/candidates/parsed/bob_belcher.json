@@ -1,0 +1,143 @@
+{
+    "awards": [
+        "Women in AI Community Catalyst of the Year at the WAI Awards North America 2025"
+    ],
+    "certifications": [
+        "Dataiku Core Designer",
+        "Dataiku Advanced Designer",
+        "Dataiku ML Practitioner",
+        "Dataiku MLOps Practitioner",
+        "Dataiku Developer"
+    ],
+    "contact_info": {
+        "email": "bob.belcher@bobsburgers.com",
+        "phone": "(555) 123-4567",
+        "linkedin": "www.linkedin.com/in/bob-belcher/",
+        "github": null,
+        "website": null,
+        "location": "Ocean City, New Jersey"
+    },
+    "education": [
+        {
+            "achievements": null,
+            "degree": "Bachelor's",
+            "end_date": "2018",
+            "field_of_study": "Engineering",
+            "institution": "Jawaharlal Nehru Technological University, Kakinada",
+            "start_date": "2014"
+        }
+    ],
+    "experiences": [
+        {
+            "achievements": [
+                "Designed and deployed end-to-end data science and optimization solutions across BFS, PB, Retail Banking and AMP",
+                "Fine-tuned domain-specific Large Language Models (LLMs) using company datasets for secure internal knowledge retrieval",
+                "Led end-to-end deployment of generative AI tools while ensuring sensitive information protection",
+                "Implemented MLOps pipelines in Dataiku and Azure to monitor, retrain, and schedule production models",
+                "Built capacity distribution models using geospatial and economic data to surface market opportunities",
+                "Built and deployed a Dash web app and executive dashboards integrated with live forecasting models"
+            ],
+            "company": "RBC",
+            "description": "Leading data science and optimization initiatives across Business Financial Services (BFS), Private Banking (PB), Retail Banking and Accelerating Market Performance (AMP), supporting strategic workforce planning, intern forecasting, market prioritization, and performance modeling through end-to-end solutions.",
+            "end_date": "Present",
+            "location": "Toronto, Ontario, Canada",
+            "position": "Data Scientist - Advanced",
+            "start_date": "2022-07"
+        },
+        {
+            "achievements": [
+                "Led Natural Language Understanding (NLU) initiatives including interview competency assessment and resume evaluation tools",
+                "Developed candidate-facing NLP tools using Q&A modeling and text classification",
+                "Built predictive models for insurance claims and fraud detection using regression, decision trees, and SVMs",
+                "Designed collaborative filtering and KNN-based policy recommendation systems",
+                "Conducted sentiment analysis on customer and social media data using LSTM and topic modeling"
+            ],
+            "company": "Cognizant",
+            "description": "Delivered full-cycle machine learning solutions across recruitment, insurance, and banking sectors, using Python for modeling and Java for backend integration and scalable deployment.",
+            "end_date": "2022-06",
+            "location": "Toronto, Ontario, Canada",
+            "position": "Data Scientist - Machine Learning",
+            "start_date": "2019-01"
+        },
+        {
+            "achievements": [
+                "Conducted exploratory data analysis on large banking datasets to uncover client behavior trends",
+                "Designed customer segmentation models using K-Means clustering",
+                "Built fraud detection models with Decision Trees and Random Forests",
+                "Performed sentiment analysis on customer feedback using NLP techniques",
+                "Created dashboards and reports using Tableau, Power BI, and Matplotlib"
+            ],
+            "company": "Infosys",
+            "description": "Conducted exploratory data analysis on large banking datasets and developed customer segmentation and fraud detection models.",
+            "end_date": "2018-12",
+            "location": "Telangana, India",
+            "position": "Data Scientist - Insights & Analytics",
+            "start_date": "2018-01"
+        },
+        {
+            "achievements": [
+                "Honored as the Women in AI Community Catalyst of the Year at the WAI Awards North America 2025",
+                "Led flagship Women in AI Canada Hackathons with 100+ participants annually, achieving 80-85% women participation",
+                "Organized and delivered 7+ technical workshops annually on AI ethics and career development",
+                "Recruited and coordinated 50+ mentors and judges across hackathons",
+                "Represented WAI as a speaker at the Global AI Summit 2024"
+            ],
+            "company": "Women in AI Canada",
+            "description": "Leading hackathon organization, community building, and technical workshops focused on AI for social impact.",
+            "end_date": "Present",
+            "location": "Toronto, Ontario, Canada",
+            "position": "Hackathon Lead - Organizer, Speaker, Mentor, Community Builder",
+            "start_date": "2023-07"
+        }
+    ],
+    "full_name": "Bob Belcher",
+    "professional_title": "Data Scientist - Advanced",
+    "publications": null,
+    "presentations": null,
+    "projects": null,
+    "skills": {
+        "cloud_platforms": [
+            "AWS",
+            "Azure",
+            "Google Cloud Platform",
+            "IBM Watson"
+        ],
+        "databases": [
+            "Teradata",
+            "SQL Server",
+            "MySQL"
+        ],
+        "frameworks_libraries": [
+            "TensorFlow",
+            "Keras",
+            "PyTorch",
+            "Scikit-learn",
+            "Pandas",
+            "Seaborn",
+            "Matplotlib"
+        ],
+        "languages": [],
+        "programming_languages": [
+            "Python",
+            "Java",
+            "SQL",
+            "R"
+        ],
+        "tools_technologies": [
+            "Jupyter Notebook",
+            "Dataiku",
+            "Azure Databricks",
+            "Azure Synapse",
+            "AWS SageMaker",
+            "Pega Data Science",
+            "GIT",
+            "RStudio",
+            "PyCharm",
+            "Visual Studio",
+            "Tableau",
+            "Power BI",
+            "Dash",
+            "Microsoft Excel"
+        ]
+    }
+}

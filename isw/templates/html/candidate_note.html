@@ -1,0 +1,8 @@
+<b>Recommendation:</b> {{ recommendation_result }} <br/>
+<b>Recommendation Score:</b> {{ score }} <br/> <br/>
+<u><b>Notes:</b></u>
+<ul>
+    {% for note in notes %}
+        <li>{{ note }}</li>
+    {% endfor %}
+</ul>

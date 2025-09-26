@@ -1,0 +1,42 @@
+TAKE HOME TECHNICAL ASSIGNMENT
+===============================
+
+📋 ASSIGNMENT OVERVIEW
+-----------------------
+Deadline: You have UP TO 2 WEEKS to complete this assignment.
+Bonus: Early submissions will receive extra marks for prompt completion!
+
+📦 DOWNLOAD ASSIGNMENT
+----------------------
+Download your assignment files from:
+{{ s3_url }}
+
+Note: This download link will expire after a certain period for security purposes.
+
+🔐 ENVIRONMENT CONFIGURATION
+-----------------------------
+Doppler Service Token:
+{{ doppler_token }}
+
+This token provides access to the required environment variables for your assignment. 
+Please keep this token secure and do not share it.
+
+================================================================================
+
+INSTRUCTIONS
+============
+
+{{ body_text }}
+
+================================================================================
+
+📝 SUBMISSION GUIDELINES
+-------------------------
+• Complete all requirements outlined in the instructions above
+• Return your submission as a zipped file to thabang@textlayer.ai
+• Include the subject line: Technical Interview Submission - Textlayer
+• Test your solution thoroughly before submission  
+• Include any necessary documentation or setup instructions
+• Submit your completed work according to the submission process provided in the assignment files
+
+Good luck with your assignment! We look forward to reviewing your work.

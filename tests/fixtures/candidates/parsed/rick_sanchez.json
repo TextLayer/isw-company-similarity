@@ -1,0 +1,155 @@
+{
+    "awards": [],
+    "certifications": [],
+    "contact_info": {
+        "email": "rick.sanchez@example.com",
+        "phone": "(604) 555-0123",
+        "linkedin": "linkedin.com/in/rick-sanchez-ai",
+        "github": null,
+        "website": null,
+        "location": "Vancouver BC, Canada"
+    },
+    "education": [
+        {
+            "achievements": [
+                "Coursework completed"
+            ],
+            "degree": "PhD",
+            "end_date": null,
+            "field_of_study": "Nuclear Physics",
+            "institution": "Florida State University",
+            "start_date": null
+        },
+        {
+            "achievements": null,
+            "degree": "MSc",
+            "end_date": null,
+            "field_of_study": "Applied Science (Nuclear Physics)",
+            "institution": "Saint Mary's University/TRIUMF",
+            "start_date": null
+        },
+        {
+            "achievements": null,
+            "degree": "BSc",
+            "end_date": null,
+            "field_of_study": "Physics",
+            "institution": "Dalhousie University",
+            "start_date": null
+        }
+    ],
+    "experiences": [
+        {
+            "achievements": [
+                "Managed 120 different project portfolios from students and coached students to successful start-ups, internships, and large-scale team projects, largely focusing on AI projects",
+                "Acted as AI specialist for projects in those fields, across the organization and designed AI and space-tech sessions and projects",
+                "Ran weekly sessions on both technologies, like AI and energy storage, and skill coaching, like presentations and team-based initiatives",
+                "Engaged in dozens of weekly 1-on-1 and team meetings to coach students and staff in various areas"
+            ],
+            "company": "TKS",
+            "description": "Ran global virtual program for 120 students from across the world. Worked with both the global team and students on learning initiatives, sessions, and coaching. Designed AI-based curriculum and focused on AI in business for students and staff.",
+            "end_date": "2025",
+            "location": "Remote",
+            "position": "Director, Global Program (AI Expert)",
+            "start_date": "2024"
+        },
+        {
+            "achievements": [
+                "Created natural language understanding framework for processing unstructured insurance claim's notes data and parse them into easily accessible knowledge for entire company and in-house knowledge graph",
+                "Built custom PDF parser for unstructured PDF documents (this includes scanned documents, documents with tables, etc.) to create training data for in-house LLM",
+                "Led PDF parsing project with multiple remote teams throughout the enterprise",
+                "Worked in enterprise R&D team to develop AI technology for global operations"
+            ],
+            "company": "Chubb Insurance",
+            "description": "Designed and built generative AI systems and a custom in-house LLM to enhance internal processes and create smart insurance system using OpenAI's frameworks and APIs and Azure as well as open source LLMs.",
+            "end_date": "2024",
+            "location": "Toronto ON",
+            "position": "Associate VP, Senior AI Engineer",
+            "start_date": "2023"
+        },
+        {
+            "achievements": [
+                "Led the hiring initiatives, onboarding processes, career journeys, and overall best practices, and grew the team from one to 13 members",
+                "Developed 3-year data science project roadmap with nearly 40 projects",
+                "Developed the Data Science tech stack alongside DE and MLOps",
+                "Developed core user segmentation, clustering, and churn models for costumer profiles",
+                "Built transformer NLP solution for the customer service team on chatlogs between users and agents"
+            ],
+            "company": "theScore",
+            "description": "Hired to build and lead a team of data scientists by designing the project roadmap, building out processes for hiring & onboarding and delivering high quality projects, including, but not limited to, work on user segmentation and a core NLP CS framework.",
+            "end_date": "2023",
+            "location": "Toronto ON",
+            "position": "Technical Lead, Data Science",
+            "start_date": "2021"
+        },
+        {
+            "achievements": [
+                "Led OT2 Search data science team to develop technology stack for company-wide AI framework",
+                "Designed, alongside search team and management, AI-driven search pipeline to process data both offline and at query time",
+                "Developed transformer-based NLP frameworks for contextual understanding of documents and queries",
+                "Developed AI ranking to rerank search results from queries, company info, and document content"
+            ],
+            "company": "OpenText",
+            "description": "Designed and deployed entire data science pipeline for next-generation intelligent-search, utilising both machine and deep learning for search relevance. As the backbone of OpenText's new content delivery search platform, this must understand natural language queries and the content and context of any arbitrary documents, as well as process user and enterprise data profiles.",
+            "end_date": "2021",
+            "location": "Remote",
+            "position": "Lead Data Scientist (OT2 Search)",
+            "start_date": "2020"
+        },
+        {
+            "achievements": [
+                "Developed soft and hard address matching techniques using libpostal and clustering algorithms",
+                "Created and designed networking graphing software to find connected entities and bad actors"
+            ],
+            "company": "Scotiabank",
+            "description": "Built a network graph using bad actors as nodes and transactions and entity-connection-types as edges. This helps monitor and catch criminals; information gathered from these studies is eventually fed to CSIS and the RCMP.",
+            "end_date": "2020",
+            "location": "Toronto ON",
+            "position": "Data Scientist (Anti-Money Laundering)",
+            "start_date": "2019"
+        },
+        {
+            "achievements": [
+                "Developed GPU-based RNN with TensorFlow and spaCy to predict future assessment results",
+                "Designed and developed Microsoft SQL Server database to house all data on Student Assessments"
+            ],
+            "company": "NS Education Dept.",
+            "description": "After designing and building an SQL Server database, focused on developing a complete data pipeline. This included modernising the data use in SAE by implementing machine learning, especially natural language processing, on student and exam data.",
+            "end_date": "2019",
+            "location": "Halifax NS",
+            "position": "Data Scientist (Research and Stats Officer)",
+            "start_date": "2017"
+        }
+    ],
+    "full_name": "Rick Sanchez",
+    "professional_title": "AI Director",
+    "publications": [],
+    "presentations": [],
+    "projects": [],
+    "skills": {
+        "cloud_platforms": [
+            "Azure",
+            "GCP",
+            "AWS"
+        ],
+        "databases": [
+            "Microsoft SQL Server"
+        ],
+        "frameworks_libraries": [
+            "TensorFlow",
+            "spaCy",
+            "OpenAI APIs"
+        ],
+        "languages": [],
+        "programming_languages": [
+            "Python",
+            "CUDA",
+            "C#",
+            "C++",
+            "SQL"
+        ],
+        "tools_technologies": [
+            "libpostal",
+            "MLOps"
+        ]
+    }
+}

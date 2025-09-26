@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Started with TextLayer-Core</title>
+    <style>
+        body {
+            background: #f6f6f9;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px 32px 32px 32px;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 24px auto;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            text-align: center;
+            margin: 0 0 16px 0;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            max-width: 240px;
+            margin: 0 auto 24px auto;
+            background: #000;
+            color: #fff !important;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 14px 0;
+            text-align: center;
+        }
+
+        .info {
+            font-size: 14px;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .step-cards {
+            max-width: 500px;
+            margin: 24px auto;
+        }
+
+        .step-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .step-card-inner {
+            display: table;
+            width: 100%;
+        }
+
+        .step-number-cell {
+            display: table-cell;
+            vertical-align: top;
+            width: 40px;
+        }
+
+        .step-content-cell {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: #000;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 16px;
+            flex-shrink: 0;
+            text-align: center;
+            line-height: 24px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .step-content h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.3;
+        }
+
+        .step-content p {
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .footer {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 400;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .footer-desc {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: #000;
+            font-size: 13px;
+            font-weight: 400;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .footer-address,
+        .footer-copyright {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            margin-top: 20px;
+        }
+
+        .unsubscribe {
+            color: #000;
+            text-decoration: underline;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="https://raw.githubusercontent.com/TextLayer/.github/main/profile/logo.png" width="60" height="42"
+            alt="TextLayer Logo" class="logo" />
+        <div class="title">Welcome to TextLayer-Core</div>
+        <div class="subtitle">
+            Your enterprise AI middleware solution is ready to deploy.<br />
+            Let's get your development environment set up.
+        </div>
+        <a href="{{ onboarding_url }}" class="button">Access Setup Guide</a>
+        <div class="info">
+            This guide will walk you through:
+        </div>
+
+        <div class="step-cards">
+            <div class="step-card">
+                <div class="step-card-inner">
+                    <div class="step-number-cell">
+                        <div class="step-number">1</div>
+                    </div>
+                    <div class="step-content-cell">
+                        <div class="step-content">
+                            <h3>Downloading the TextLayer-Core repository</h3>
+                            <p>Clone the repository and get the latest version</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-card-inner">
+                    <div class="step-number-cell">
+                        <div class="step-number">2</div>
+                    </div>
+                    <div class="step-content-cell">
+                        <div class="step-content">
+                            <h3>Configuring your development environment</h3>
+                            <p>Set up your local development workspace</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-card-inner">
+                    <div class="step-number-cell">
+                        <div class="step-number">3</div>
+                    </div>
+                    <div class="step-content-cell">
+                        <div class="step-content">
+                            <h3>Setting up the middleware infrastructure</h3>
+                            <p>Deploy and configure the core infrastructure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-card-inner">
+                    <div class="step-number-cell">
+                        <div class="step-number">4</div>
+                    </div>
+                    <div class="step-content-cell">
+                        <div class="step-content">
+                            <h3>Integrating with your existing AI projects</h3>
+                            <p>Connect your current AI workflows seamlessly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            If you have any questions during setup, our engineering team is here to help.<br />
+            <br />
+            Best regards,<br />
+            The TextLayer Team
+        </div>
+        <div class="footer">
+            <div class="footer-title">TextLayer</div>
+            <div class="footer-desc">Enterprise AI Infrastructure</div>
+            <div class="footer-links">
+                <a href="https://github.com/textlayer">GitHub</a>
+                <a href="https://textlayer.ai">Website</a>
+                <a href="https://docs.textlayer.ai">Documentation</a>
+            </div>
+            <div class="footer-copyright">© {{ year }} TextLayer AI. All rights reserved.</div>
+        </div>
+    </div>
+</body>
+
+</html>

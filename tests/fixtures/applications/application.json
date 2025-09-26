@@ -1,0 +1,93 @@
+{
+  "application": {
+    "archiveReason": null,
+    "candidate": {
+      "id": "d518d588-3c50-45ec-9f7f-223647eee5a0",
+      "name": "Vibhu Bhalla",
+      "primaryEmailAddress": {
+        "isPrimary": "True",
+        "type": "Personal",
+        "value": "vibhu@example.com"
+      },
+      "primaryPhoneNumber": {
+        "isPrimary": "True",
+        "type": "Personal",
+        "value": "1234567890"
+      }
+    },
+    "createdAt": "2025-08-05T05:07:17.106Z",
+    "creditedToUser": null,
+    "currentInterviewStage": {
+      "id": "51dcec02-3d10-4e0d-b4e0-6b822327b92f",
+      "interviewPlanId": "b6700337-8199-45ba-8e39-3b85dbe78135",
+      "interviewStageGroupId": "cc6ff875-de52-405a-b8d0-361310324554",
+      "orderInInterviewPlan": 9,
+      "title": "Technical/Project Round",
+      "type": "Active"
+    },
+    "customFields": [],
+    "id": "d2771b79-1426-47d7-a965-ed095615bca7",
+    "job": {
+      "id": "test-job-id"
+    },
+    "source": {
+      "id": "0967fdf9-cbb7-45aa-aff6-f45ceaa2ac49",
+      "isArchived": false,
+      "sourceType": {
+        "id": "c14b2dbe-02c3-4015-93be-f03627e364fd",
+        "isArchived": false,
+        "title": "Inbound"
+      },
+      "title": "Applied"
+    },
+    "status": "Active",
+    "updatedAt": "2025-08-22T17:23:36.932Z"
+  },
+  "candidate": {
+    "id": "d518d588-3c50-45ec-9f7f-223647eee5a0",
+    "name": "Vibhu Bhalla",
+    "primaryEmailAddress": {
+      "isPrimary": "True",
+      "type": "Personal",
+      "value": "vibhu@example.com"
+    },
+    "primaryPhoneNumber": {
+      "isPrimary": "True",
+      "type": "Personal",
+      "value": "1234567890"
+    }
+  },
+  "job": {
+    "_id": "test-job-id",
+    "_source": {
+      "id": "test-job-id",
+      "title": "Software Engineer",
+      "description": "We are looking for a software engineer to join our team and help build scalable applications.",
+      "expectations": "Strong problem-solving skills and ability to work in a fast-paced environment.",
+      "qualifications": {
+        "required": ["Python", "JavaScript", "AWS"],
+        "preferred": ["React", "Docker", "Kubernetes"],
+        "bonus": ["Machine Learning", "GraphQL"]
+      },
+      "responsibilities": [
+        "Develop and maintain web applications",
+        "Collaborate with cross-functional teams",
+        "Write clean, maintainable code",
+        "Participate in code reviews"
+      ],
+      "flags": {
+        "green": [
+          {
+            "flag": "Remote-friendly",
+            "reasons": ["Flexible work arrangements", "Global team"]
+          }
+        ],
+        "red": []
+      }
+    }
+  },
+  "ids": {
+    "application_id": "d2771b79-1426-47d7-a965-ed095615bca7",
+    "candidate_id": "d518d588-3c50-45ec-9f7f-223647eee5a0"
+  }
+}

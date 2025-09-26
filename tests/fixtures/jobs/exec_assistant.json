@@ -1,0 +1,61 @@
+{
+  "title": "Executive Assistant",
+  "description": "As the Executive Assistant, you'll be the go-to support across scheduling, communication, documentation, research, light HR coordination, social media support, travel booking, and program administration. We are looking for a person who can juggle different priorities and get things done.",
+  "responsibilities": [
+      "Manage and maintain executive calendars, scheduling, confirming, and preparing for meetings",
+      "Coordinate meetings (including cross-time zone), organize logistics, prepare agendas, and take notes",
+      "Support the creation, formatting, and design of slide decks and presentations",
+      "Post on company social media channels and coordinate asset gathering from the Design team",
+      "Draft, proofread, and send correspondence, memos, and summaries",
+      "Maintain organized electronic and physical filing systems",
+      "Assist with light candidate screening, interviewing scheduling, and job post creation",
+      "Work with leadership to gather requirements, build and update job descriptions",
+      "Follow up on outstanding invoices and assist with accounts receivable",
+      "Arrange domestic and international travel for executives/team members",
+      "Support and help administer programs and fellowships (including comms, scheduling, logistics)",
+      "Plan and help execute in-person and virtual events",
+      "Conduct research and provide analysis/briefs on various topics",
+      "General administrative work and special projects as assigned",
+      "Maintain confidentiality and demonstrate discretion on all sensitive matters"
+  ],
+  "expectations": "Passion for supporting teams and leaders, attention to detail, and delivering excellent administrative work. Superb written and verbal communication skills. Initiative, organization, reliability, and a strong sense of follow-through. Ability to work independently and adapt quickly to new tasks and priorities.",
+  "qualifications": {
+      "required": [
+          "Experience as an executive assistant or similar support role, ideally for leaders or cross-functional teams",
+          "Excellent organization, scheduling, and time management abilities",
+          "Confidence with productivity tools (Microsoft Office Suite, Google Workspace, modern remote work tools)",
+          "Experience in administrative work, communications, basic HR/recruiting coordination, and travel support",
+          "Professionalism, adaptability, and commitment to confidentiality"
+      ],
+      "bonus": [
+          "Experience administering company programs or fellowships",
+          "Comfort posting on social media and working with design/marketing assets",
+          "Familiarity with invoices, and accounts receivable",
+          "Experience supporting fast-moving or startup teams"
+      ],
+      "preferred": [
+          "Strong organizational skills and attention to detail",
+          "Experience supporting executives in fast-paced environments"
+      ]
+  },
+  "flags": {
+      "green": [
+          {
+              "flag": "Experience with startup or tech company environments"
+          },
+          {
+              "flag": "Proven track record of managing complex calendars and travel arrangements"
+          }
+      ],
+      "red": [
+          {
+              "flag": "High level and generic experience like \"RAG\", \"Langchain\", \"Vector-Search\"",
+              "reasons": [
+                  "RAG is a generic term",
+                  "Langchain might be used by is looked down upon by actual AI engineers",
+                  "Vector search is generally overhyped"
+              ]
+          }
+      ]
+  }
+}

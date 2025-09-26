@@ -1,0 +1,136 @@
+{
+    "awards": [],
+    "certifications": [],
+    "contact_info": {
+        "email": "sterling.archer@example.com",
+        "phone": "555.123.4567",
+        "linkedin": "https://www.linkedin.com/in/sterling-archer-123456/",
+        "github": "github.com/sterling-archer",
+        "medium": "medium.com/sterling-archer",
+        "location": "New York, NY USA",
+        "website": null
+    },
+    "education": [
+        {
+            "achievements": [
+                "Dean's Honor List",
+                "Co-op completion",
+                "Wesbrook Scholar Nomination",
+                "Published Research Author"
+            ],
+            "degree": "BASc",
+            "end_date": "2017",
+            "field_of_study": "Electrical Engineering",
+            "institution": "University of Technology",
+            "start_date": "2010"
+        }
+    ],
+    "experiences": [
+        {
+            "achievements": [
+                "Created state of art agentic system for ads creation and animation capable of deep understanding of brand and creativity utilizing multimodal RAG",
+                "Led end-to-end teams for distributed microservice pipelines from BE, ML, Data and CloudOps, delivered highly scalable microservices",
+                "Finetuned custom LLMs using GRPO for layout and animation generation tasks, optimized for multi GPU training using Deepspeed",
+                "Created and implemented core technical strategic vision"
+            ],
+            "company": "Lumina Platforms Inc. (Kyoso)",
+            "description": null,
+            "end_date": "Present",
+            "location": "New York, USA",
+            "position": "Founding Engineer",
+            "start_date": "2024-09"
+        },
+        {
+            "achievements": [
+                "Pioneered and deployed deep recommendation systems and services, responsible for winning and retaining over $2 Million USD in ARR",
+                "Led innovation and R&D of advanced ML services utilizing GPT based NLP and RecSys, Graph Neural Nets, Joint Optimization, Vectorized Search",
+                "Consistently demonstrated excellence in customer care, on-call support and delivering on new features and customer requests",
+                "Developed efficient microservices to serve hundreds of thousands of real-time requests per day in Tensorflow and Pytorch, leveraging AWS cloud infrastructure and compute"
+            ],
+            "company": "XGen AI",
+            "description": null,
+            "end_date": "2024-09",
+            "location": "New York, USA",
+            "position": "Lead Machine Learning Engineer",
+            "start_date": "2020-11"
+        },
+        {
+            "achievements": [
+                "Developed and deployed efficient account code recommender system microservice for all customers, 90% weighted live accuracy",
+                "Developed robust boosted tree models and SHAP inference for Marketing, Sales and Churn analysis, 95% test accuracy",
+                "Piloted in depth customer churn analysis of over 400 customers with estimated churn reduction of 7% quarter over quarter",
+                "Delivered reliable and consistent BI analytics for customer audits"
+            ],
+            "company": "Procurify",
+            "description": null,
+            "end_date": "2020-11",
+            "location": "New York, USA",
+            "position": "Data Scientist",
+            "start_date": "2019-02"
+        },
+        {
+            "achievements": [
+                "Developed advanced hardware features including controller memory buffer and virtualization in firmware for SSD device validation",
+                "Code owner and developer of NVMe Processor Complex with 50,000+ lines of code in embedded C++ as part of core SSD functionality",
+                "Analyzed and validated hardware protocols for SSD devices with packet capture and trace equipment"
+            ],
+            "company": "Intel Canada Ltd.",
+            "description": null,
+            "end_date": "2019-02",
+            "location": "New York, USA",
+            "position": "Silicon Validation Engineer",
+            "start_date": "2018-01"
+        }
+    ],
+    "full_name": "Sterling Archer",
+    "professional_title": "Machine Learning Engineer",
+    "publications": [
+        {
+            "date": "2015-09-10",
+            "publication_type": "article",
+            "title": "A biomechanical model for cell polarization and intercalation during Drosophila germband extension",
+            "url": null
+        }
+    ],
+    "presentations": [],
+    "projects": [],
+    "skills": {
+        "cloud_platforms": [
+            "AWS"
+        ],
+        "databases": [
+            "Postgres"
+        ],
+        "frameworks_libraries": [
+            "Torch",
+            "llamaindex",
+            "boto3",
+            "HuggingFace",
+            "Tensorflow",
+            "Sklearn",
+            "FastMCP",
+            "Pandas",
+            "Flask",
+            "RecBole",
+            "PEFT",
+            "Deepspeed"
+        ],
+        "languages": [],
+        "programming_languages": [
+            "Python",
+            "C/C++",
+            "Java",
+            "SQL",
+            "Bash",
+            "Typescript",
+            "LATEX"
+        ],
+        "tools_technologies": [
+            "Docker",
+            "Tableau",
+            "Salesforce",
+            "Segment",
+            "Metabase"
+        ]
+    }
+}

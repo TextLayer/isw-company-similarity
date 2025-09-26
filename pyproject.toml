@@ -1,0 +1,126 @@
+[project]
+name = "textlayer-core-new"
+version = "0.1.0"
+description = "TextLayer Core New: A new architectural pattern for Python services."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "flask==2.2.5",
+    "flask-cors==5.0.0",
+    "marshmallow==3.26.1",
+    "python-dotenv==1.0.1",
+    "pydantic==2.10.3",
+    "click==8.1.8",
+    "sentry-sdk[flask]>=2.32.0",
+    "celery>=5.5.3",
+    "sendgrid>=6.9.0",
+    "jinja2>=3.1.0",
+    "mistralai==1.8.0",
+    "boto3>=1.40.0",
+    "redis>=6.2.0",
+    "opensearch-py==2.8.0",
+    "pyjwt>=2.10.1",
+    "gunicorn>=23.0.0",
+    "langfuse~=3.0.0",
+    "pygithub>=2.7.0",
+    "gitpython>=3.1.45",
+    "tiktoken>=0.5.0",
+    "numpy>=1.24.0",
+    "litellm>=1.0.0",
+    "vaul>=0.1.0",
+    "notion-client==2.4.0",
+    "notion-to-md-py==0.1.2",
+    "markdown==3.8.2",
+    "opentelemetry-api>=1.34.1",
+    "opentelemetry-sdk>=1.34.1,<1.35.0",
+    "opentelemetry-instrumentation>=0.44.0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.34.1",
+    "opentelemetry-exporter-otlp-proto-http>=1.34.1",
+    "openlit>=1.0.0",
+    "kombu>=5.5.4",
+    "tenacity>=9.1.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.1.1",
+    "requests>=2.32.4",
+    "ruff==0.11.0",
+    "coverage==7.6.12",
+    "pytest-xdist>=3.8.0",
+    "fakeredis>=2.31.0",
+]
+
+[tool.ruff]
+# Same as Black.
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enable comprehensive linting rules
+select = [
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "I", # isort
+    "B", # flake8-bugbear
+]
+ignore = [
+    "B012", # `break` inside `finally` blocks cause exceptions to be silenced
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # Ignore unused imports in __init__ files
+
+[tool.ruff.lint.isort]
+known-first-party = ["textlayer"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings
+quote-style = "double"
+
+# Like Black, respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Enable auto-formatting
+line-ending = "auto"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["textlayer"]
+
+[project.scripts]
+textlayer-cli = "textlayer.interfaces.cli:cli"

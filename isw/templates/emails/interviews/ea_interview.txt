@@ -1,0 +1,44 @@
+================================================
+TextLayer - Next Steps in Your Journey
+================================================
+
+Hi {{ candidate_first_name }},
+
+Thanks again for taking the time to chat with us! We really enjoyed our conversation and are excited to move you forward to the next round.
+
+As a next step, we'd love for you to complete a short take-home assignment. It's designed to give us a feel for your working style across a few different types of challenges.
+
+------------------------------------------------
+NEXT STEPS:
+------------------------------------------------
+
+[1] Complete Your Take-Home Challenge
+    Access the Executive Assistant Take-Home Challenge and choose 2 out of the 3 tasks that best align with your strengths.
+    
+    Link: https://www.notion.so/Executive-Assistant-Take-Home-Challenge-2331142ac5a680e9a9e1e5f6ea9ee60b?source=copy_link
+
+[2] Submit Your Completed Work
+    Send your completed assignment to colton@textlayer.ai before your scheduled interview so we have time to review it.
+
+[3] Schedule Your Final Interview
+    Your scheduled interview serves as your submission deadline. Book your slot to showcase your work and discuss your approach.
+
+------------------------------------------------
+READY TO SCHEDULE YOUR INTERVIEW?
+------------------------------------------------
+
+Book your final round interview slot below:
+https://you.ashbyhq.com/meeting/ddf68de6-d825-48f4-96bf-aff5023e165e/
+
+If anything is unclear or you run into any issues, don't hesitate to reach out. Our team is here to help.
+
+Looking forward to continuing the conversation,
+The TextLayer Team
+
+================================================
+TextLayer - Enterprise AI Infrastructure
+
+Github: https://github.com/textlayer
+Documentation: https://docs.textlayer.ai  
+Website: https://textlayer.ai
+================================================

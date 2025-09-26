@@ -1,0 +1,196 @@
+{
+    "awards": [
+        "On the Spot Award for creating an NLP-based Q&A System using GPT-2"
+    ],
+    "certifications": [],
+    "contact_info": {
+        "email": "homer.simpson@springfieldnuclear.com",
+        "phone": "(555) 123-4567",
+        "linkedin": null,
+        "github": null,
+        "website": null,
+        "location": null
+    },
+    "education": [
+        {
+            "achievements": [
+                "Thesis: Deep learning and machine learning techniques for security",
+                "Coursework: Software Engineering (MLOps), Storytelling for Data Science, Machine Learning, Data Visualization"
+            ],
+            "degree": "MSc",
+            "end_date": null,
+            "field_of_study": "Computer Science",
+            "institution": "University of Toronto",
+            "start_date": null
+        },
+        {
+            "achievements": [
+                "Thesis: Contextual Text Summarization for emails",
+                "Coursework: Machine learning, Natural language processing, Soft Computing, Database Systems, Algorithms and Data Structures, Automata theory, Distributed Systems, Computer Graphics, Image processing, Cloud computing"
+            ],
+            "degree": "Bachelor of Engineering",
+            "end_date": null,
+            "field_of_study": "Computer Science",
+            "institution": "University of Mumbai",
+            "start_date": null
+        }
+    ],
+    "experiences": [
+        {
+            "achievements": [
+                "Developed a personalized agentic shopping assistant for Canadian Tire to enhance the shopping experience using OpenAI SDK, FastMCP, Weaviate, LangSmith, and Gemini",
+                "Designed, Architected, and implemented LLMOps Framework: Utilized LangSmith, Azure Databricks, and MLFlow to create a robust framework for managing large language models (LLMs) in production environments",
+                "Led the development of a Generative AI solution to automatically summarize and extract key insights from diverse SOC reports, enabling CTC to reduce auditor hiring costs by 70% using Ragas, Docker, Kubernetes, Azure and OpenAI"
+            ],
+            "company": "Canadian Tire",
+            "description": null,
+            "end_date": "Present",
+            "location": null,
+            "position": "AI Engineer",
+            "start_date": "2025-02"
+        },
+        {
+            "achievements": [
+                "Implemented LLM Models to generate, evaluate and edit SRED reports, including an RAG pipeline to retrieve relevant information from knowledge bases using AWS (EC2, Redis, Lambda function), OpenAI, Ragas, etc, with role-based access control (RBAC) and prompt-level logging",
+                "Fine-tuned a Large Language Model (LLM) using PyTorch, Ray, FastAPI, Redis, LangSmith and Docker, incorporating human-in-the-loop feedback to iteratively optimize performance and output quality across real-world use cases"
+            ],
+            "company": "Vector Institute",
+            "description": "Contract position",
+            "end_date": "2025-04",
+            "location": null,
+            "position": "Machine Learning Engineer",
+            "start_date": "2025-01"
+        },
+        {
+            "achievements": [
+                "Spearheaded engineering-led digital transformation by architecting and migrating legacy Excel-based ETL workflows into scalable, production-grade Databricks pipelines\u2014eliminating manual bottlenecks and enabling real-time analytics",
+                "Led the development of an enterprise-grade internal ChatGPT integrated with a secure knowledge store for contextualized retrieval",
+                "Developed CI/CD Pipelines: Designed and implemented continuous integration and deployment (CI/CD) pipelines using Azure DevOps and Databricks jobs, streamlining the operationalization of the ML/LLM lifecycle"
+            ],
+            "company": "State Street",
+            "description": null,
+            "end_date": "2025-02",
+            "location": null,
+            "position": "Data Scientist",
+            "start_date": "2024-11"
+        },
+        {
+            "achievements": [
+                "Developed supervised machine learning models to perform vulnerability management, achieving a classification accuracy of 92%",
+                "Led a team of 3 interns to develop a large-scale Transformer-based (BERT-based) vulnerability classification outperforming the state of the art by 30%, resulting in a paper accepted to ASE 2024 and a research grant of 100K CAD",
+                "Implemented a large-scale experimentation pipeline to benchmark the state-of-the-art LLM models for vulnerability detection (20 models)",
+                "Developed weekly reports & dashboards using Tableau, summarizing the vulnerabilities & impact on the overall security",
+                "Built large-scale data pipelines (SQL, Python, AWS) to generate new open-source packages, querying millions of repos, users & their interaction data to build a recommendation system"
+            ],
+            "company": "Huawei (University of Toronto)",
+            "description": null,
+            "end_date": "2024-06",
+            "location": null,
+            "position": "Machine Learning Engineer",
+            "start_date": "2022-01"
+        },
+        {
+            "achievements": [
+                "Part of the core machine learning team for designing machine learning algorithms (including XGBoost, Decision Trees, etc) to predict and optimize batch operations for the product \u2013 ignio WorkLoadManagement (WLM)",
+                "Developed time series forecasting models (including ARIMA, SARIMA) for prediction of Batch network node runtimes, AIOPs network CPU utilization and memory usage",
+                "Developed large-scale A/B experiments (testing of new product & UI features for NBS banking app) leading to a 13% increase in loan applicants",
+                "Designed an outlier detection system to derive substance abuse from records of purchase using (SARIMA, and RNN) with an accuracy of 80% for Loblaws Pharma",
+                "Won the \"On the Spot Award\" for creating an NLP-based Q&A System using GPT-2, Named Entity Recognition (NER) to interact with the insights generated by ignio, increasing product trust and usability by 40%"
+            ],
+            "company": "Digitate (Tata Research - Cloud SaaS)",
+            "description": null,
+            "end_date": "2021-04",
+            "location": null,
+            "position": "Data Scientist",
+            "start_date": "2018-06"
+        }
+    ],
+    "full_name": "Homer Simpson",
+    "professional_title": "Machine Learning Scientist",
+    "publications": [
+        {
+            "title": "NLP classification of Stack Overflow Questions",
+            "description": "Fine-tuned GPT-3 using data mined from multiple sources for the classification of StackOverflow questions for enabling better NLP-based recommendations to users with 83% accuracy.",
+            "start_date": null,
+            "end_date": null
+        }
+    ],
+    "presentations": [],
+    "projects": [
+        {
+            "description": "Developed a heart attack prediction system (random forest & XGBoost-based methods with an accuracy of 92%). Designed a large-scale recommendation system to recommend clinical trials based on patient profiles using data from clinicaltrials.gov and CDC. Model deployment on Azure using fastAPI, Docker.",
+            "end_date": null,
+            "start_date": null,
+            "title": "Heart Disease prediction and clinical trial recommendation system"
+        },
+        {
+            "description": "Fine-tuned GPT-3 using data mined from multiple sources for the classification of StackOverflow questions for enabling better NLP-based recommendations to users with 83% accuracy.",
+            "end_date": null,
+            "start_date": null,
+            "title": "NLP classification of Stack Overflow Questions"
+        }
+    ],
+    "skills": {
+        "cloud_platforms": [
+            "Azure",
+            "AWS",
+            "GCP"
+        ],
+        "databases": [
+            "Neo4j",
+            "Snowflake",
+            "Redis",
+            "RDS",
+            "RedShift",
+            "BigQuery"
+        ],
+        "frameworks_libraries": [
+            "Numpy",
+            "Sklearn",
+            "gensim",
+            "Pandas",
+            "spacy",
+            "nltk",
+            "Keras",
+            "xgboost",
+            "TensorFlow",
+            "HuggingFace",
+            "PyTorch",
+            "Langchain",
+            "CrewAI",
+            "LLamaIndex",
+            "FastMCP",
+            "LangGraph",
+            "AutoGen"
+        ],
+        "languages": [],
+        "programming_languages": [
+            "Python",
+            "R",
+            "Java",
+            "SQL",
+            "JS"
+        ],
+        "tools_technologies": [
+            "Docker",
+            "AirFlow",
+            "Git",
+            "LangSmith",
+            "W&B",
+            "Kubernetes",
+            "dbt",
+            "MLFlow",
+            "Spark",
+            "Tableau",
+            "D3.js",
+            "Dataiku",
+            "Google Analytics",
+            "Excel",
+            "PowerBI",
+            "Weaviate",
+            "Ragas",
+            "Ray",
+            "FastAPI"
+        ]
+    }
+}

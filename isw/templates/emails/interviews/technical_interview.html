@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Assignment - TextLayer</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Link styling */
+        a {
+            color: #4ade80 !important;
+            text-decoration: underline !important;
+            text-decoration-color: #4ade80 !important;
+        }
+
+        /* Download assignment files link styling */
+        a.download-assignment-files {
+            color: #ffffff !important;
+        }
+
+        /* Code snippet styling for the instructions section */
+        .instructions-content pre {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+            padding: 16px !important;
+            margin: 16px 0 !important;
+            overflow-x: auto !important;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            color: #e5e7eb !important;
+        }
+
+        .instructions-content code {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+            padding: 2px 6px !important;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+            font-size: 13px !important;
+            color: #4ade80 !important;
+        }
+
+        .instructions-content pre code {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            color: #e5e7eb !important;
+        }
+
+        /* Syntax highlighting colors */
+        .instructions-content .hljs-keyword,
+        .instructions-content .hljs-selector-tag,
+        .instructions-content .hljs-built_in {
+            color: #8b5cf6 !important;
+        }
+
+        .instructions-content .hljs-string,
+        .instructions-content .hljs-attr {
+            color: #10b981 !important;
+        }
+
+        .instructions-content .hljs-function,
+        .instructions-content .hljs-title {
+            color: #3b82f6 !important;
+        }
+
+        .instructions-content .hljs-comment {
+            color: #6b7280 !important;
+            font-style: italic !important;
+        }
+
+        .instructions-content .hljs-number {
+            color: #f59e0b !important;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #ffffff; background-color: #0a0a0a;">
+    <!-- Main Container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #0a0a0a;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Email Container -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="650" style="max-width: 650px; background-color: #0a0a0a; border: 1px solid #262626;">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 56px 40px 48px 40px; text-align: center; border-bottom: 1px solid #262626; background-color: #111111; position: relative;">
+                            <!-- Logo and Brand -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding-bottom: 24px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding-right: 12px; vertical-align: middle;">
+                                                    <!-- TextLayer SVG Logo -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" height="26" viewBox="0 0 302 211" style="vertical-align: middle;">
+                                                        <path d="M11.4545 0L0 11.5343L11.4545 23L8.79545 11.5343L15.8182 4.46269L11.4545 0Z" fill="white"/>
+                                                        <path d="M21.6136 0L10.2955 11.5343L21.6136 23L33 11.5343L21.6136 0Z" fill="white"/>
+                                                    </svg>
+                                                </td>
+                                                <td style="vertical-align: middle;">
+                                                    <span style="font-size: 28px; font-weight: bold; color: #ffffff; letter-spacing: -0.025em;">TextLayer</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <h1 style="font-size: 32px; font-weight: 600; color: #ffffff; margin: 24px 0 16px 0; letter-spacing: -0.02em; line-height: 1.2;">Technical Assignment</h1>
+                                        <p style="font-size: 16px; color: #a3a3a3; margin-bottom: 32px; line-height: 1.5; max-width: 500px;">Your personalized technical challenge to demonstrate your engineering capabilities and problem-solving approach.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 48px 40px;">
+
+                            <!-- Assignment Overview -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td style="background-color: #171717; border: 1px solid #262626; padding: 24px;">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">📋 Assignment Overview</h3>
+                                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">Deadline:</p>
+                                        <p style="margin: 0 0 12px 0; font-size: 14px; color: #a3a3a3; font-family: Arial, sans-serif;">You have <strong style="color: #ffffff;">up to 2 weeks</strong> to complete this assignment.</p>
+                                        <p style="margin: 0; font-size: 14px; color: #4ade80; font-weight: 500; font-family: Arial, sans-serif;">Bonus: Early submissions will receive extra marks for prompt completion!</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Download Section -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td style="background-color: #0f172a; border: 1px solid #3b82f6; padding: 24px;">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">📦 Download Assignment</h3>
+                                        <p style="margin: 0 0 24px 0; font-size: 16px; color: #a3a3a3; font-family: Arial, sans-serif;">Click the link below to download your assignment files:</p>
+
+                                        <!-- Download Button -->
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                                            <tr>
+                                                <td style="text-align: center;">
+                                                    <a class="download-assignment-files" href="{{ s3_url }}" style="display: inline-block; background-color: #4ade80; color: #0a0a0a; padding: 16px 32px; text-decoration: none; font-weight: 600; font-size: 16px; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.05em;">DOWNLOAD ASSIGNMENT FILES</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; padding-top: 12px;">
+                                                    <p style="margin: 0; font-size: 12px; color: #737373; font-style: italic; font-family: Arial, sans-serif;">Note: This download link will expire after a certain period for security purposes.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Environment Configuration -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td style="background-color: #1c1917; border: 1px solid #f59e0b; padding: 24px;">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">🔐 Environment Configuration</h3>
+                                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">Doppler Service Token:</p>
+
+                                        <!-- Token Container -->
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="background-color: #171717; border: 1px solid #262626; padding: 16px; font-family: Consolas, monospace; font-size: 14px; color: #4ade80; letter-spacing: 0.5px; word-break: break-all;">
+                                                    {{ doppler_token }}
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="margin: 16px 0 0 0; font-size: 14px; color: #a3a3a3; font-family: Arial, sans-serif;">This token provides access to the required environment variables for your assignment. Please keep this token secure and do not share it.</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Instructions Section -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td style="background-color: #171717; border: 1px solid #262626; padding: 32px;">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">📝 Instructions</h3>
+                                        <div class="instructions-content" style="color: #ffffff; line-height: 1.6; font-family: Arial, sans-serif;">
+                                            {{ body | safe }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Submission Guidelines -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td style="background-color: #171717; border: 1px solid #262626; padding: 32px;">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #ffffff; font-family: Arial, sans-serif;">📝 Submission Guidelines</h3>
+                                        <ul style="margin: 20px 0; padding-left: 20px; color: #a3a3a3; font-family: Arial, sans-serif;">
+                                            <li style="margin: 8px 0; line-height: 1.5;">Complete all requirements outlined in the instructions above</li>
+                                            <li style="margin: 8px 0; line-height: 1.5;">Return your submission as a zipped file to this <a style="color: #4ade80; text-decoration: none;" href="{{ submission_url if submission_url else 'mailto:thabang@textlayer.ai' }}" target="_blank">submission link</a></li>
+                                            <li style="margin: 8px 0; line-height: 1.5;">Include the subject line <span style="background-color: #4ade80; color: #0a0a0a; padding: 4px 8px; font-family: Consolas, monospace; font-size: 13px; font-weight: 600;">Technical Interview Submission - Textlayer</span></li>
+                                            <li style="margin: 8px 0; line-height: 1.5;">Test your solution thoroughly before submission</li>
+                                            <li style="margin: 8px 0; line-height: 1.5;">Include any necessary documentation or setup instructions</li>
+                                            <li style="margin: 8px 0; line-height: 1.5;">Submit your completed work according to the submission process provided in the assignment files</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Good Luck Message -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="text-align: center; margin-top: 40px; font-size: 16px; color: #a3a3a3; font-style: italic; font-family: Arial, sans-serif;">
+                                        Good luck with your assignment! We look forward to reviewing your work.
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 48px 40px; border-top: 1px solid #262626; text-align: center; background-color: #111111;">
+                            <!-- Footer Logo -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding-bottom: 8px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding-right: 8px; vertical-align: middle;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="19" viewBox="0 0 302 211" style="vertical-align: middle;">
+                                                        <path d="M11.4545 0L0 11.5343L11.4545 23L8.79545 11.5343L15.8182 4.46269L11.4545 0Z" fill="white"/>
+                                                        <path d="M21.6136 0L10.2955 11.5343L21.6136 23L33 11.5343L21.6136 0Z" fill="white"/>
+                                                    </svg>
+                                                </td>
+                                                <td style="vertical-align: middle;">
+                                                    <span style="font-weight: 600; color: #ffffff;">TextLayer</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="padding-bottom: 20px;">
+                                        <p style="font-size: 14px; color: #737373; margin: 0;">Enterprise AI Infrastructure</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <!-- Footer Links -->
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://github.com/textlayer" style="color: #4ade80; text-decoration: none; font-size: 14px; font-weight: 500;" target="_blank">Github</a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://docs.textlayer.ai" style="color: #4ade80; text-decoration: none; font-size: 14px; font-weight: 500;" target="_blank">Documentation</a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://textlayer.ai" style="color: #4ade80; text-decoration: none; font-size: 14px; font-weight: 500;" target="_blank">Website</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
