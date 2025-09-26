@@ -48,6 +48,7 @@ dev = [
     "coverage==7.6.12",
     "pytest-xdist>=3.8.0",
     "fakeredis>=2.31.0",
+    "ipykernel>=6.30.1",
 ]
 
 [tool.ruff]
