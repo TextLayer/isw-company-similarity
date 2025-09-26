@@ -36,7 +36,7 @@ format:
 # Run all tests
 test:
 	@echo "Running tests..."
-	uv run pytest tests/ --ignore=tests/evaluations/ -v -n auto
+	uv run pytest -m "not integration" --ignore=tests/evaluations/ -n auto
 
 # Clean up build artifacts
 clean:
