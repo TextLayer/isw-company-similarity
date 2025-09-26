@@ -9,46 +9,7 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 
-def _load_recruitment_fixture_data():
-    """Load recruitment fixture data from JSON file"""
-    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "applications", "application.json")
-    with open(fixture_path, "r") as f:
-        return json.load(f)
-
-
-@pytest.fixture
-def mock_ashby_application_data():
-    """Mock Ashby application data for testing"""
-    data = _load_recruitment_fixture_data()
-    return data["application"]
-
-
-@pytest.fixture
-def mock_ashby_candidate_data():
-    """Mock Ashby candidate data for testing"""
-    data = _load_recruitment_fixture_data()
-    return data["candidate"]
-
-
-@pytest.fixture
-def mock_job_document_data():
-    """Mock job document data for testing"""
-    data = _load_recruitment_fixture_data()
-    return data["job"]
-
-
-@pytest.fixture
-def test_application_id():
-    """Test application ID"""
-    data = _load_recruitment_fixture_data()
-    return data["ids"]["application_id"]
-
-
-@pytest.fixture
-def test_candidate_id():
-    """Test candidate ID"""
-    data = _load_recruitment_fixture_data()
-    return data["ids"]["candidate_id"]
+## Removed recruitment fixtures and helpers
 
 
 @pytest.fixture

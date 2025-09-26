@@ -16,29 +16,18 @@ This project follows a new architectural pattern with the following structure:
 ### Prerequisites
 
 - Python 3.12
-- pip
+- uv
 - make
-- Doppler CLI
 
 ### Quick Start
 
-1. **Create virtual environment:**
-   ```bash
-   make setup-venv
-   source .venv/bin/activate
-   ```
+1. **Install dependencies:**
 
-2. **Install dependencies:**
    ```bash
    make install
    ```
 
-3. **Set up Doppler:**
-   ```bash
-   doppler setup
-   ```
-
-4. **Run the application:**
+2. **Run the application:**
    ```bash
    make run
    ```
@@ -48,18 +37,18 @@ This project follows a new architectural pattern with the following structure:
 ### Available Commands
 
 - `make help` - Show available commands
-- `make setup-venv` - Create Python 3.12 virtual environment
 - `make install` - Install production dependencies
 - `make dev` - Install development dependencies
 - `make lint` - Run linting checks
 - `make format` - Format code
-- `make test` - Run tests with Doppler
-- `make run` - Run Flask application with Doppler
+- `make test` - Run tests
+- `make run` - Run Flask application
 - `make clean` - Clean build artifacts
 
 ### Development Setup
 
 1. Install development dependencies:
+
    ```bash
    make dev
    ```
@@ -72,7 +61,7 @@ This project follows a new architectural pattern with the following structure:
 ## Project Structure
 
 ```
-textlayer/
+isw/
 ├── applications/          # Application entry points
 │   ├── api.py           # Flask API application
 │   ├── cli.py           # CLI application
@@ -95,11 +84,12 @@ textlayer/
 
 ## Configuration
 
-The application uses Doppler for configuration management. Set up your Doppler project and configure the necessary environment variables.
+The application uses environment variables. See `isw/shared/config/base.py` for keys.
 
 ## Testing
 
-Run tests with Doppler:
+Run tests:
+
 ```bash
 make test
 ```
@@ -107,11 +97,13 @@ make test
 ## Linting and Formatting
 
 Format code:
+
 ```bash
 make format
 ```
 
 Check linting:
+
 ```bash
 make lint
 ```
