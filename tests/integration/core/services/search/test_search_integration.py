@@ -25,9 +25,9 @@ class TestSearchIntegration:
     def search_service(self, mock_opensearch_client):
         """Create search service with mocked OpenSearch client."""
         with patch(
-            "textlayer.core.services.search.providers.opensearch.OpenSearch", return_value=mock_opensearch_client
+            "isw.core.services.search.providers.opensearch.OpenSearch", return_value=mock_opensearch_client
         ):
-            with patch("textlayer.core.services.search.providers.opensearch.config") as mock_config:
+            with patch("isw.core.services.search.providers.opensearch.config") as mock_config:
                 mock_config.return_value.opensearch_host = "http://localhost:9200"
                 mock_config.return_value.opensearch_username = "test"
                 mock_config.return_value.opensearch_password = "test"

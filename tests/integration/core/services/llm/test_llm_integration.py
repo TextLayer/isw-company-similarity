@@ -39,7 +39,7 @@ def test_embedding_chunking_integration(monkeypatch):
     )
 
     router = CountingRouter()
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", lambda **_: router)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", lambda **_: router)
 
     client = EmbeddingClient(dimension=config.embedding_dimension, models=config.embedding_models)
 
@@ -243,7 +243,7 @@ def test_embedding_fallback_integration(monkeypatch):
         router = FallbackRouter(**config)
         return router
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", create_router)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", create_router)
 
     # Client should be configured with fallback
     client = EmbeddingClient(dimension=config.embedding_dimension, models=[model["key"] for model in validated_models])

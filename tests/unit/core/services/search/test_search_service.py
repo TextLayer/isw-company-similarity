@@ -204,7 +204,7 @@ class TestSearchService:
 
         assert exc_info.value.index == "test-index"
 
-    @patch("textlayer.shared.config.config")
+    @patch("isw.shared.config.config")
     def test_uses_config_defaults(self, mock_config):
         """Test service uses config for default provider."""
         mock_config.return_value.search_provider = "opensearch"

@@ -27,8 +27,8 @@ class TestOpenSearchProviderErrorHandling:
     @pytest.fixture
     def provider(self, mock_client):
         """Create provider with mocked client."""
-        with patch("textlayer.core.services.search.providers.opensearch.OpenSearch", return_value=mock_client):
-            with patch("textlayer.core.services.search.providers.opensearch.config") as mock_config:
+        with patch("isw.core.services.search.providers.opensearch.OpenSearch", return_value=mock_client):
+            with patch("isw.core.services.search.providers.opensearch.config") as mock_config:
                 mock_config.return_value.opensearch_host = "http://localhost:9200"
                 mock_config.return_value.opensearch_username = "admin"
                 mock_config.return_value.opensearch_password = "admin"
@@ -93,7 +93,7 @@ class TestOpenSearchProviderErrorHandling:
 
     def test_bulk_create_partial_failure(self, provider, mock_client):
         """Test bulk create returns partial results on failure."""
-        with patch("textlayer.core.services.search.providers.opensearch.helpers.bulk") as mock_bulk:
+        with patch("isw.core.services.search.providers.opensearch.helpers.bulk") as mock_bulk:
             mock_bulk.return_value = (1, [{"index": {"_id": "2", "error": "Document too large"}}])
 
             documents = [{"id": "1", "title": "Doc 1"}, {"id": "2", "title": "Doc 2"}]
@@ -106,7 +106,7 @@ class TestOpenSearchProviderErrorHandling:
 
     def test_bulk_create_request_error(self, provider, mock_client):
         """Test bulk create handles RequestError by returning failure result."""
-        with patch("textlayer.core.services.search.providers.opensearch.helpers.bulk") as mock_bulk:
+        with patch("isw.core.services.search.providers.opensearch.helpers.bulk") as mock_bulk:
             mock_bulk.side_effect = RequestError(400, "bulk_error", {"error": "Bulk operation failed"})
 
             documents = [{"id": "1", "title": "Doc 1"}, {"id": "2", "title": "Doc 2"}]

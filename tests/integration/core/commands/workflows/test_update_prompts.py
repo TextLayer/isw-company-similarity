@@ -6,14 +6,14 @@ from tests import BaseTest
 
 class TestUpdatePromptsCommand(BaseTest):
     def test_service_calls(self):
-        with patch("textlayer.core.commands.workflows.update_prompts.GitService") as mock_git_service_class:
+        with patch("isw.core.commands.workflows.update_prompts.GitService") as mock_git_service_class:
             mock_git_service_instance = Mock()
             mock_git_service_class.return_value = mock_git_service_instance
             mock_git_service_instance.commit_all.return_value = mock_git_service_instance
             mock_git_service_instance.push.return_value = mock_git_service_instance
             mock_git_service_instance.create_pull_request.return_value = "https://github.com/textlayer/textlayer/pull/1"
 
-            with patch("textlayer.core.commands.workflows.update_prompts.StorageService") as mock_storage_service_class:
+            with patch("isw.core.commands.workflows.update_prompts.StorageService") as mock_storage_service_class:
                 mock_storage_service_instance = Mock()
                 mock_storage_service_class.return_value = mock_storage_service_instance
 

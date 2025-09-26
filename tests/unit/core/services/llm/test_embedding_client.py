@@ -37,7 +37,7 @@ def test_embed_empty_text_returns_zero_vector(monkeypatch):
         ],
     )
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", DummyRouter)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", DummyRouter)
 
     client = EmbeddingClient(dimension=5, models=["test-embed"])
     vec = client.embed("")
@@ -52,7 +52,7 @@ def test_embed_normal_path_calls_router(monkeypatch):
             {"key": names[0], "mode": "embedding", "output_vector_size": 3, "max_tokens": 4096}
         ],
     )
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", DummyRouter)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", DummyRouter)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
     vec = client.embed("hello world")
@@ -70,7 +70,7 @@ def test_embed_batch_success(monkeypatch):
     )
 
     router = DummyRouter()
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", lambda **_: router)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", lambda **_: router)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
     texts = ["text one", "text two", "text three"]
@@ -102,7 +102,7 @@ def test_embed_batch_with_failure(monkeypatch):
             return DummyRouter._Resp([{"embedding": [1.0, 0.0, 0.0]}])
 
     router = FailingRouter()
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", lambda **_: router)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", lambda **_: router)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
     texts = ["text one", "text two", "text three"]
@@ -143,7 +143,7 @@ def test_embedding_chunking_and_averaging(monkeypatch):
             else:
                 return DummyRouter._Resp([{"embedding": [0.0, 0.0, 1.0]}])
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", ChunkRouter)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", ChunkRouter)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
     result = client.embed("long text that will be chunked")
@@ -183,7 +183,7 @@ def test_embedding_fallback_on_chunk_failure(monkeypatch):
             # Success on fallback (first chunk only)
             return DummyRouter._Resp([{"embedding": [1.0, 0.0, 0.0]}])
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", FailingChunkRouter)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", FailingChunkRouter)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
 
@@ -224,7 +224,7 @@ def test_embedding_no_response_data(monkeypatch):
         def embedding(self, **params):
             return DummyRouter._Resp([])  # Empty data
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", EmptyResponseRouter)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", EmptyResponseRouter)
 
     client = EmbeddingClient(dimension=3, models=["embed-model"])
     result = client.embed("test text")
@@ -253,7 +253,7 @@ def test_embedding_client_initialization_with_multiple_models(monkeypatch):
         router_config = config
         return DummyRouter()
 
-    monkeypatch.setattr("textlayer.core.services.llm.embedding.Router", mock_router)
+    monkeypatch.setattr("isw.core.services.llm.embedding.Router", mock_router)
 
     client = EmbeddingClient(dimension=3, models=["primary-embed", "fallback-embed"])
 

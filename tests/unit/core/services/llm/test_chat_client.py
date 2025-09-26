@@ -39,7 +39,7 @@ def test_batch_tool_call_recursion(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -80,7 +80,7 @@ def test_batch_max_steps_limit(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -117,7 +117,7 @@ def test_stream_basic_text(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -150,7 +150,7 @@ def test_stream_with_tool_calls(monkeypatch):
 
     # Mock Router to avoid real initialization
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -226,7 +226,7 @@ def test_structured_output(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -262,7 +262,7 @@ def test_chat_interface_with_stream_flag(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
@@ -288,7 +288,7 @@ def test_error_handling_in_tool_execution(monkeypatch):
     )
 
     mock_router = Mock()
-    monkeypatch.setattr("textlayer.core.services.llm.chat.Router", lambda **_: mock_router)
+    monkeypatch.setattr("isw.core.services.llm.chat.Router", lambda **_: mock_router)
 
     client = ChatClient(models=["test-chat-model"])
 
