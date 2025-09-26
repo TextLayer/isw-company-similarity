@@ -1,7 +1,7 @@
 from unittest.mock import ANY, Mock, patch
 
-from tests import BaseTest
 from isw.core.commands.workflows.update_prompts import UpdatePromptsCommand
+from tests import BaseTest
 
 
 class TestUpdatePromptsCommand(BaseTest):

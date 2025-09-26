@@ -3,9 +3,9 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from tests import BaseCommandTest
 from isw.core.commands.onboarding.get_textlayer_core import GetTextlayerCoreCommand
 from isw.core.errors import ProcessingException, ValidationException
+from tests import BaseCommandTest
 
 
 class TestGetTextlayerCoreCommand(BaseCommandTest):

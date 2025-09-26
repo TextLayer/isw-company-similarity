@@ -1,9 +1,9 @@
 import pytest
 from flask import g
 
-from tests import BaseTest
 from isw.core.errors import AuthenticationException, AuthorizationException
 from isw.interfaces.api.decorators.auth import auth
+from tests import BaseTest
 
 
 class TestSessionDecorators(BaseTest):

@@ -1,8 +1,8 @@
 from unittest.mock import Mock, patch
 
-from tests import BaseTest
 from isw.core.commands.workflows.sync_prompts import SyncPromptsCommand
 from isw.core.utils.matchers import StringMatcher
+from tests import BaseTest
 
 
 class TestSyncPromptsCommand(BaseTest):

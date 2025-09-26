@@ -1,9 +1,9 @@
 import pytest
 import requests
 
+from isw.core.services.doppler.service import DopplerService, DopplerServiceError
 from tests import BaseCommandTest
 from tests.fixtures.mocks import RespBad, RespOK
-from isw.core.services.doppler.service import DopplerService, DopplerServiceError
 
 
 class TestDopplerService(BaseCommandTest):

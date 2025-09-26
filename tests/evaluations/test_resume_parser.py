@@ -1,8 +1,8 @@
 import json
 
+from isw.core.commands.recruitment.analyze_candidate_resume import AnalyzeCandidateResumeCommand
 from tests.evaluations.base import FunctionalEvaluator
 from tests.fixtures import load_fixture, load_fixture_json
-from isw.core.commands.recruitment.analyze_candidate_resume import AnalyzeCandidateResumeCommand
 
 
 class TestResumeParser(FunctionalEvaluator):

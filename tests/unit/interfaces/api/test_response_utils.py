@@ -1,8 +1,8 @@
 import pytest
 
-from tests import BaseTest
 from isw.core.errors import ValidationException
 from isw.interfaces.api.utils.response import Response
+from tests import BaseTest
 
 
 def assert_error_response(exception, status_code):

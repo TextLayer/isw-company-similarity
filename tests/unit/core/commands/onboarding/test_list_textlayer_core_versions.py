@@ -2,9 +2,9 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from tests import BaseCommandTest
 from isw.core.commands.onboarding.list_textlayer_core_versions import ListTextlayerCoreVersionsCommand
 from isw.core.errors import ProcessingException, ValidationException
+from tests import BaseCommandTest
 
 
 class TestListTextlayerCoreVersionsCommand(BaseCommandTest):

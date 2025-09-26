@@ -11,13 +11,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 def _load_recruitment_fixture_data():
     """Load recruitment fixture data from JSON file"""
-    fixture_path = os.path.join(
-        os.path.dirname(__file__),
-        "fixtures",
-        "applications",
-        "application.json"
-    )
-    with open(fixture_path, 'r') as f:
+    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "applications", "application.json")
+    with open(fixture_path, "r") as f:
         return json.load(f)
 
 

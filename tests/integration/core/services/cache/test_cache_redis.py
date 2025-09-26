@@ -2,8 +2,8 @@ import time
 
 import pytest
 
-from tests import BaseTest
 from isw.core.services.cache import cache_result
+from tests import BaseTest
 
 
 class TestCacheRedisIntegration(BaseTest):

@@ -1,7 +1,7 @@
 import pytest
 
-from tests import BaseTest
 from isw.core.services.ats import ATSService
+from tests import BaseTest
 
 
 class TestATSServiceIntegration(BaseTest):

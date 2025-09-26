@@ -2,9 +2,9 @@ import os
 
 import pytest
 
-from tests import BaseTest
 from isw.core.errors import ServiceException
 from isw.core.services.jwt import JWTService
+from tests import BaseTest
 
 
 @pytest.fixture(scope="session")

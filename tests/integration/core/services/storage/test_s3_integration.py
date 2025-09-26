@@ -3,9 +3,9 @@ import io
 import pytest
 import requests
 
-from tests import BaseTest
 from isw.core.services.storage import StorageService
 from isw.interfaces.api.utils.response import Response
+from tests import BaseTest
 
 
 class TestAWSS3StorageServiceIntegration(BaseTest):

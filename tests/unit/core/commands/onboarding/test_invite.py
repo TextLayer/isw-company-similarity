@@ -3,8 +3,8 @@ from unittest.mock import Mock, patch
 import pytest
 from marshmallow import ValidationError
 
-from tests import BaseCommandTest
 from isw.core.commands.onboarding.invite import InviteCommand
+from tests import BaseCommandTest
 
 
 class TestInviteCommand(BaseCommandTest):

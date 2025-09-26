@@ -3,9 +3,9 @@ import uuid
 
 import pytest
 
-from tests import BaseTest
 from isw.core.services.git import GitService
 from isw.core.services.storage import StorageService
+from tests import BaseTest
 
 
 class TestDiskStorageServiceIntegration(BaseTest):
