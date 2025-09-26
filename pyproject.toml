@@ -1,7 +1,7 @@
 [project]
-name = "textlayer-core-new"
+name = "insight-software-backend"
 version = "0.1.0"
-description = "TextLayer Core New: A new architectural pattern for Python services."
+description = "Insight Software Backend: A new architectural pattern for Python services."
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "flask==2.2.5",
@@ -100,7 +100,7 @@ exclude = [
 "__init__.py" = ["F401"] # Ignore unused imports in __init__ files
 
 [tool.ruff.lint.isort]
-known-first-party = ["textlayer"]
+known-first-party = ["isw"]
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
@@ -120,7 +120,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["textlayer"]
+packages = ["isw"]
 
 [project.scripts]
-textlayer-cli = "textlayer.interfaces.cli:cli"
+insight-software-backend-cli = "isw.interfaces.cli:cli"

@@ -1,5 +1,5 @@
-FLASK_APP=textlayer.applications.api:app
+FLASK_APP=isw.applications.api:app
 FLASK_CONFIG=PROD
-FLASK_RUN_PORT=5000
+FLASK_RUN_PORT=8080
 FLASK_DEBUG=0
 LOG_LEVEL=DEBUG
