@@ -3,7 +3,6 @@ import json
 
 import click
 
-from ...core.controllers.recruitment_controller import RecruitmentController
 from ...core.controllers.workflows_controller import WorkflowsController
 from ...core.services.evals import EvalsService
 from ...core.utils.helpers import from_json
@@ -74,32 +73,7 @@ def create_evals_dataset(name: str, description: str):
         click.secho(f'Sorry, but the evals dataset could not be created. Reason: "{e}".', fg="red")
 
 
-@cli.command(name="run-evals-workflow")
-@click.argument("name", type=str)
-@click.argument("description", type=str)
-@click.argument("runner", type=str)
-def run_evals_workflow(name: str, description: str, runner: str):
-    """
-    Run an evals workflow remotely.
-    Likely, used in CI/CD on demand.
-
-    Parameters:
-        name: The name of the workflow to run
-        description: The description of the workflow
-        runner: The runner of the workflow
-    """
-    try:
-        recruitment_controller = RecruitmentController()
-
-        WorkflowsController().run_evals(
-            name=name,
-            description=description,
-            runner=runner,
-            prompt=lambda input_data: (recruitment_controller.analyze_candidate_resume(**json.loads(input_data))),
-        )
-        click.secho("The evals workflow has been run successfully!", fg="green")
-    except Exception as e:
-        click.secho(f'Sorry, but the evals workflow could not be run. Reason: "{e}".', fg="red")
+# Removed run-evals-workflow command due to dependency on recruitment domain
 
 
 @cli.command(name="sync-prompts")

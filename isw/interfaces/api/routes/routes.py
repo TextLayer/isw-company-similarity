@@ -8,11 +8,7 @@ from ..middleware.logger_middleware import log_request_info, log_response_info
 from ..utils.messages import Error
 from ..utils.response import Response
 from .auth_routes import auth_routes
-from .onboarding_routes import onboarding_routes
-from .recruitment_routes import recruitment_routes
-from .research_routes import research_routes
 from .thread_routes import thread_routes
-from .webhooks import webhooks_routes
 
 
 def stop(env, resp):
@@ -22,11 +18,7 @@ def stop(env, resp):
 
 blueprints = {
     "/auth": auth_routes,
-    "/onboarding": onboarding_routes,
-    "/recruitment": recruitment_routes,
-    "/research": research_routes,
     "/threads": thread_routes,
-    "/webhooks": webhooks_routes,
 }
 
 
