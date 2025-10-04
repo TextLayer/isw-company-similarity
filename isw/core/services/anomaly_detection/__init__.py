@@ -1,6 +1,6 @@
 """XBRL Tag Anomaly Detection Service."""
 
-from .service import XBRLAnomalyService, AnomalyDetectionConfig
+from .service import AnomalyDetectionConfig, XBRLAnomalyService
 
 __all__ = [
     "XBRLAnomalyService",

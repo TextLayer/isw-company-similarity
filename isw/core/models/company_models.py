@@ -1,6 +1,6 @@
-from sqlalchemy import String, Integer, Text, Float, Numeric, ForeignKey
-from sqlalchemy.orm import mapped_column
 from pgvector.sqlalchemy import Vector
+from sqlalchemy import Float, ForeignKey, Integer, Numeric, String, Text
+from sqlalchemy.orm import mapped_column
 
 from isw.core.models.base import BaseModel
 
@@ -75,7 +75,10 @@ class CompanyFacts(BaseModel):
     form_type = mapped_column(String(10), nullable=False, index=True)
 
     def __repr__(self):
-        return f"<CompanyFacts(cik={self.cik}, fact={self.fact}, fiscal_year={self.fiscal_year}, filing_period={self.filing_period})>"
+        return (
+            f"<CompanyFacts(cik={self.cik}, fact={self.fact}, "
+            f"fiscal_year={self.fiscal_year}, filing_period={self.filing_period})>"
+        )
 
     def to_dict(self):
         return {

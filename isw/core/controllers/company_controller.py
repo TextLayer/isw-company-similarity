@@ -2,6 +2,7 @@ from isw.core.commands.company.get_companies import GetCompaniesCommand
 from isw.core.commands.company.get_company import GetCompanyCommand
 from isw.core.commands.company.get_company_reports import GetCompanyReportsCommand
 from isw.core.commands.company.get_report_anomalies import GetReportAnomaliesCommand
+
 from ..commands.company.get_similar_companies import GetSimilarCompaniesCommand
 from .base import Controller
 

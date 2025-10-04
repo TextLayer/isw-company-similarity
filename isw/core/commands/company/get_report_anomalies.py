@@ -1,9 +1,9 @@
 from ...commands.base import ReadCommand
-from ...services.database import DatabaseService
-from ...services.anomaly_detection import XBRLAnomalyService, AnomalyDetectionConfig
-from ...services.vector_search import VectorSearchService
-from ...models.company_models import Company
 from ...errors.validation import ValidationException
+from ...models.company_models import Company
+from ...services.anomaly_detection import AnomalyDetectionConfig, XBRLAnomalyService
+from ...services.database import DatabaseService
+from ...services.vector_search import VectorSearchService
 
 
 class GetReportAnomaliesCommand(ReadCommand):
@@ -48,7 +48,9 @@ class GetReportAnomaliesCommand(ReadCommand):
             peer_ciks = [company.cik for company, _ in peer_results if company.cik != int(self.cik)]
             
             if len(peer_ciks) < config.min_peers:
-                raise ValidationException(f"Insufficient similar peers found: {len(peer_ciks)} (need at least {config.min_peers})")
+                raise ValidationException(
+                    f"Insufficient similar peers found: {len(peer_ciks)} (need at least {config.min_peers})"
+                )
             
             # Detect anomalies
             results = XBRLAnomalyService.detect_anomalies(

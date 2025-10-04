@@ -1,4 +1,5 @@
 import click
+
 from isw.interfaces.cli.commands.database import database
 from isw.shared.config import set_config
 from isw.shared.config.cli_adapter import get_cli_config

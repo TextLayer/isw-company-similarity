@@ -1,5 +1,6 @@
-from typing import List, Dict, Any, Tuple, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 from sqlalchemy.orm import Session
 

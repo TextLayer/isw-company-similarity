@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from typing import Any, Generator
 
-from sqlalchemy import create_engine, text, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.engine import Connection, Engine
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
 

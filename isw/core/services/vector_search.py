@@ -1,9 +1,9 @@
 """Vector search service for company similarity operations."""
 
 from typing import List, Optional, Tuple
-from sqlalchemy.orm import Session
+
 from sqlalchemy import select
-from pgvector.sqlalchemy import Vector
+from sqlalchemy.orm import Session
 
 from ..models.company_models import Company
 

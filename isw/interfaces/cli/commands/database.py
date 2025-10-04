@@ -1,12 +1,13 @@
 import csv
 import json
-import psycopg2
-import click
 from io import StringIO
+
+import click
+import psycopg2
 from sqlalchemy.orm import sessionmaker
 
-from isw.core.services.database import DatabaseService, Base
 from isw.core.models.company_models import Company, CompanyFacts
+from isw.core.services.database import Base, DatabaseService
 
 
 @click.group()
@@ -133,7 +134,7 @@ def load_facts(csv_file):
                 
                 if total % 1000000 == 0:
                     click.echo(f"  {total:,} rows processed ({imported:,} valid)")
-            except:
+            except Exception:
                 continue
     
     click.echo(f"Filtered {total:,} → {imported:,} valid facts")
@@ -141,7 +142,8 @@ def load_facts(csv_file):
     
     buffer.seek(0)
     cursor.copy_expert(
-        "COPY company_facts (cik, fact, value, fiscal_year, filing_period, form_type) FROM STDIN WITH (FORMAT text, DELIMITER E'\\t')",
+        """COPY company_facts (cik, fact, value, fiscal_year, filing_period, form_type)
+        FROM STDIN WITH (FORMAT text, DELIMITER E'\\t')""",
         buffer
     )
     conn.commit()

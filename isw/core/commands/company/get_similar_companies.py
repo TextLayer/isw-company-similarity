@@ -1,12 +1,14 @@
 from ...commands.base import ReadCommand
-from ...services.vector_search import VectorSearchService
-from ...services.database.service import DatabaseService
-from ...models.company_models import Company
 from ...errors.validation import ValidationException
+from ...models.company_models import Company
+from ...services.database.service import DatabaseService
+from ...services.vector_search import VectorSearchService
 
 
 class GetSimilarCompaniesCommand(ReadCommand):
-    def __init__(self, cik: str, similarity_threshold: float = 0.7, max_results: int = 10, filter_community: bool = True):
+    def __init__(
+        self, cik: str, similarity_threshold: float = 0.7, max_results: int = 10, filter_community: bool = True
+    ):
         self.cik = cik
         self.similarity_threshold = similarity_threshold
         self.max_results = max_results

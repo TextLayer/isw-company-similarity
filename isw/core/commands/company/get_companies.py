@@ -1,9 +1,9 @@
-from ...commands.base import ReadCommand
-from ...services.database.service import DatabaseService
-from ...models.company_models import Company
-from ...errors.validation import ValidationException
-
 import math
+
+from ...commands.base import ReadCommand
+from ...errors.validation import ValidationException
+from ...models.company_models import Company
+from ...services.database.service import DatabaseService
 
 
 class GetCompaniesCommand(ReadCommand):

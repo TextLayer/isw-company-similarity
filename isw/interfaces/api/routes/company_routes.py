@@ -1,16 +1,13 @@
-from flask import Blueprint, g, request
-
-from isw.core.controllers import company_controller
+from flask import Blueprint, request
 
 from ....core.controllers.company_controller import CompanyController
-from ....core.schemas.routes_schema import pagination_schema
 from ....core.schemas.company_schema import (
     company_reports_schema,
+    report_anomalies_schema,
     similar_company_search_schema,
-    report_anomalies_schema
 )
+from ....core.schemas.routes_schema import pagination_schema
 from ..utils.response import Response
-
 
 company_controller = CompanyController()
 company_routes = Blueprint("company_routes", __name__)

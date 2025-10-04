@@ -7,9 +7,10 @@ Create Date: 2025-10-04 09:50:47.714208
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
+from pgvector.sqlalchemy import Vector
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '3c20b35eadd0'
@@ -26,7 +27,7 @@ def upgrade() -> None:
     sa.Column('cik', sa.Integer(), nullable=False),
     sa.Column('company_name', sa.String(length=500), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('embedded_description', pgvector.sqlalchemy.vector.VECTOR(dim=1536), nullable=True),
+    sa.Column('embedded_description', Vector(1536), nullable=True),
     sa.Column('total_revenue', sa.Float(), nullable=True),
     sa.Column('sic', sa.String(length=10), nullable=True),
     sa.Column('market_cap', sa.Float(), nullable=True),

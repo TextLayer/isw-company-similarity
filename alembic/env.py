@@ -1,18 +1,19 @@
 """Alembic environment configuration for insight-software-backend."""
 
-from logging.config import fileConfig
 import os
 import sys
+from logging.config import fileConfig
 from pathlib import Path
 
 from sqlalchemy import engine_from_config, pool
+
 from alembic import context
 
 # Add the project root to the Python path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from isw.core.services.database import Base
 from isw.core.models.company_models import Company  # noqa: F401 - Import to register model
+from isw.core.services.database import Base
 
 # this is the Alembic Config object
 config = context.config
