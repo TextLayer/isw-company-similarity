@@ -4,10 +4,10 @@ A Python backend service for company similarity search and XBRL tag anomaly dete
 
 ## Features
 
-- **Vector Similarity Search**: Find similar companies using 1536-dimensional embeddings
-- **Community-Based Clustering**: Leiden and Louvain community detection
+- **Vector Similarity Search**: Find similar companies using embeddings
+- **Community-Based Clustering**: Leiden community detection
 - **XBRL Anomaly Detection**: Identify missing or extra financial reporting tags
-- **Company Financial Data**: 49M+ financial facts from SEC filings
+- **Company Financial Data**: financial facts from SEC filings
 - **RESTful API**: Clean API with pagination, filtering, and search
 - **PostgreSQL + pgvector**: High-performance vector operations
 
@@ -114,8 +114,8 @@ The application uses PostgreSQL 17 with the pgvector extension for efficient vec
 **Connection**: `postgresql://insight_user:insight_password@localhost:5432/insight_db`
 
 **Tables**:
-- `companies` - 5,973 companies with vector embeddings
-- `company_facts` - 49M+ financial facts from SEC filings
+- `companies`
+- `company_facts`
 
 ### Database CLI Commands
 
@@ -220,17 +220,6 @@ SECRET_KEY=your-secret-key
 # Logging
 DEBUG=true
 ```
-
-## Key Technologies
-
-- **Flask** - Web framework
-- **SQLAlchemy** - ORM
-- **PostgreSQL 17** - Database
-- **pgvector** - Vector similarity search
-- **Marshmallow** - Schema validation
-- **Click** - CLI framework
-- **Alembic** - Database migrations
-- **NumPy** - Statistical computations
 
 ## Data Sources
 
