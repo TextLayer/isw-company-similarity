@@ -1,0 +1,416 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Insight Software Backend API",
+    "version": "1.0.0",
+    "description": "Company similarity search and XBRL tag anomaly detection using vector embeddings"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000/v1",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/company_routes/": {
+      "get": {
+        "summary": "Get Companies",
+        "description": "Get paginated list of companies",
+        "tags": ["Companies"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1
+                  },
+                  "page_size": {
+                    "type": "integer",
+                    "default": 10,
+                    "minimum": 1,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company_routes/{cik}": {
+      "get": {
+        "summary": "Get Company by CIK",
+        "description": "Get detailed information for a specific company",
+        "tags": ["Companies"],
+        "parameters": [
+          {
+            "name": "cik",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Central Index Key (CIK) of the company"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company_routes/{cik}/similar": {
+      "get": {
+        "summary": "Find Similar Companies",
+        "description": "Find companies similar to target using vector embeddings",
+        "tags": ["Companies", "Vector Search"],
+        "parameters": [
+          {
+            "name": "cik",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimilaritySearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarCompaniesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company_routes/{cik}/reports": {
+      "get": {
+        "summary": "Get Company Reports",
+        "description": "Get financial facts/reports for a company",
+        "tags": ["Reports"],
+        "parameters": [
+          {
+            "name": "cik",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyReportsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyReportsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company_routes/{cik}/reports/anomalies": {
+      "get": {
+        "summary": "Detect Report Anomalies",
+        "description": "Detect missing or extra XBRL tags by comparing against similar peers",
+        "tags": ["Reports", "Anomaly Detection"],
+        "parameters": [
+          {
+            "name": "cik",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnomalyDetectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnomalyDetectionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "cik": {"type": "integer"},
+          "company_name": {"type": "string"},
+          "description": {"type": "string"},
+          "total_revenue": {"type": "number"},
+          "sic": {"type": "string"},
+          "market_cap": {"type": "number"},
+          "full_time_employees": {"type": "integer"},
+          "cluster": {"type": "integer"},
+          "leiden_community": {"type": "integer"},
+          "louvain_community": {"type": "integer"}
+        }
+      },
+      "CompanyListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "companies": {
+                "type": "array",
+                "items": {"$ref": "#/components/schemas/Company"}
+              },
+              "total_pages": {"type": "integer"},
+              "total_count": {"type": "integer"},
+              "page": {"type": "integer"},
+              "page_size": {"type": "integer"}
+            }
+          },
+          "status": {"type": "integer"}
+        }
+      },
+      "CompanyResponse": {
+        "type": "object",
+        "properties": {
+          "data": {"$ref": "#/components/schemas/Company"},
+          "status": {"type": "integer"}
+        }
+      },
+      "SimilaritySearchRequest": {
+        "type": "object",
+        "properties": {
+          "similarity_threshold": {
+            "type": "number",
+            "default": 0.7,
+            "minimum": 0,
+            "maximum": 1
+          },
+          "max_results": {
+            "type": "integer",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "filter_community": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "SimilarCompaniesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "company": {"$ref": "#/components/schemas/Company"},
+                "similarity": {"type": "number"}
+              }
+            }
+          },
+          "status": {"type": "integer"}
+        }
+      },
+      "CompanyReportsRequest": {
+        "type": "object",
+        "properties": {
+          "fiscal_year": {"type": "string"},
+          "filing_period": {
+            "type": "string",
+            "enum": ["Q1", "Q2", "Q3", "FY"]
+          },
+          "form_type": {
+            "type": "string",
+            "enum": ["10-K", "10-Q"]
+          }
+        }
+      },
+      "CompanyReportsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "integer"},
+                "cik": {"type": "integer"},
+                "fact": {"type": "string"},
+                "value": {"type": "string"},
+                "fiscal_year": {"type": "string"},
+                "filing_period": {"type": "string"},
+                "form_type": {"type": "string"}
+              }
+            }
+          },
+          "status": {"type": "integer"}
+        }
+      },
+      "AnomalyDetectionRequest": {
+        "type": "object",
+        "required": ["form_type"],
+        "properties": {
+          "form_type": {
+            "type": "string",
+            "enum": ["10-K", "10-Q"]
+          },
+          "fiscal_year": {"type": "string"},
+          "filing_period": {"type": "string"},
+          "n_peers": {
+            "type": "integer",
+            "default": 10
+          },
+          "similarity_threshold": {
+            "type": "number",
+            "default": 0.5
+          },
+          "filter_community": {
+            "type": "boolean",
+            "default": true
+          },
+          "common_threshold": {
+            "type": "number",
+            "default": 0.70,
+            "description": "Tags present in ≥70% of peers are considered 'expected'"
+          },
+          "rare_threshold": {
+            "type": "number",
+            "default": 0.25,
+            "description": "Tags present in ≤25% of peers are considered 'unexpected'"
+          }
+        }
+      },
+      "AnomalyDetectionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "missing_tags": {
+                "type": "array",
+                "description": "Tags common in peers but absent in target",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "tag": {"type": "string"},
+                    "peer_frequency": {"type": "number"},
+                    "peer_count": {"type": "integer"},
+                    "confidence_lower": {"type": "number"},
+                    "severity": {"type": "number"}
+                  }
+                }
+              },
+              "extra_tags": {
+                "type": "array",
+                "description": "Tags rare in peers but present in target",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "tag": {"type": "string"},
+                    "peer_frequency": {"type": "number"},
+                    "peer_count": {"type": "integer"},
+                    "confidence_upper": {"type": "number"},
+                    "severity": {"type": "number"}
+                  }
+                }
+              },
+              "summary": {
+                "type": "object",
+                "properties": {
+                  "target_cik": {"type": "integer"},
+                  "form_type": {"type": "string"},
+                  "n_peers": {"type": "integer"},
+                  "n_missing_tags": {"type": "integer"},
+                  "n_extra_tags": {"type": "integer"},
+                  "peer_companies": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cik": {"type": "integer"},
+                        "company_name": {"type": "string"},
+                        "similarity": {"type": "number"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "status": {"type": "integer"}
+        }
+      }
+    }
+  }
+}
+

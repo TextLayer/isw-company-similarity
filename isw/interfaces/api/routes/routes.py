@@ -3,29 +3,25 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from ....shared.logging.logger import logger
 from ...worker.registry import task_registry
-from ..middleware.auth_middleware import authenticate_request
 from ..middleware.logger_middleware import log_request_info, log_response_info
 from ..utils.messages import Error
 from ..utils.response import Response
-from .auth_routes import auth_routes
-from .thread_routes import thread_routes
+from .company_routes import company_routes
 
 
 def stop(env, resp):
     resp("200 OK", [("Content-Type", "text/plain")])
-    return [b"TextLayer Core API. Basepath /v1/"]
+    return [b"InsightSoftware Anomaly Detection API. Basepath /v1/"]
 
 
 blueprints = {
-    "/auth": auth_routes,
-    "/threads": thread_routes,
+    "/company_routes": company_routes,
 }
 
 
 def init_routes(app):
     app.wsgi_app = DispatcherMiddleware(stop, {"/v1": app.wsgi_app})
 
-    app.before_request(authenticate_request)
     app.before_request(log_request_info)
     app.after_request(log_response_info)
 

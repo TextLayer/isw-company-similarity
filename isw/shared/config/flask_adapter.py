@@ -9,8 +9,8 @@ class FlaskConfigAdapter(BaseConfig):
     """Extends base config with Flask-specific values"""
 
     # Flask-only values
-    flask_secret_key: str
-    flask_config: str
+    flask_secret_key: str = "dev-secret-key-change-in-production"
+    flask_config: str = "DEV"
     preferred_url_scheme: str = "https"
 
     @classmethod

@@ -1,119 +1,244 @@
-# TextLayer Core New
+# Insight Software Backend
 
-A new architectural pattern for Python services with improved modularity and separation of concerns.
+A Python backend service for company similarity search and XBRL tag anomaly detection using vector embeddings and PostgreSQL with pgvector.
 
-## Architecture
+## Features
 
-This project follows a new architectural pattern with the following structure:
+- **Vector Similarity Search**: Find similar companies using 1536-dimensional embeddings
+- **Community-Based Clustering**: Leiden and Louvain community detection
+- **XBRL Anomaly Detection**: Identify missing or extra financial reporting tags
+- **Company Financial Data**: 49M+ financial facts from SEC filings
+- **RESTful API**: Clean API with pagination, filtering, and search
+- **PostgreSQL + pgvector**: High-performance vector operations
 
-- **applications/**: Entry points for different application types (API, CLI, Worker)
-- **interfaces/**: Interface adapters for different protocols and frameworks
-- **core/**: Core business logic, services, and domain models
-- **shared/**: Shared utilities, configuration, and common functionality
-
-## Setup
+## Quick Start
 
 ### Prerequisites
 
-- Python 3.12
-- uv
-- make
+- Python 3.12+
+- Docker Desktop
+- PostgreSQL (via Docker)
 
-### Quick Start
+### Installation
 
-1. **Install dependencies:**
+```bash
+# Install dependencies
+uv sync
 
-   ```bash
-   make install
-   ```
+# Start PostgreSQL with pgvector
+docker-compose up -d
 
-2. **Run the application:**
-   ```bash
-   make run
-   ```
+# Run Alembic migrations
+source .venv/bin/activate
+alembic upgrade head
 
-## Development
+# Load company data
+insight-software-backend-cli database load-companies data/security.csv
 
-### Available Commands
+# Load financial facts (takes ~5 minutes)
+insight-software-backend-cli database load-facts data/companyfacts.csv
 
-- `make help` - Show available commands
-- `make install` - Install production dependencies
-- `make dev` - Install development dependencies
-- `make lint` - Run linting checks
-- `make format` - Format code
-- `make test` - Run tests
-- `make run` - Run Flask application
-- `make clean` - Clean build artifacts
+# Check status
+insight-software-backend-cli database status
+```
 
-### Development Setup
+### Run API Server
 
-1. Install development dependencies:
+```bash
+export FLASK_APP=isw.applications.api:app
+flask run
+```
 
-   ```bash
-   make dev
-   ```
+API will be available at `http://127.0.0.1:5000/v1/`
 
-2. Run tests:
-   ```bash
-   make test
-   ```
+## API Endpoints
 
-## Project Structure
+### 1. Get Companies (Paginated)
+
+```bash
+curl -X GET http://127.0.0.1:5000/v1/company_routes/ \
+  -H "Content-Type: application/json" \
+  -d '{"page": 1, "page_size": 10}'
+```
+
+### 2. Get Company by CIK
+
+```bash
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961
+```
+
+### 3. Find Similar Companies
+
+```bash
+# Within same community
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/similar \
+  -H "Content-Type: application/json" \
+  -d '{"similarity_threshold": 0.5, "max_results": 10, "filter_community": true}'
+
+# Across all communities
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/similar \
+  -H "Content-Type: application/json" \
+  -d '{"filter_community": false}'
+```
+
+### 4. Get Company Reports
+
+```bash
+# All reports
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports \
+  -H "Content-Type: application/json" \
+  -d '{}'
+
+# Filtered by fiscal year and form type
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports \
+  -H "Content-Type: application/json" \
+  -d '{"fiscal_year": "2019", "filing_period": "FY", "form_type": "10-K"}'
+```
+
+### 5. Detect Report Anomalies
+
+```bash
+curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports/anomalies \
+  -H "Content-Type: application/json" \
+  -d '{"form_type": "10-K"}'
+```
+
+Detects missing XBRL tags (common in peers but absent in target) and extra tags (rare in peers but present in target).
+
+## Database
+
+### PostgreSQL with pgvector
+
+The application uses PostgreSQL 17 with the pgvector extension for efficient vector similarity search.
+
+**Connection**: `postgresql://insight_user:insight_password@localhost:5432/insight_db`
+
+**Tables**:
+- `companies` - 5,973 companies with vector embeddings
+- `company_facts` - 49M+ financial facts from SEC filings
+
+### Database CLI Commands
+
+```bash
+# Initialize tables
+insight-software-backend-cli database init
+
+# Load data
+insight-software-backend-cli database load-companies security.csv
+insight-software-backend-cli database load-facts companyfacts.csv
+
+# Check status
+insight-software-backend-cli database status
+```
+
+### Migrations
+
+```bash
+# Create migration
+alembic revision --autogenerate -m "Description"
+
+# Apply migrations
+alembic upgrade head
+
+# Rollback
+alembic downgrade -1
+```
+
+## Architecture
 
 ```
 isw/
 ├── applications/          # Application entry points
-│   ├── api.py           # Flask API application
-│   ├── cli.py           # CLI application
-│   └── worker.py        # Celery worker application
-├── interfaces/           # Interface adapters
-│   ├── api/             # API-specific interfaces
-│   ├── cli/             # CLI-specific interfaces
-│   └── worker/          # Worker-specific interfaces
-├── core/                # Core business logic
-│   ├── commands/        # Command handlers
-│   ├── controllers/     # Controllers
-│   ├── errors/          # Error handling
-│   └── services/        # Business services
-├── shared/              # Shared utilities
-│   ├── config/          # Configuration management
-│   ├── logging/         # Logging setup
-│   └── utils/           # Common utilities
-└── tests/               # Test suite
+│   ├── api.py            # Flask API
+│   ├── cli.py            # CLI interface
+│   └── worker.py         # Celery worker
+├── core/
+│   ├── commands/         # Business logic (command pattern)
+│   │   └── company/
+│   ├── controllers/      # Request handlers
+│   ├── models/           # SQLAlchemy models
+│   ├── schemas/          # Marshmallow validation
+│   └── services/         # Core services
+│       ├── database/     # Database connection & queries
+│       ├── vector_search.py  # pgvector similarity search
+│       └── anomaly_detection/  # XBRL tag anomaly detection
+├── interfaces/
+│   ├── api/              # Flask routes & middleware
+│   └── cli/              # Click CLI commands
+└── shared/
+    ├── config/           # Configuration management
+    └── logging/          # Logging setup
+```
+
+## Development
+
+### Running Tests
+
+```bash
+pytest
+```
+
+### Linting
+
+```bash
+ruff check .
+ruff format .
+```
+
+### Docker Commands
+
+```bash
+# Start database
+docker-compose up -d
+
+# Stop database
+docker-compose down
+
+# Reset database (removes all data)
+docker-compose down -v
+
+# View logs
+docker logs insight-postgres-pgvector
+
+# Connect to database
+docker exec -it insight-postgres-pgvector psql -U insight_user -d insight_db
 ```
 
 ## Configuration
 
-The application uses environment variables. See `isw/shared/config/base.py` for keys.
-
-## Testing
-
-Run tests:
+Environment variables (set in `.env` or export):
 
 ```bash
-make test
+# Database
+DATABASE_URL=postgresql://insight_user:insight_password@localhost:5432/insight_db
+
+# Flask
+FLASK_APP=isw.applications.api:app
+FLASK_CONFIG=DEV
+SECRET_KEY=your-secret-key
+
+# Logging
+DEBUG=true
 ```
 
-## Linting and Formatting
-
-Format code:
-
-```bash
-make format
-```
-
-Check linting:
-
-```bash
-make lint
-```
-
-## Dependencies
-
-This project starts with minimal dependencies and adds more as needed:
+## Key Technologies
 
 - **Flask** - Web framework
-- **Flask-CORS** - CORS support
-- **Pydantic** - Data validation
+- **SQLAlchemy** - ORM
+- **PostgreSQL 17** - Database
+- **pgvector** - Vector similarity search
+- **Marshmallow** - Schema validation
 - **Click** - CLI framework
-- **Python-dotenv** - Environment variable loading
+- **Alembic** - Database migrations
+- **NumPy** - Statistical computations
+
+## Data Sources
+
+Place your data files in the `data/` directory (gitignored):
+
+- **data/security.csv**: Company profiles with vector embeddings (5,973 companies)
+- **data/companyfacts.csv**: Financial facts from SEC filings (92M rows → 49M filtered)
+
+## License
+
+[Your License Here]

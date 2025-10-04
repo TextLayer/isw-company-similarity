@@ -4,11 +4,10 @@ from typing import Optional
 
 from flask import Flask
 
-from isw.core.services.observability import obs
 from isw.interfaces.api.middleware.proxy_fix_middleware import init_proxy_fix
 from isw.interfaces.api.routes import routes
-from isw.interfaces.api.utils.extensions import cors, sentry
-from isw.shared.config import get_config, set_config
+from isw.interfaces.api.utils.extensions import cors
+from isw.shared.config import set_config
 from isw.shared.config.flask_adapter import get_flask_config
 
 
@@ -41,14 +40,6 @@ def create_app(config_name: Optional[str] = None):
     silence_warnings(config)
     init_proxy_fix(app)
 
-    obs.init(
-        exporters=["langfuse", "console"],
-        app_name="textlayer-api",
-        environment=config.env,
-        version="1.0.0",
-    )
-
     cors.init_app(app)
-    sentry.init_app(config)
 
     return app
