@@ -236,9 +236,5 @@ DEBUG=true
 
 Place your data files in the `data/` directory (gitignored):
 
-- **data/security.csv**: Company profiles with vector embeddings (5,973 companies)
-- **data/companyfacts.csv**: Financial facts from SEC filings (92M rows → 49M filtered)
-
-## License
-
-[Your License Here]
+- **data/security.csv**: Company profiles with vector embedding
+- **data/companyfacts.csv**: Financial facts from SEC filings
