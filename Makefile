@@ -1,70 +1,68 @@
-.PHONY: help lint format test clean install dev run setup-venv
+.PHONY: help install dev lint format test clean db-up db-down db-reset run cli
 
-# Display help information by default
 help:
-	@echo "Available commands:"
-	@echo "  make help          - Show this help message"
-	@echo "  make setup-venv    - Create Python 3.12 virtual environment"
-	@echo "  make install       - Install production dependencies"
-	@echo "  make dev           - Install development dependencies"
-	@echo "  make lint          - Run linting checks"
-	@echo "  make format        - Run code formatters"
-	@echo "  make test          - Run unit tests"
-	@echo "  make run           - Run the Flask application with Doppler"
-	@echo "  make clean         - Clean up build artifacts"
+	@echo "Insight Software Backend - Available Commands"
+	@echo ""
+	@echo "Setup:"
+	@echo "  make install       - Install dependencies"
+	@echo "  make dev           - Install dev dependencies"
+	@echo ""
+	@echo "Database:"
+	@echo "  make db-up         - Start PostgreSQL container"
+	@echo "  make db-down       - Stop PostgreSQL container"
+	@echo "  make db-reset      - Reset database (removes all data)"
+	@echo ""
+	@echo "Development:"
+	@echo "  make lint          - Check code with ruff"
+	@echo "  make format        - Format code with ruff"
+	@echo "  make test          - Run tests"
+	@echo "  make run           - Start Flask API server"
+	@echo "  make cli           - Show CLI commands"
+	@echo ""
+	@echo "Cleanup:"
+	@echo "  make clean         - Remove build artifacts"
 
-# Create Python 3.12 virtual environment
-setup-venv:
-	@echo "Creating Python 3.12 virtual environment..."
-	python3.12 -m venv .venv
-	@echo "Virtual environment created. Activate it with:"
-	@echo "  source .venv/bin/activate"
-	@echo "Then run: make install"
+install:
+	uv sync
 
-# Run linting checks with Ruff
+dev:
+	uv sync --dev
+
 lint:
-	@echo "Running Ruff linter..."
 	uv run ruff format --check .
 	uv run ruff check .
 
-# Run code formatting with Ruff
 format:
-	@echo "Running Ruff linter with auto-fix..."
 	uv run ruff format .
 	uv run ruff check --fix .
 
-# Run all tests
 test:
-	@echo "Running tests..."
-	uv run pytest -m "not integration" --ignore=tests/evaluations/ --ignore=tests/integration/ -n auto
+	uv run pytest tests/unit/ -v
+	uv run pytest tests/integration/ -v
 
-# Clean up build artifacts
 clean:
-	@echo "Cleaning build artifacts..."
-	rm -rf .ruff_cache
-	rm -rf .pytest_cache
-	rm -rf .coverage
-	rm -rf htmlcov
-	rm -rf __pycache__
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	rm -rf .ruff_cache .pytest_cache .coverage htmlcov __pycache__
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete
 
-# Install production dependencies
-install:
-	@echo "Installing production dependencies..."
-	uv sync
+db-up:
+	docker-compose up -d
 
-# Install development dependencies
-dev:
-	@echo "Installing development dependencies..."
-	uv sync --dev
+db-down:
+	docker-compose down
 
-# Run the Flask application with Doppler
+db-reset:
+	docker-compose down -v
+	docker-compose up -d
+
 run:
-	@echo "Starting Flask application with Doppler..."
+	@echo "Starting Flask API on http://127.0.0.1:5000/v1/"
 	uv run flask run
 
-run-worker:
-	@echo "Starting worker..."
-	uv run celery -A textlayer.applications.worker.app worker --loglevel=info
+cli:
+	@echo "Database commands:"
+	@echo "  insight-software-backend-cli database init"
+	@echo "  insight-software-backend-cli database load-companies data/security.csv"
+	@echo "  insight-software-backend-cli database load-facts data/companyfacts.csv"
+	@echo "  insight-software-backend-cli database status"
