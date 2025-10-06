@@ -106,4 +106,4 @@ build-backend = "setuptools.build_meta"
 packages = ["isw"]
 
 [project.scripts]
-insight-software-backend-cli = "isw.interfaces.cli:cli"
+insight-software-backend-cli = "isw.applications.cli:cli"

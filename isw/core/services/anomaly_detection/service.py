@@ -11,7 +11,7 @@ from ...models.company_models import CompanyFacts
 class AnomalyDetectionConfig:
     """Configuration for anomaly detection thresholds. Single source of truth for all defaults."""
     common_threshold: float = 0.70      # Tag is "expected" if >= 70% of peers have it
-    rare_threshold: float = 0.3        # Tag is "unexpected" if <= 25% of peers have it
+    rare_threshold: float = 0.3        # Tag is "unexpected" if <= 30% of peers have it
     conf_level: float = 0.85            # 85% confidence interval
     use_confidence_intervals: bool = True  # Use CI lower/upper bounds vs point estimates
     min_peers: int = 5                  # Minimum peers required
