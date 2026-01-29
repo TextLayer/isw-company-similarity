@@ -42,6 +42,10 @@ class BaseConfig:
     # SEC EDGAR
     sec_user_agent: str = "isw-company-similarity/1.0 (spencer@textlayer.ai)"
 
+    # OpenAI
+    openai_api_key: str = ""
+    openai_embedding_model: str = "text-embedding-3-small"
+
     @staticmethod
     def get_env(key: str, default: Any = None, required: bool = False, type: Any = str):
         """Utility method for getting environment variables with type conversion"""
@@ -98,4 +102,7 @@ class BaseConfig:
             database_echo=cls.get_env("DATABASE_ECHO", default=False, type=bool),
             # SEC EDGAR
             sec_user_agent=cls.get_env("SEC_USER_AGENT", default="isw-company-similarity/1.0 (spencer@textlayer.ai)"),
+            # OpenAI
+            openai_api_key=cls.get_env("OPENAI_API_KEY", default=""),
+            openai_embedding_model=cls.get_env("OPENAI_EMBEDDING_MODEL", default="text-embedding-3-small"),
         )
