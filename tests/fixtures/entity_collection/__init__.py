@@ -1,13 +1,9 @@
-"""Fixtures for entity collection tests."""
+"""Fixtures for entity collection tests.
 
-import json
-from pathlib import Path
+This directory contains real data downloaded from:
+- SEC EDGAR bulk submissions API (real_sec_data/)
+- filings.xbrl.org JSON API (real_esef_data/)
 
-FIXTURES_DIR = Path(__file__).parent
-
-
-def load_fixture(name: str) -> dict:
-    """Load a JSON fixture file."""
-    path = FIXTURES_DIR / name
-    with open(path) as f:
-        return json.load(f)
+To refresh fixtures, run from project root:
+    python -c "from tests.fixtures.entity_collection import download_fixtures; download_fixtures()"
+"""

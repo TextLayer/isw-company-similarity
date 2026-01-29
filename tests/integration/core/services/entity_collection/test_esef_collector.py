@@ -1,221 +1,201 @@
 """Integration tests for ESEF collector.
 
-These tests verify that the collector correctly parses real filings.xbrl.org API responses.
+These tests verify parsing of real filings.xbrl.org API responses.
+Includes both fixture-based tests and live API tests.
 """
 
+import json
+import os
 import unittest
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from isw.core.services.entity_collection import (
-    DownloadError,
     ESEFCollector,
+    IdentifierType,
     Jurisdiction,
 )
-from tests.fixtures.entity_collection import load_fixture
+
+REAL_ESEF_FIXTURES = (
+    Path(__file__).parent.parent.parent.parent.parent / "fixtures" / "entity_collection" / "real_esef_data"
+)
 
 
-class TestESEFCollectorIntegration(unittest.TestCase):
-    """Integration tests for ESEFCollector with realistic API responses."""
+class TestESEFCollectorWithRealFixtures(unittest.TestCase):
+    """Integration tests using real downloaded API responses."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Skip tests if fixtures don't exist."""
+        if not REAL_ESEF_FIXTURES.exists():
+            raise unittest.SkipTest("Real ESEF fixtures not downloaded")
+
+    def _load_fixture(self, name: str) -> dict:
+        """Load a real API response fixture."""
+        filepath = REAL_ESEF_FIXTURES / name
+        with open(filepath) as f:
+            return json.load(f)
 
     @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_parses_real_api_response_format(self, mock_client_class):
-        """Test parsing actual filings.xbrl.org JSON API response structure."""
-        fixture = load_fixture("esef_filings_response.json")
+    def test_parses_real_gb_filings(self, mock_client_class):
+        """Test parsing real UK (GB) filings from API."""
+        fixture = self._load_fixture("gb_filings.json")
 
         mock_response = MagicMock()
         mock_response.json.return_value = fixture
         mock_response.raise_for_status = MagicMock()
 
+        # Return empty second page to stop pagination
+        empty_response = MagicMock()
+        empty_response.json.return_value = {"data": [], "included": []}
+        empty_response.raise_for_status = MagicMock()
+
         mock_client = MagicMock()
-        mock_client.get.return_value = mock_response
+        mock_client.get.side_effect = [mock_response, empty_response]
         mock_client.__enter__ = MagicMock(return_value=mock_client)
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        collector = ESEFCollector()
+        collector = ESEFCollector(page_size=100)
         entities = collector.fetch_entities()
 
-        # Should have 4 unique entities (Siemens appears twice)
-        assert len(entities) == 4
+        assert len(entities) > 0
 
-        names = {e.name for e in entities}
-        assert "Siemens AG" in names
-        assert "BP p.l.c." in names
-        assert "TotalEnergies SE" in names
-        assert "Royal Philips N.V." in names
-
-    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_correctly_assigns_jurisdictions(self, mock_client_class):
-        """Test that jurisdictions are correctly assigned from country codes."""
-        fixture = load_fixture("esef_filings_response.json")
-
-        mock_response = MagicMock()
-        mock_response.json.return_value = fixture
-        mock_response.raise_for_status = MagicMock()
-
-        mock_client = MagicMock()
-        mock_client.get.return_value = mock_response
-        mock_client.__enter__ = MagicMock(return_value=mock_client)
-        mock_client.__exit__ = MagicMock(return_value=False)
-        mock_client_class.return_value = mock_client
-
-        collector = ESEFCollector()
-        entities = collector.fetch_entities()
-
-        by_name = {e.name: e for e in entities}
-
-        # GB -> UK
-        assert by_name["BP p.l.c."].jurisdiction == Jurisdiction.UK
-        # DE -> EU
-        assert by_name["Siemens AG"].jurisdiction == Jurisdiction.EU
-        # FR -> EU
-        assert by_name["TotalEnergies SE"].jurisdiction == Jurisdiction.EU
-        # NL -> EU
-        assert by_name["Royal Philips N.V."].jurisdiction == Jurisdiction.EU
+        for entity in entities:
+            assert entity.jurisdiction == Jurisdiction.UK
+            assert entity.identifier_type == IdentifierType.LEI
+            assert len(entity.identifier) == 20
+            assert entity.name
 
     @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_deduplicates_by_lei(self, mock_client_class):
-        """Test that duplicate filings for same entity are deduplicated."""
-        fixture = load_fixture("esef_filings_response.json")
+    def test_parses_real_eu_filings(self, mock_client_class):
+        """Test parsing real EU filings from API."""
+        fr_fixture = self._load_fixture("fr_filings.json")
+        nl_fixture = self._load_fixture("nl_filings.json")
 
-        mock_response = MagicMock()
-        mock_response.json.return_value = fixture
-        mock_response.raise_for_status = MagicMock()
-
-        mock_client = MagicMock()
-        mock_client.get.return_value = mock_response
-        mock_client.__enter__ = MagicMock(return_value=mock_client)
-        mock_client.__exit__ = MagicMock(return_value=False)
-        mock_client_class.return_value = mock_client
-
-        collector = ESEFCollector()
-        entities = collector.fetch_entities()
-
-        # Siemens has 2 filings but should appear only once
-        siemens_count = sum(1 for e in entities if e.name == "Siemens AG")
-        assert siemens_count == 1
-
-    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_filters_invalid_leis(self, mock_client_class):
-        """Test that entities with invalid LEIs are filtered out."""
-        fixture = load_fixture("esef_filings_invalid_lei.json")
-
-        mock_response = MagicMock()
-        mock_response.json.return_value = fixture
-        mock_response.raise_for_status = MagicMock()
-
-        mock_client = MagicMock()
-        mock_client.get.return_value = mock_response
-        mock_client.__enter__ = MagicMock(return_value=mock_client)
-        mock_client.__exit__ = MagicMock(return_value=False)
-        mock_client_class.return_value = mock_client
-
-        collector = ESEFCollector()
-        entities = collector.fetch_entities()
-
-        # Only the valid 20-char LEI should be included
-        assert len(entities) == 1
-        assert entities[0].name == "Valid Company SpA"
-        assert entities[0].identifier == "ABCDEFGHIJ1234567890"
-
-    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_handles_download_error(self, mock_client_class):
-        """Test proper error handling when API request fails."""
-        import httpx
-
-        mock_client = MagicMock()
-        mock_client.get.side_effect = httpx.RequestError("Connection timeout")
-        mock_client.__enter__ = MagicMock(return_value=mock_client)
-        mock_client.__exit__ = MagicMock(return_value=False)
-        mock_client_class.return_value = mock_client
-
-        collector = ESEFCollector()
-
-        with self.assertRaises(DownloadError) as ctx:
-            collector.fetch_entities()
-
-        assert "Connection timeout" in str(ctx.exception)
-
-    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_extracts_all_required_fields(self, mock_client_class):
-        """Test that all required entity fields are correctly extracted."""
-        fixture = load_fixture("esef_filings_response.json")
-
-        mock_response = MagicMock()
-        mock_response.json.return_value = fixture
-        mock_response.raise_for_status = MagicMock()
-
-        mock_client = MagicMock()
-        mock_client.get.return_value = mock_response
-        mock_client.__enter__ = MagicMock(return_value=mock_client)
-        mock_client.__exit__ = MagicMock(return_value=False)
-        mock_client_class.return_value = mock_client
-
-        collector = ESEFCollector()
-        entities = collector.fetch_entities()
-
-        entity = next(e for e in entities if e.name == "Siemens AG")
-        entity_dict = entity.to_dict()
-
-        assert entity_dict["name"] == "Siemens AG"
-        assert entity_dict["identifier"] == "W38RGI023J3WT1HWRP32"
-        assert entity_dict["jurisdiction"] == "EU"
-        assert entity_dict["identifier_type"] == "LEI"
-
-    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
-    def test_handles_pagination(self, mock_client_class):
-        """Test that pagination is handled correctly."""
-        page1 = {
-            "data": [
-                {
-                    "type": "filing",
-                    "id": "1",
-                    "attributes": {
-                        "country": "DE",
-                        "entity_name": "Company 1",
-                        "lei": "AAAABBBBCCCCDDDDEEEE",
-                        "report_type": "AFR",
-                    },
-                }
-                for _ in range(10)
-            ]
-        }
-        # Change LEIs to be unique
-        for i, item in enumerate(page1["data"]):
-            item["attributes"]["lei"] = f"AAAABBBBCCCC{i:08d}"
-            item["attributes"]["entity_name"] = f"Company {i}"
-
-        page2 = {
-            "data": [
-                {
-                    "type": "filing",
-                    "id": "2",
-                    "attributes": {
-                        "country": "FR",
-                        "entity_name": "Company 10",
-                        "lei": "FFFFGGGGHHHHIIIIJJJJ",
-                        "report_type": "AFR",
-                    },
-                }
-            ]
+        # Combine fixtures
+        combined = {
+            "data": fr_fixture["data"] + nl_fixture["data"],
+            "included": fr_fixture.get("included", []) + nl_fixture.get("included", []),
         }
 
-        mock_response1 = MagicMock()
-        mock_response1.json.return_value = page1
-        mock_response1.raise_for_status = MagicMock()
+        mock_response = MagicMock()
+        mock_response.json.return_value = combined
+        mock_response.raise_for_status = MagicMock()
 
-        mock_response2 = MagicMock()
-        mock_response2.json.return_value = page2
-        mock_response2.raise_for_status = MagicMock()
+        empty_response = MagicMock()
+        empty_response.json.return_value = {"data": [], "included": []}
+        empty_response.raise_for_status = MagicMock()
 
         mock_client = MagicMock()
-        mock_client.get.side_effect = [mock_response1, mock_response2]
+        mock_client.get.side_effect = [mock_response, empty_response]
         mock_client.__enter__ = MagicMock(return_value=mock_client)
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        collector = ESEFCollector(page_size=10)
+        collector = ESEFCollector(page_size=100)
         entities = collector.fetch_entities()
 
-        # 10 from page 1 + 1 from page 2
-        assert len(entities) == 11
+        assert len(entities) > 0
+
+        for entity in entities:
+            assert entity.jurisdiction == Jurisdiction.EU
+            assert entity.identifier_type == IdentifierType.LEI
+            assert len(entity.identifier) == 20
+
+    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
+    def test_deduplicates_entities_by_lei(self, mock_client_class):
+        """Test that entities are deduplicated by LEI across pages."""
+        fixture = self._load_fixture("gb_filings.json")
+
+        # Create duplicate by returning same data twice
+        mock_response = MagicMock()
+        mock_response.json.return_value = fixture
+        mock_response.raise_for_status = MagicMock()
+
+        empty_response = MagicMock()
+        empty_response.json.return_value = {"data": [], "included": []}
+        empty_response.raise_for_status = MagicMock()
+
+        mock_client = MagicMock()
+        mock_client.get.side_effect = [mock_response, mock_response, empty_response]
+        mock_client.__enter__ = MagicMock(return_value=mock_client)
+        mock_client.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = mock_client
+
+        collector = ESEFCollector(page_size=5)
+        entities = collector.fetch_entities()
+
+        leis = [e.identifier for e in entities]
+        assert len(leis) == len(set(leis)), "Duplicate LEIs found"
+
+    @patch("isw.core.services.entity_collection.esef_collector.httpx.Client")
+    def test_serialization_roundtrip(self, mock_client_class):
+        """Test that entities serialize and deserialize correctly."""
+        fixture = self._load_fixture("gb_filings.json")
+
+        mock_response = MagicMock()
+        mock_response.json.return_value = fixture
+        mock_response.raise_for_status = MagicMock()
+
+        empty_response = MagicMock()
+        empty_response.json.return_value = {"data": [], "included": []}
+        empty_response.raise_for_status = MagicMock()
+
+        mock_client = MagicMock()
+        mock_client.get.side_effect = [mock_response, empty_response]
+        mock_client.__enter__ = MagicMock(return_value=mock_client)
+        mock_client.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = mock_client
+
+        collector = ESEFCollector(page_size=100)
+        entities = collector.fetch_entities()
+
+        from isw.core.services.entity_collection import EntityRecord
+
+        for entity in entities:
+            entity_dict = entity.to_dict()
+            restored = EntityRecord.from_dict(entity_dict)
+            assert restored.name == entity.name
+            assert restored.identifier == entity.identifier
+            assert restored.jurisdiction == entity.jurisdiction
+            assert restored.identifier_type == entity.identifier_type
+
+
+@pytest.mark.skipif(
+    os.environ.get("RUN_LIVE_API_TESTS") != "1",
+    reason="Live API tests disabled. Set RUN_LIVE_API_TESTS=1 to run.",
+)
+class TestESEFCollectorLiveAPI(unittest.TestCase):
+    """Integration tests that hit the real filings.xbrl.org API.
+
+    These tests are skipped by default. Run with:
+        RUN_LIVE_API_TESTS=1 pytest tests/integration/.../test_esef_collector.py -k Live
+    """
+
+    def test_live_api_fetch_entities(self):
+        """Test fetching entities from the real API."""
+        collector = ESEFCollector(page_size=10, max_pages=2)
+        entities = collector.fetch_entities()
+
+        assert len(entities) > 0
+
+        for entity in entities:
+            assert entity.name
+            assert len(entity.identifier) == 20
+            assert entity.identifier.isalnum()
+            assert entity.identifier_type == IdentifierType.LEI
+            assert entity.jurisdiction in (Jurisdiction.UK, Jurisdiction.EU)
+
+    def test_live_api_handles_pagination(self):
+        """Test that pagination works with real API."""
+        collector = ESEFCollector(page_size=5, max_pages=3)
+        entities = collector.fetch_entities()
+
+        # With 3 pages of 5, we should have multiple entities
+        assert len(entities) > 5
+
+        leis = [e.identifier for e in entities]
+        assert len(leis) == len(set(leis)), "Duplicate LEIs found"

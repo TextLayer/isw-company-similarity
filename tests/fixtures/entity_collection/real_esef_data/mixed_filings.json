@@ -1,0 +1,578 @@
+{
+  "data": [
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/32033791"
+          },
+          "data": {
+            "type": "entity",
+            "id": "5303"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/9986/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": null,
+        "date_added": "2023-11-09 18:26:01.957777",
+        "error_count": 0,
+        "sha256": "efd83933387621614d796dc9d7da2512a87ff6338c94c2105614f3cf1d9c1a9f",
+        "report_url": "/EDRPOU-32033791/2020-12-31/UAIFRS/UA/0/32033791-2020-12-31.html",
+        "period_end": "2020-12-31",
+        "json_url": "/EDRPOU-32033791/2020-12-31/UAIFRS/UA/0/32033791-2020-12-31.json",
+        "warning_count": 0,
+        "country": "UA",
+        "fxo_id": "EDRPOU-32033791-2020-12-31-UAIFRS-UA-0",
+        "processed": "2023-11-14 15:49:47.074643",
+        "inconsistency_count": 0,
+        "viewer_url": "/EDRPOU-32033791/2020-12-31/UAIFRS/UA/0/ixbrlviewer.html"
+      },
+      "id": "9986",
+      "links": {
+        "self": "/api/filings/9986"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/31729918"
+          },
+          "data": {
+            "type": "entity",
+            "id": "5291"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/9963/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": null,
+        "date_added": "2023-11-09 18:25:46.878460",
+        "error_count": 0,
+        "sha256": "56c1dfbfd266c2ca44db2d62d21834c90edd575ba4faf944334664798fa6a1e1",
+        "report_url": "/EDRPOU-31729918/2020-12-31/UAIFRS/UA/0/31729918-2020-12-31.html",
+        "period_end": "2020-12-31",
+        "json_url": "/EDRPOU-31729918/2020-12-31/UAIFRS/UA/0/31729918-2020-12-31.json",
+        "warning_count": 0,
+        "country": "UA",
+        "fxo_id": "EDRPOU-31729918-2020-12-31-UAIFRS-UA-0",
+        "processed": "2023-11-14 15:49:59.157491",
+        "inconsistency_count": 0,
+        "viewer_url": "/EDRPOU-31729918/2020-12-31/UAIFRS/UA/0/ixbrlviewer.html"
+      },
+      "id": "9963",
+      "links": {
+        "self": "/api/filings/9963"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/549300CSLHPO6Y1AZN37"
+          },
+          "data": {
+            "type": "entity",
+            "id": "1"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/2/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/549300CSLHPO6Y1AZN37/2021-12-31/ESEF/SE/1/549300CSLHPO6Y1AZN37-2021-12-31.zip",
+        "date_added": "2022-03-22 00:00:00",
+        "error_count": 1,
+        "sha256": "fa9ed0bc7a9e61b4cdb2e9592a23a3b4decf6d5638db4407f3c6bb704080c38e",
+        "report_url": null,
+        "period_end": "2021-12-31",
+        "json_url": null,
+        "warning_count": 0,
+        "country": "SE",
+        "fxo_id": "549300CSLHPO6Y1AZN37-2021-12-31-ESEF-SE-1",
+        "processed": "2023-01-18 11:02:06.724768",
+        "inconsistency_count": 0,
+        "viewer_url": null
+      },
+      "id": "2",
+      "links": {
+        "self": "/api/filings/2"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400OOMJ31L0SWCY70"
+          },
+          "data": {
+            "type": "entity",
+            "id": "390"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5738/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400OOMJ31L0SWCY70/2022-12-31/ESEF/PL/0/259400OOMJ31L0SWCY70-31-12-2022-PL.zip",
+        "date_added": "2023-05-09 10:51:45.266800",
+        "error_count": 0,
+        "sha256": "c6bd20a9aa5d520303e625185e8e69a30bed10e758661b73476e6058b23dbca2",
+        "report_url": "/259400OOMJ31L0SWCY70/2022-12-31/ESEF/PL/0/259400OOMJ31L0SWCY70-31-12-2022-PL/reports/259400OOMJ31L0SWCY70-2022-12-31.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400OOMJ31L0SWCY70/2022-12-31/ESEF/PL/0/259400OOMJ31L0SWCY70-2022-12-31.json",
+        "warning_count": 1,
+        "country": "PL",
+        "fxo_id": "259400OOMJ31L0SWCY70-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 10:56:56.463392",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400OOMJ31L0SWCY70/2022-12-31/ESEF/PL/0/259400OOMJ31L0SWCY70-31-12-2022-PL/reports/ixbrlviewer.html"
+      },
+      "id": "5738",
+      "links": {
+        "self": "/api/filings/5738"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400NFU8A8SBP6VC21"
+          },
+          "data": {
+            "type": "entity",
+            "id": "1162"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5740/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400NFU8A8SBP6VC21/2022-12-31/ESEF/PL/0/izs_2022-12-31_pl.zip",
+        "date_added": "2023-05-09 10:51:50.382633",
+        "error_count": 0,
+        "sha256": "07b8ad3797278529b661bba88463715b93cc341096ef8e0889388c00b3d14a94",
+        "report_url": "/259400NFU8A8SBP6VC21/2022-12-31/ESEF/PL/0/izs_2022-12-31_pl/reports/izs_2022-12-31_pl.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400NFU8A8SBP6VC21/2022-12-31/ESEF/PL/0/izs_2022-12-31_pl.json",
+        "warning_count": 1,
+        "country": "PL",
+        "fxo_id": "259400NFU8A8SBP6VC21-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 10:58:05.652400",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400NFU8A8SBP6VC21/2022-12-31/ESEF/PL/0/izs_2022-12-31_pl/reports/ixbrlviewer.html"
+      },
+      "id": "5740",
+      "links": {
+        "self": "/api/filings/5740"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400G1XM5GQU4K4G26"
+          },
+          "data": {
+            "type": "entity",
+            "id": "211"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5741/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400G1XM5GQU4K4G26/2022-12-31/ESEF/PL/0/mlsystem_2022-12-31_pl.zip",
+        "date_added": "2023-05-09 10:51:51.571357",
+        "error_count": 0,
+        "sha256": "b659283de1ca9928d36ac44e2fdaa445befa33450efafc27fcbbc4e947a27a5f",
+        "report_url": "/259400G1XM5GQU4K4G26/2022-12-31/ESEF/PL/0/mlsystem_2022-12-31_pl/reports/mlsystem_2022-12-31_pl.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400G1XM5GQU4K4G26/2022-12-31/ESEF/PL/0/mlsystem_2022-12-31_pl.json",
+        "warning_count": 0,
+        "country": "PL",
+        "fxo_id": "259400G1XM5GQU4K4G26-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 10:58:29.366849",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400G1XM5GQU4K4G26/2022-12-31/ESEF/PL/0/mlsystem_2022-12-31_pl/reports/ixbrlviewer.html"
+      },
+      "id": "5741",
+      "links": {
+        "self": "/api/filings/5741"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400QHG4C6452WLF35"
+          },
+          "data": {
+            "type": "entity",
+            "id": "1273"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5742/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400QHG4C6452WLF35/2022-12-31/ESEF/PL/0/ipe_2022-12-31_pl.zip",
+        "date_added": "2023-05-09 10:51:52.744252",
+        "error_count": 0,
+        "sha256": "47a43ef4bda9728fb3a211a3d510e1b933e2a1c60b113c86392243803c070080",
+        "report_url": "/259400QHG4C6452WLF35/2022-12-31/ESEF/PL/0/ipe_2022-12-31_pl/reports/ipe_2022-12-31_pl.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400QHG4C6452WLF35/2022-12-31/ESEF/PL/0/ipe_2022-12-31_pl.json",
+        "warning_count": 2,
+        "country": "PL",
+        "fxo_id": "259400QHG4C6452WLF35-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 10:58:57.316550",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400QHG4C6452WLF35/2022-12-31/ESEF/PL/0/ipe_2022-12-31_pl/reports/ixbrlviewer.html"
+      },
+      "id": "5742",
+      "links": {
+        "self": "/api/filings/5742"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400W3UZE94C6A7O67"
+          },
+          "data": {
+            "type": "entity",
+            "id": "2828"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5744/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400W3UZE94C6A7O67/2022-12-31/ESEF/PL/0/Solar_2022-12-31_pl.zip",
+        "date_added": "2023-05-09 10:51:54.980277",
+        "error_count": 0,
+        "sha256": "1d992c07ea8a398ffd6fc0a8ef5612c40d5614e33c7fab5a94c9ccea494f82bb",
+        "report_url": "/259400W3UZE94C6A7O67/2022-12-31/ESEF/PL/0/Solar_2022-12-31_pl/reports/Solar_2022-12-31_pl.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400W3UZE94C6A7O67/2022-12-31/ESEF/PL/0/Solar_2022-12-31_pl.json",
+        "warning_count": 1,
+        "country": "PL",
+        "fxo_id": "259400W3UZE94C6A7O67-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 10:59:57.057149",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400W3UZE94C6A7O67/2022-12-31/ESEF/PL/0/Solar_2022-12-31_pl/reports/ixbrlviewer.html"
+      },
+      "id": "5744",
+      "links": {
+        "self": "/api/filings/5744"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400ULGKWTD96ABA70"
+          },
+          "data": {
+            "type": "entity",
+            "id": "2863"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5746/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400ULGKWTD96ABA70/2031-03-01/ESEF/PL/0/elzabsa-2022-12-31-pl.zip",
+        "date_added": "2023-05-09 10:51:57.708901",
+        "error_count": 0,
+        "sha256": "02839c18381784cb380e6ad8bafa74803be9766241b6f9672e3421726ddfb39d",
+        "report_url": "/259400ULGKWTD96ABA70/2031-03-01/ESEF/PL/0/elzabsa-2022-12-31-pl/reports/elzabsa-2022-12-31-pl.xhtml",
+        "period_end": "2031-03-01",
+        "json_url": "/259400ULGKWTD96ABA70/2031-03-01/ESEF/PL/0/elzabsa-2022-12-31-pl.json",
+        "warning_count": 0,
+        "country": "PL",
+        "fxo_id": "259400ULGKWTD96ABA70-2031-03-01-ESEF-PL-0",
+        "processed": "2023-05-09 11:00:48.114056",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400ULGKWTD96ABA70/2031-03-01/ESEF/PL/0/elzabsa-2022-12-31-pl/reports/ixbrlviewer.html"
+      },
+      "id": "5746",
+      "links": {
+        "self": "/api/filings/5746"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/259400JK2AT927YR9N41"
+          },
+          "data": {
+            "type": "entity",
+            "id": "134"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5747/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/259400JK2AT927YR9N41/2022-12-31/ESEF/PL/0/GK_VRG_31-12-2022-PL.zip",
+        "date_added": "2023-05-09 10:51:59.065588",
+        "error_count": 0,
+        "sha256": "92e6af5dc400cb4ed7793ab4199a920f859205d66335e0643deb3bf86bdfc4de",
+        "report_url": "/259400JK2AT927YR9N41/2022-12-31/ESEF/PL/0/GK_VRG_31-12-2022-PL/reports/259400JK2AT927YR9N41-2022-12-31.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/259400JK2AT927YR9N41/2022-12-31/ESEF/PL/0/259400JK2AT927YR9N41-2022-12-31.json",
+        "warning_count": 3,
+        "country": "PL",
+        "fxo_id": "259400JK2AT927YR9N41-2022-12-31-ESEF-PL-0",
+        "processed": "2023-05-09 11:01:34.464648",
+        "inconsistency_count": 0,
+        "viewer_url": "/259400JK2AT927YR9N41/2022-12-31/ESEF/PL/0/GK_VRG_31-12-2022-PL/reports/ixbrlviewer.html"
+      },
+      "id": "5747",
+      "links": {
+        "self": "/api/filings/5747"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=10&include=entity",
+    "first": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=10&include=entity",
+    "last": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=10&include=entity&page%5Bnumber%5D=2339",
+    "next": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=10&include=entity&page%5Bnumber%5D=2"
+  },
+  "included": [
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "32033791",
+        "name": "\u0422\u043e\u0432\u0430\u0440\u0438\u0441\u0442\u0432\u043e \u0437 \u043e\u0431\u043c\u0435\u0436\u0435\u043d\u043e\u044e \u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044e \"\u041a\u043e\u043c\u043f\u0430\u043d\u0456\u044f \u0437 \u0443\u043f\u0440\u0430\u0432\u043b\u0456\u043d\u043d\u044f \u0430\u043a\u0442\u0438\u0432\u0430\u043c\u0438 \"\u0414\u043e\u0431\u0440\u043e\u0431\u0443\u0434 - \u0406\u043d\u0432\u0435\u0441\u0442\""
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/32033791/filings"
+          }
+        }
+      },
+      "id": "5303",
+      "links": {
+        "self": "/api/entities/32033791"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "31729918",
+        "name": "\u0410\u043a\u0446\u0456\u043e\u043d\u0435\u0440\u043d\u0435 \u0442\u043e\u0432\u0430\u0440\u0438\u0441\u0442\u0432\u043e \"\u041a\u043e\u043d\u0446\u0435\u0440\u043d \u0413\u0430\u043b\u043d\u0430\u0444\u0442\u043e\u0433\u0430\u0437\""
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/31729918/filings"
+          }
+        }
+      },
+      "id": "5291",
+      "links": {
+        "self": "/api/entities/31729918"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "549300CSLHPO6Y1AZN37",
+        "name": "Cloetta AB"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/549300CSLHPO6Y1AZN37/filings"
+          }
+        }
+      },
+      "id": "1",
+      "links": {
+        "self": "/api/entities/549300CSLHPO6Y1AZN37"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400OOMJ31L0SWCY70",
+        "name": "Instal Krak\u00f3w S.A."
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400OOMJ31L0SWCY70/filings"
+          }
+        }
+      },
+      "id": "390",
+      "links": {
+        "self": "/api/entities/259400OOMJ31L0SWCY70"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400NFU8A8SBP6VC21",
+        "name": "IZOSTAL Sp\u00f3\u0142ka Akcyjna"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400NFU8A8SBP6VC21/filings"
+          }
+        }
+      },
+      "id": "1162",
+      "links": {
+        "self": "/api/entities/259400NFU8A8SBP6VC21"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400G1XM5GQU4K4G26",
+        "name": "ML System Sp\u00f3\u0142ka Akcyjna"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400G1XM5GQU4K4G26/filings"
+          }
+        }
+      },
+      "id": "211",
+      "links": {
+        "self": "/api/entities/259400G1XM5GQU4K4G26"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400QHG4C6452WLF35",
+        "name": "IPOPEMA Securities S.A."
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400QHG4C6452WLF35/filings"
+          }
+        }
+      },
+      "id": "1273",
+      "links": {
+        "self": "/api/entities/259400QHG4C6452WLF35"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400W3UZE94C6A7O67",
+        "name": "Solar Company Sp\u00f3\u0142ka Akcyjna"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400W3UZE94C6A7O67/filings"
+          }
+        }
+      },
+      "id": "2828",
+      "links": {
+        "self": "/api/entities/259400W3UZE94C6A7O67"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400ULGKWTD96ABA70",
+        "name": "ZAK\u0141ADY URZ\u0104DZE\u0143 KOMPUTEROWYCH ELZAB S.A."
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400ULGKWTD96ABA70/filings"
+          }
+        }
+      },
+      "id": "2863",
+      "links": {
+        "self": "/api/entities/259400ULGKWTD96ABA70"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "259400JK2AT927YR9N41",
+        "name": "VRG SP\u00d3\u0141KA AKCYJNA"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/259400JK2AT927YR9N41/filings"
+          }
+        }
+      },
+      "id": "134",
+      "links": {
+        "self": "/api/entities/259400JK2AT927YR9N41"
+      }
+    }
+  ],
+  "meta": {
+    "count": 23382
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

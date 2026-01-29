@@ -1,7 +1,7 @@
 """Unit tests for ESEF collector internal logic.
 
 These tests focus on complex internal logic like LEI validation and jurisdiction mapping.
-Integration tests cover data parsing from realistic fixtures.
+Integration tests cover data parsing from real API responses.
 """
 
 import unittest
@@ -63,3 +63,27 @@ class TestESEFCollectorLogic(unittest.TestCase):
         """Test source name is correct."""
         collector = ESEFCollector()
         assert collector.get_source_name() == "filings.xbrl.org"
+
+    def test_build_entity_map(self):
+        """Test building entity map from included resources."""
+        collector = ESEFCollector()
+
+        included = [
+            {
+                "type": "entity",
+                "id": "123",
+                "attributes": {"identifier": "ABCD1234567890123456", "name": "Test Co"},
+            },
+            {
+                "type": "entity",
+                "id": "456",
+                "attributes": {"identifier": "EFGH0987654321098765", "name": "Other Co"},
+            },
+            {"type": "filing", "id": "789"},  # Should be ignored
+        ]
+
+        entity_map = collector._build_entity_map(included)
+
+        assert len(entity_map) == 2
+        assert entity_map["123"]["identifier"] == "ABCD1234567890123456"
+        assert entity_map["456"]["name"] == "Other Co"
