@@ -3,9 +3,10 @@
 import io
 import json
 import zipfile
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import httpx
+from dateutil.relativedelta import relativedelta
 
 from isw.shared.config import config
 from isw.shared.logging.logger import logger
@@ -19,19 +20,26 @@ from .base import (
     ParseError,
 )
 
+BULK_SUBMISSIONS_URL = "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip"
+
 
 class SECEdgarCollector(EntityCollector):
     """
     Collector for SEC EDGAR bulk submissions data.
 
     Downloads the SEC bulk submissions.zip file and extracts companies
-    that have filed 10-K (annual reports) within the past 3 years.
+    that have filed 10-K (annual reports) within the specified lookback period.
 
     The bulk file contains JSON submissions for all SEC filers, organized
     by CIK (Central Index Key).
-    """
 
-    BULK_SUBMISSIONS_URL = "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip"
+    Note: The bulk file is ~1GB. This implementation loads it into memory.
+    Ensure sufficient RAM is available (recommend 2GB+ free).
+
+    Exception handling: Individual malformed submission files are skipped
+    with a warning (the bulk archive may contain corrupt entries), but
+    network/download errors are propagated.
+    """
 
     def __init__(
         self,
@@ -51,10 +59,9 @@ class SECEdgarCollector(EntityCollector):
         self.user_agent = user_agent or config().sec_user_agent
         self.years_lookback = years_lookback
         self.timeout = timeout
-        self._cutoff_date = datetime.now() - timedelta(days=365 * years_lookback)
+        self._cutoff_date = datetime.now() - relativedelta(years=years_lookback)
 
     def get_source_name(self) -> str:
-        """Return the name of this data source."""
         return "SEC EDGAR"
 
     def fetch_entities(self) -> list[EntityRecord]:
@@ -82,21 +89,12 @@ class SECEdgarCollector(EntityCollector):
         return entities
 
     def _download_bulk_file(self) -> bytes:
-        """
-        Download the SEC bulk submissions zip file.
-
-        Returns:
-            Raw bytes of the zip file.
-
-        Raises:
-            DownloadError: If the download fails.
-        """
-        logger.info(f"Downloading SEC bulk submissions from {self.BULK_SUBMISSIONS_URL}")
+        logger.info(f"Downloading SEC bulk submissions from {BULK_SUBMISSIONS_URL}")
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
                 response = client.get(
-                    self.BULK_SUBMISSIONS_URL,
+                    BULK_SUBMISSIONS_URL,
                     headers={"User-Agent": self.user_agent},
                     follow_redirects=True,
                 )
@@ -109,22 +107,6 @@ class SECEdgarCollector(EntityCollector):
             raise DownloadError(f"Failed to download SEC bulk file: {e}") from e
 
     def _parse_bulk_submissions(self, zip_data: bytes) -> list[EntityRecord]:
-        """
-        Parse the bulk submissions zip file and extract entities.
-
-        The zip file contains:
-        - submissions.json: Index of all filers
-        - CIK*.json: Individual company submission files
-
-        Args:
-            zip_data: Raw bytes of the zip file.
-
-        Returns:
-            List of EntityRecord objects.
-
-        Raises:
-            ParseError: If parsing fails.
-        """
         entities = []
 
         try:
@@ -152,16 +134,6 @@ class SECEdgarCollector(EntityCollector):
         return entities
 
     def _parse_submission_file(self, zf: zipfile.ZipFile, filename: str) -> EntityRecord | None:
-        """
-        Parse an individual company submission file.
-
-        Args:
-            zf: Open ZipFile object.
-            filename: Name of the JSON file to parse.
-
-        Returns:
-            EntityRecord if the company has recent 10-K filings, None otherwise.
-        """
         with zf.open(filename) as f:
             data = json.load(f)
 
@@ -184,15 +156,6 @@ class SECEdgarCollector(EntityCollector):
         )
 
     def _has_recent_10k(self, submission_data: dict) -> bool:
-        """
-        Check if a company has filed a 10-K within the lookback period.
-
-        Args:
-            submission_data: Parsed JSON submission data.
-
-        Returns:
-            True if company has recent 10-K filing.
-        """
         filings = submission_data.get("filings", {})
         recent = filings.get("recent", {})
 

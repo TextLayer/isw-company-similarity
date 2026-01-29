@@ -12,6 +12,8 @@ from .base import (
     Jurisdiction,
 )
 
+API_URL = "https://filings.xbrl.org/api/filings"
+
 
 class ESEFCollector(EntityCollector):
     """
@@ -25,37 +27,22 @@ class ESEFCollector(EntityCollector):
     companies' annual reports.
     """
 
-    API_URL = "https://filings.xbrl.org/api/filings"
-
     def __init__(
         self,
         page_size: int = 100,
         timeout: float = 60.0,
         max_pages: int = 1000,
     ):
-        """
-        Initialize the ESEF collector.
-
-        Args:
-            page_size: Number of results per API page.
-            timeout: HTTP request timeout in seconds.
-            max_pages: Maximum number of pages to fetch (safety limit).
-        """
         self.page_size = page_size
         self.timeout = timeout
         self.max_pages = max_pages
 
     def get_source_name(self) -> str:
-        """Return the name of this data source."""
         return "filings.xbrl.org"
 
     def fetch_entities(self) -> list[EntityRecord]:
         """
         Fetch all EU/UK public companies from filings.xbrl.org.
-
-        Queries the JSON API with pagination, includes entity data,
-        extracts unique entities by LEI, and assigns jurisdiction
-        based on filing country code.
 
         Returns:
             List of EntityRecord objects for EU/UK companies.
@@ -71,18 +58,6 @@ class ESEFCollector(EntityCollector):
         return entities
 
     def _fetch_all_entities(self) -> list[EntityRecord]:
-        """
-        Fetch all entities from the API with pagination.
-
-        The filings.xbrl.org JSON API uses page[number] pagination.
-        Entity data is included via the include=entity parameter.
-
-        Returns:
-            List of unique EntityRecord objects.
-
-        Raises:
-            DownloadError: If API requests fail.
-        """
         seen_leis: set[str] = set()
         entities: list[EntityRecord] = []
         page = 1
@@ -112,19 +87,6 @@ class ESEFCollector(EntityCollector):
         return entities
 
     def _fetch_page(self, client: httpx.Client, page_number: int) -> tuple[list[EntityRecord], bool]:
-        """
-        Fetch a single page of filings with entity data from the API.
-
-        Args:
-            client: HTTP client instance.
-            page_number: Page number (1-indexed).
-
-        Returns:
-            Tuple of (entities from this page, whether more pages exist).
-
-        Raises:
-            DownloadError: If the request fails.
-        """
         params = {
             "page[size]": self.page_size,
             "page[number]": page_number,
@@ -132,17 +94,18 @@ class ESEFCollector(EntityCollector):
         }
 
         try:
-            response = client.get(self.API_URL, params=params)
+            response = client.get(API_URL, params=params)
             response.raise_for_status()
             data = response.json()
 
             filings = data.get("data", [])
             included = data.get("included", [])
+            links = data.get("links", {})
 
             entity_map = self._build_entity_map(included)
             entities = self._extract_entities_from_filings(filings, entity_map)
 
-            has_more = len(filings) >= self.page_size
+            has_more = links.get("next") is not None or len(filings) >= self.page_size
             return entities, has_more
 
         except httpx.HTTPStatusError as e:
@@ -151,15 +114,6 @@ class ESEFCollector(EntityCollector):
             raise DownloadError(f"Failed to fetch from filings.xbrl.org: {e}") from e
 
     def _build_entity_map(self, included: list[dict]) -> dict[str, dict]:
-        """
-        Build a map of entity ID to entity data from included resources.
-
-        Args:
-            included: List of included resources from JSON API response.
-
-        Returns:
-            Dict mapping entity ID to entity attributes.
-        """
         entity_map = {}
         for item in included:
             if item.get("type") == "entity":
@@ -169,16 +123,6 @@ class ESEFCollector(EntityCollector):
         return entity_map
 
     def _extract_entities_from_filings(self, filings: list[dict], entity_map: dict[str, dict]) -> list[EntityRecord]:
-        """
-        Extract EntityRecords from filings using entity relationship.
-
-        Args:
-            filings: List of filing records from JSON API.
-            entity_map: Map of entity ID to entity attributes.
-
-        Returns:
-            List of EntityRecord objects.
-        """
         entities = []
 
         for filing in filings:
@@ -193,16 +137,6 @@ class ESEFCollector(EntityCollector):
         return entities
 
     def _parse_filing_with_entity(self, filing: dict, entity_map: dict[str, dict]) -> EntityRecord | None:
-        """
-        Parse a filing and its related entity into an EntityRecord.
-
-        Args:
-            filing: Filing record from JSON API.
-            entity_map: Map of entity ID to entity attributes.
-
-        Returns:
-            EntityRecord if valid, None otherwise.
-        """
         filing_attrs = filing.get("attributes", {})
         country = filing_attrs.get("country", "")
 
@@ -232,30 +166,11 @@ class ESEFCollector(EntityCollector):
         )
 
     def _is_valid_lei(self, lei: str) -> bool:
-        """
-        Validate LEI format (20 alphanumeric characters).
-
-        Args:
-            lei: LEI string to validate.
-
-        Returns:
-            True if valid LEI format.
-        """
         if not lei or len(lei) != 20:
             return False
         return lei.isalnum()
 
     def _get_jurisdiction(self, country_code: str) -> Jurisdiction:
-        """
-        Map country code to jurisdiction.
-
-        Args:
-            country_code: ISO country code (e.g., "GB", "DE", "FR").
-
-        Returns:
-            Jurisdiction enum value.
-        """
         if country_code.upper() in ("GB", "UK"):
             return Jurisdiction.UK
-
         return Jurisdiction.EU

@@ -69,7 +69,15 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    """Revert to CIK-only schema."""
+    """Revert to CIK-only schema.
+
+    WARNING: This downgrade DELETES all EU/UK entities (non-CIK records)
+    since they cannot be represented in the old schema. This is intentional
+    as there is no way to store LEI identifiers in an Integer column.
+
+    If EU/UK entities have relationships (embeddings, clusters, etc.),
+    those will be orphaned. Consider backing up data before downgrading.
+    """
     # Add back cik column
     op.add_column(
         "companies",
@@ -86,6 +94,7 @@ def downgrade() -> None:
     )
 
     # Delete non-CIK records (they can't be represented in old schema)
+    # This is intentional - LEI identifiers cannot fit in an Integer column
     op.execute(
         """
         DELETE FROM companies

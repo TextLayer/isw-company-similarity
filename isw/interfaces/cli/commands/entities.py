@@ -34,12 +34,6 @@ def entities():
     help="Data source to collect from (default: all).",
 )
 @click.option(
-    "--sec-user-agent",
-    type=str,
-    default="ISW-Company-Similarity/1.0 (contact@example.com)",
-    help="User-Agent for SEC requests (required by SEC).",
-)
-@click.option(
     "--dry-run",
     is_flag=True,
     help="Show what would be collected without actually fetching.",
@@ -47,7 +41,6 @@ def entities():
 def collect(
     output: str | None,
     source: str,
-    sec_user_agent: str,
     dry_run: bool,
 ):
     """
@@ -55,6 +48,9 @@ def collect(
 
     Fetches company information (name, identifier, jurisdiction) from
     SEC EDGAR (US) and filings.xbrl.org (EU/UK), outputting to JSON.
+
+    The SEC User-Agent is configured via SEC_USER_AGENT environment
+    variable or defaults to the value in config.
 
     Examples:
 
@@ -77,35 +73,30 @@ def collect(
 
     all_entities: list[EntityRecord] = []
 
-    # Collect from SEC EDGAR
     if source in ("all", "sec"):
         click.echo("Collecting from SEC EDGAR...")
         try:
-            sec_collector = SECEdgarCollector(user_agent=sec_user_agent)
+            sec_collector = SECEdgarCollector()
             sec_entities = sec_collector.fetch_entities()
             all_entities.extend(sec_entities)
-            click.echo(f"  ✓ Collected {len(sec_entities):,} US entities")
+            click.echo(f"  Collected {len(sec_entities):,} US entities")
         except Exception as e:
             logger.error(f"SEC EDGAR collection failed: {e}")
-            click.echo(f"  ✗ SEC EDGAR collection failed: {e}", err=True)
-            if source == "sec":
-                raise click.Abort() from None
+            click.echo(f"  SEC EDGAR collection failed: {e}", err=True)
+            raise click.Abort() from None
 
-    # Collect from filings.xbrl.org
     if source in ("all", "esef"):
         click.echo("Collecting from filings.xbrl.org...")
         try:
             esef_collector = ESEFCollector()
             esef_entities = esef_collector.fetch_entities()
             all_entities.extend(esef_entities)
-            click.echo(f"  ✓ Collected {len(esef_entities):,} EU/UK entities")
+            click.echo(f"  Collected {len(esef_entities):,} EU/UK entities")
         except Exception as e:
             logger.error(f"ESEF collection failed: {e}")
-            click.echo(f"  ✗ ESEF collection failed: {e}", err=True)
-            if source == "esef":
-                raise click.Abort() from None
+            click.echo(f"  ESEF collection failed: {e}", err=True)
+            raise click.Abort() from None
 
-    # Deduplicate by identifier
     seen_identifiers: set[str] = set()
     unique_entities: list[EntityRecord] = []
     duplicates = 0
@@ -121,17 +112,14 @@ def collect(
     if duplicates > 0:
         click.echo(f"  (removed {duplicates:,} duplicates)")
 
-    # Output results
     if output:
         _write_json_output(unique_entities, output)
-        click.echo(f"\n✓ Saved to {output}")
+        click.echo(f"\nSaved to {output}")
     else:
-        # Print summary to stdout if no output file
         _print_summary(unique_entities)
 
 
 def _write_json_output(entities: list[EntityRecord], output_path: str) -> None:
-    """Write entities to a JSON file."""
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -142,7 +130,6 @@ def _write_json_output(entities: list[EntityRecord], output_path: str) -> None:
 
 
 def _print_summary(entities: list[EntityRecord]) -> None:
-    """Print a summary of collected entities."""
     by_jurisdiction: dict[str, int] = {}
     by_type: dict[str, int] = {}
 
