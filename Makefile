@@ -1,7 +1,7 @@
 .PHONY: help install dev lint format test clean db-up db-down db-reset run cli
 
 help:
-	@echo "Insight Software Backend - Available Commands"
+	@echo "ISW Company Similarity - Available Commands"
 	@echo ""
 	@echo "Setup:"
 	@echo "  make install       - Install dependencies"

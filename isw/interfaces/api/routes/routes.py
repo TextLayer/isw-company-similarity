@@ -11,7 +11,7 @@ from .company_routes import company_routes
 
 def stop(env, resp):
     resp("200 OK", [("Content-Type", "text/plain")])
-    return [b"InsightSoftware Anomaly Detection API. Basepath /v1/"]
+    return [b"ISW Company Similarity API. Basepath /v1/"]
 
 
 blueprints = {

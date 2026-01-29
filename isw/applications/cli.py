@@ -7,7 +7,7 @@ from isw.shared.config.cli_adapter import get_cli_config
 
 @click.group()
 def cli():
-    """Insight Software Backend CLI"""
+    """ISW Company Similarity CLI"""
     pass
 
 set_config(get_cli_config())
