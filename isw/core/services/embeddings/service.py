@@ -1,8 +1,6 @@
-import logging
-
 from openai import OpenAI
 
-logger = logging.getLogger(__name__)
+from isw.shared.logging.logger import logger
 
 
 class EmbeddingServiceError(Exception):
