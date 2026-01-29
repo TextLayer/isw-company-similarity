@@ -262,18 +262,21 @@ def enrich(
         raw_entities = json.load(f)
 
     entities = [EntityRecord.from_dict(e) for e in raw_entities]
-    total_entities = len(entities)
-    click.echo(f"Loaded {total_entities:,} entities")
+    total_loaded = len(entities)
+    click.echo(f"Loaded {total_loaded:,} entities")
 
-    # Apply limit if specified
-    if limit is not None:
-        entities = entities[:limit]
-        click.echo(f"Processing first {len(entities):,} entities (--limit)")
-
-    # Apply resume offset
+    # Apply resume offset first
     if resume_from > 0:
         entities = entities[resume_from:]
         click.echo(f"Resuming from index {resume_from} ({len(entities):,} remaining)")
+
+    # Apply limit after resume
+    if limit is not None:
+        entities = entities[:limit]
+        click.echo(f"Processing {len(entities):,} entities (--limit)")
+
+    # Track the count of entities we're actually processing
+    processing_count = len(entities)
 
     # Initialize services
     click.echo("\nInitializing services...")
@@ -309,8 +312,7 @@ def enrich(
     click.echo("-" * 60)
 
     for i, entity in enumerate(entities):
-        actual_index = resume_from + i
-        progress = f"[{actual_index + 1}/{total_entities}]"
+        progress = f"[{i + 1}/{processing_count}]"
 
         try:
             # Fetch business description

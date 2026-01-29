@@ -76,6 +76,36 @@ class TestEnrichCommand(unittest.TestCase):
         assert "Missing option" in result.output
 
 
+class TestEnrichOptions(unittest.TestCase):
+    """Test enrich command options."""
+
+    def test_limit_option_documented(self):
+        """Verify --limit option exists and is documented."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--limit" in result.output
+        assert "Limit the number of entities to process" in result.output
+
+    def test_resume_from_option_documented(self):
+        """Verify --resume-from option exists and is documented."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--resume-from" in result.output
+        assert "Resume processing from this entity index" in result.output
+
+    def test_delay_option_documented(self):
+        """Verify --delay option exists and is documented."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--delay" in result.output
+
+    def test_skip_embeddings_option_documented(self):
+        """Verify --skip-embeddings option exists and is documented."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--skip-embeddings" in result.output
+
+
 class TestCollectCommand(unittest.TestCase):
     def test_collect_command_exists(self):
         """Verify the collect command is registered."""
