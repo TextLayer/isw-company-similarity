@@ -1,14 +1,7 @@
-"""Integration tests for SEC EDGAR collector.
-
-These tests verify parsing of real SEC submission data.
-Fixtures are downloaded from the actual SEC EDGAR API.
-"""
-
 import io
 import json
 import unittest
 import zipfile
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from isw.core.services.entity_collection import (
@@ -16,19 +9,18 @@ from isw.core.services.entity_collection import (
     Jurisdiction,
     SECEdgarCollector,
 )
+from tests.conftest import get_fixture_path
 
-REAL_SEC_FIXTURES = (
-    Path(__file__).parent.parent.parent.parent.parent / "fixtures" / "entity_collection" / "real_sec_data"
-)
+SEC_FIXTURES = get_fixture_path("entity_collection", "sec_data")
 
 
-def create_zip_from_real_fixtures(*filenames: str) -> bytes:
-    """Create a mock submissions.zip from real downloaded fixtures."""
+def create_zip_from_fixtures(*filenames: str) -> bytes:
+    """Create a mock submissions.zip from downloaded fixtures."""
     buffer = io.BytesIO()
 
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         for name in filenames:
-            filepath = REAL_SEC_FIXTURES / name
+            filepath = SEC_FIXTURES / name
             if filepath.exists():
                 with open(filepath) as f:
                     data = json.load(f)
@@ -40,19 +32,17 @@ def create_zip_from_real_fixtures(*filenames: str) -> bytes:
     return buffer.getvalue()
 
 
-class TestSECEdgarCollectorWithRealData(unittest.TestCase):
-    """Integration tests using real SEC submission data."""
+class TestSECEdgarCollector(unittest.TestCase):
+    """Integration tests using SEC submission data."""
 
     @classmethod
     def setUpClass(cls):
-        """Skip tests if fixtures don't exist."""
-        if not REAL_SEC_FIXTURES.exists():
-            raise unittest.SkipTest("Real SEC fixtures not downloaded")
+        if not SEC_FIXTURES.exists():
+            raise unittest.SkipTest("SEC fixtures not downloaded")
 
     @patch("isw.core.services.entity_collection.edgar_collector.httpx.Client")
-    def test_parses_real_apple_submission(self, mock_client_class):
-        """Test parsing real Apple Inc. SEC submission."""
-        mock_zip = create_zip_from_real_fixtures("apple_submission.json")
+    def test_parses_apple_submission(self, mock_client_class):
+        mock_zip = create_zip_from_fixtures("apple_submission.json")
 
         mock_response = MagicMock()
         mock_response.content = mock_zip
@@ -76,9 +66,8 @@ class TestSECEdgarCollectorWithRealData(unittest.TestCase):
         assert entity.identifier_type == IdentifierType.CIK
 
     @patch("isw.core.services.entity_collection.edgar_collector.httpx.Client")
-    def test_parses_multiple_real_companies(self, mock_client_class):
-        """Test parsing multiple real SEC submissions."""
-        mock_zip = create_zip_from_real_fixtures(
+    def test_parses_multiple_companies(self, mock_client_class):
+        mock_zip = create_zip_from_fixtures(
             "apple_submission.json",
             "microsoft_submission.json",
             "tesla_submission.json",
@@ -111,8 +100,7 @@ class TestSECEdgarCollectorWithRealData(unittest.TestCase):
 
     @patch("isw.core.services.entity_collection.edgar_collector.httpx.Client")
     def test_cik_is_zero_padded(self, mock_client_class):
-        """Test that CIK identifiers are correctly zero-padded to 10 digits."""
-        mock_zip = create_zip_from_real_fixtures("apple_submission.json")
+        mock_zip = create_zip_from_fixtures("apple_submission.json")
 
         mock_response = MagicMock()
         mock_response.content = mock_zip
@@ -134,8 +122,7 @@ class TestSECEdgarCollectorWithRealData(unittest.TestCase):
 
     @patch("isw.core.services.entity_collection.edgar_collector.httpx.Client")
     def test_serialization_roundtrip(self, mock_client_class):
-        """Test that entities serialize and deserialize correctly."""
-        mock_zip = create_zip_from_real_fixtures("apple_submission.json")
+        mock_zip = create_zip_from_fixtures("apple_submission.json")
 
         mock_response = MagicMock()
         mock_response.content = mock_zip

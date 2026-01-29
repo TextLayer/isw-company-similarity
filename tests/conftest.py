@@ -1,11 +1,25 @@
 import os
 import sys
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
 
 # Add the parent directory to Python path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+# Fixture paths - use these instead of .parent.parent.parent chains
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
+
+
+def get_fixture_path(*parts: str) -> Path:
+    """Get a path to a fixture file or directory.
+
+    Usage:
+        get_fixture_path("data_sources", "sec_data", "apple_10k_2025.htm")
+        get_fixture_path("entity_collection", "esef_data")
+    """
+    return FIXTURES_DIR.joinpath(*parts)
 
 
 ## Removed recruitment fixtures and helpers
