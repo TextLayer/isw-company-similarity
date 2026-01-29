@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 import httpx
 
+from isw.shared.config import config
 from isw.shared.logging.logger import logger
 
 from .base import (
@@ -17,15 +18,6 @@ from .base import (
     Jurisdiction,
     ParseError,
 )
-
-# SEC EDGAR bulk submissions file URL
-SEC_BULK_SUBMISSIONS_URL = "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip"
-
-# SEC requires a User-Agent header with contact information
-DEFAULT_USER_AGENT = "ISW-Company-Similarity/1.0 (contact@example.com)"
-
-# Number of years to look back for 10-K filings
-YEARS_LOOKBACK = 3
 
 
 class SECEdgarCollector(EntityCollector):
@@ -39,10 +31,12 @@ class SECEdgarCollector(EntityCollector):
     by CIK (Central Index Key).
     """
 
+    BULK_SUBMISSIONS_URL = "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip"
+
     def __init__(
         self,
-        user_agent: str = DEFAULT_USER_AGENT,
-        years_lookback: int = YEARS_LOOKBACK,
+        user_agent: str | None = None,
+        years_lookback: int = 3,
         timeout: float = 300.0,
     ):
         """
@@ -50,10 +44,11 @@ class SECEdgarCollector(EntityCollector):
 
         Args:
             user_agent: User-Agent header for SEC requests (required by SEC).
+                       Defaults to config value if not provided.
             years_lookback: Number of years to look back for 10-K filings.
             timeout: HTTP request timeout in seconds.
         """
-        self.user_agent = user_agent
+        self.user_agent = user_agent or config().sec_user_agent
         self.years_lookback = years_lookback
         self.timeout = timeout
         self._cutoff_date = datetime.now() - timedelta(days=365 * years_lookback)
@@ -80,7 +75,6 @@ class SECEdgarCollector(EntityCollector):
         logger.info(f"Fetching entities from {self.get_source_name()}")
         logger.info(f"Looking for 10-K filings since {self._cutoff_date.date()}")
 
-        # Download and extract bulk submissions
         zip_data = self._download_bulk_file()
         entities = self._parse_bulk_submissions(zip_data)
 
@@ -97,12 +91,12 @@ class SECEdgarCollector(EntityCollector):
         Raises:
             DownloadError: If the download fails.
         """
-        logger.info(f"Downloading SEC bulk submissions from {SEC_BULK_SUBMISSIONS_URL}")
+        logger.info(f"Downloading SEC bulk submissions from {self.BULK_SUBMISSIONS_URL}")
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
                 response = client.get(
-                    SEC_BULK_SUBMISSIONS_URL,
+                    self.BULK_SUBMISSIONS_URL,
                     headers={"User-Agent": self.user_agent},
                     follow_redirects=True,
                 )
@@ -135,12 +129,10 @@ class SECEdgarCollector(EntityCollector):
 
         try:
             with zipfile.ZipFile(io.BytesIO(zip_data)) as zf:
-                # Get list of all JSON files in the archive
                 json_files = [f for f in zf.namelist() if f.endswith(".json")]
                 logger.info(f"Found {len(json_files)} JSON files in archive")
 
                 for filename in json_files:
-                    # Skip the index file - we process individual CIK files
                     if filename == "submissions.json":
                         continue
 
@@ -173,17 +165,14 @@ class SECEdgarCollector(EntityCollector):
         with zf.open(filename) as f:
             data = json.load(f)
 
-        # Extract CIK (pad to 10 digits as SEC standard)
         cik = str(data.get("cik", "")).zfill(10)
         if not cik or cik == "0000000000":
             return None
 
-        # Extract company name
         name = data.get("name", "").strip()
         if not name:
             return None
 
-        # Check for recent 10-K filings
         if not self._has_recent_10k(data):
             return None
 
@@ -211,7 +200,6 @@ class SECEdgarCollector(EntityCollector):
         filing_dates = recent.get("filingDate", [])
 
         for form, date_str in zip(forms, filing_dates, strict=False):
-            # Check for 10-K and 10-K/A (amended)
             if form in ("10-K", "10-K/A"):
                 try:
                     filing_date = datetime.strptime(date_str, "%Y-%m-%d")

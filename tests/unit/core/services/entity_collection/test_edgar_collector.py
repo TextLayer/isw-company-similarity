@@ -53,7 +53,7 @@ class TestSECEdgarCollector(unittest.TestCase):
 
     def test_get_source_name(self):
         """Test source name is correct."""
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
         assert collector.get_source_name() == "SEC EDGAR"
 
     @patch("isw.core.services.entity_collection.edgar_collector.httpx.Client")
@@ -78,11 +78,9 @@ class TestSECEdgarCollector(unittest.TestCase):
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        # Collect entities
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
         entities = collector.fetch_entities()
 
-        # Should only get companies with 10-K
         assert len(entities) == 2
         names = {e.name for e in entities}
         assert "Apple Inc." in names
@@ -107,10 +105,9 @@ class TestSECEdgarCollector(unittest.TestCase):
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        collector = SECEdgarCollector(years_lookback=3)
+        collector = SECEdgarCollector(user_agent="test/1.0", years_lookback=3)
         entities = collector.fetch_entities()
 
-        # Only recent filer should be included
         assert len(entities) == 1
         assert entities[0].name == "Recent Filer"
 
@@ -132,7 +129,7 @@ class TestSECEdgarCollector(unittest.TestCase):
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
         entities = collector.fetch_entities()
 
         assert len(entities) == 1
@@ -154,14 +151,14 @@ class TestSECEdgarCollector(unittest.TestCase):
         mock_client.__exit__ = MagicMock(return_value=False)
         mock_client_class.return_value = mock_client
 
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
 
         with self.assertRaises(DownloadError):
             collector.fetch_entities()
 
     def test_has_recent_10k_with_amendment(self):
         """Test that 10-K/A (amended) filings are counted."""
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
 
         submission = {
             "filings": {
@@ -176,7 +173,7 @@ class TestSECEdgarCollector(unittest.TestCase):
 
     def test_has_recent_10k_empty_filings(self):
         """Test handling of empty filings."""
-        collector = SECEdgarCollector()
+        collector = SECEdgarCollector(user_agent="test/1.0")
 
         submission = {"filings": {"recent": {"form": [], "filingDate": []}}}
 

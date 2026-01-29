@@ -12,15 +12,6 @@ from .base import (
     Jurisdiction,
 )
 
-# filings.xbrl.org API endpoint
-FILINGS_XBRL_API_URL = "https://filings.xbrl.org/api/filings"
-
-# Default page size for API requests
-DEFAULT_PAGE_SIZE = 100
-
-# Maximum pages to fetch (safety limit)
-MAX_PAGES = 1000
-
 
 class ESEFCollector(EntityCollector):
     """
@@ -33,11 +24,13 @@ class ESEFCollector(EntityCollector):
     companies' annual reports.
     """
 
+    API_URL = "https://filings.xbrl.org/api/filings"
+
     def __init__(
         self,
-        page_size: int = DEFAULT_PAGE_SIZE,
+        page_size: int = 100,
         timeout: float = 60.0,
-        max_pages: int = MAX_PAGES,
+        max_pages: int = 1000,
     ):
         """
         Initialize the ESEF collector.
@@ -72,10 +65,7 @@ class ESEFCollector(EntityCollector):
         """
         logger.info(f"Fetching entities from {self.get_source_name()}")
 
-        # Collect all filings with pagination
         all_filings = self._fetch_all_filings()
-
-        # Extract unique entities by LEI
         entities = self._extract_unique_entities(all_filings)
 
         logger.info(f"Collected {len(entities)} unique entities from {self.get_source_name()}")
@@ -107,14 +97,12 @@ class ESEFCollector(EntityCollector):
                     raise
 
                 if not filings:
-                    # No more results
                     logger.info(f"Completed fetching after {page} pages")
                     break
 
                 all_filings.extend(filings)
                 offset += len(filings)
 
-                # If we got fewer results than page_size, we're done
                 if len(filings) < self.page_size:
                     break
 
@@ -138,16 +126,14 @@ class ESEFCollector(EntityCollector):
         params = {
             "limit": self.page_size,
             "offset": offset,
-            # Filter for ESEF filings (annual reports)
-            "report_type": "AFR",  # Annual Financial Report
+            "report_type": "AFR",
         }
 
         try:
-            response = client.get(FILINGS_XBRL_API_URL, params=params)
+            response = client.get(self.API_URL, params=params)
             response.raise_for_status()
             data = response.json()
 
-            # API returns {"data": [...], "meta": {...}}
             if isinstance(data, dict):
                 return data.get("data", [])
             elif isinstance(data, list):
@@ -195,17 +181,14 @@ class ESEFCollector(EntityCollector):
         Returns:
             EntityRecord if valid, None otherwise.
         """
-        # Extract LEI (Legal Entity Identifier)
         lei = filing.get("lei") or filing.get("entity_lei")
         if not lei or not self._is_valid_lei(lei):
             return None
 
-        # Extract entity name
         name = filing.get("entity_name") or filing.get("name", "").strip()
         if not name:
             return None
 
-        # Determine jurisdiction from country code
         country = filing.get("country") or filing.get("entity_country", "")
         jurisdiction = self._get_jurisdiction(country)
 
@@ -240,9 +223,7 @@ class ESEFCollector(EntityCollector):
         Returns:
             Jurisdiction enum value.
         """
-        # UK has its own jurisdiction
         if country_code.upper() in ("GB", "UK"):
             return Jurisdiction.UK
 
-        # All other countries are EU
         return Jurisdiction.EU
