@@ -1,5 +1,3 @@
-"""Unit tests for BaseDataSource and related data classes."""
-
 import unittest
 
 from isw.core.services.data_sources.base import (
@@ -96,7 +94,7 @@ class TestBusinessDescription(unittest.TestCase):
         desc = BusinessDescription(
             text="Siemens AG is a global technology company...",
             source_filing_type="AFR",
-            source_accession=None,  # ESEF has no accession
+            source_accession=None,
             extraction_method="xbrl_extract",
         )
 

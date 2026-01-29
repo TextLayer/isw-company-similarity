@@ -1,18 +1,11 @@
-"""Integration tests verifying Filing dataclass against real API data.
-
-These tests parse actual SEC EDGAR and ESEF API responses to ensure
-the Filing dataclass can represent real-world data structures.
-"""
-
 import json
 import unittest
-from pathlib import Path
 
 from isw.core.services.data_sources.base import Filing
+from tests.conftest import get_fixture_path
 
-FIXTURES_DIR = Path(__file__).parent.parent.parent.parent.parent / "fixtures"
-SEC_FIXTURES = FIXTURES_DIR / "entity_collection" / "real_sec_data"
-ESEF_FIXTURES = FIXTURES_DIR / "entity_collection" / "real_esef_data"
+SEC_FIXTURES = get_fixture_path("entity_collection", "sec_data")
+ESEF_FIXTURES = get_fixture_path("entity_collection", "esef_data")
 
 
 def parse_sec_filing(submission: dict, filing_index: int = 0) -> Filing:
@@ -73,7 +66,7 @@ def parse_esef_filing(filing_data: dict, entity_data: dict | None = None) -> Fil
 
 
 class TestFilingFromSECData(unittest.TestCase):
-    """Test Filing dataclass against real SEC EDGAR data."""
+    """Test Filing dataclass against SEC EDGAR data."""
 
     @classmethod
     def setUpClass(cls):
@@ -93,9 +86,9 @@ class TestFilingFromSECData(unittest.TestCase):
 
         assert filing.identifier == "0000320193"
         assert filing.filing_type == "10-K"
-        assert filing.period_end  # Has a date
-        assert filing.filed_at  # Has filing date
-        assert filing.accession_number  # Has accession
+        assert filing.period_end
+        assert filing.filed_at
+        assert filing.accession_number
         assert "sec.gov" in filing.document_url
 
     def test_parses_microsoft_10k_filing(self):
@@ -129,7 +122,7 @@ class TestFilingFromSECData(unittest.TestCase):
 
 
 class TestFilingFromESEFData(unittest.TestCase):
-    """Test Filing dataclass against real ESEF API data."""
+    """Test Filing dataclass against ESEF API data."""
 
     @classmethod
     def setUpClass(cls):
@@ -149,11 +142,11 @@ class TestFilingFromESEFData(unittest.TestCase):
 
         filing = parse_esef_filing(filing_data, entity_data)
 
-        assert len(filing.identifier) == 20  # LEI is 20 chars
+        assert len(filing.identifier) == 20
         assert filing.filing_type == "AFR"
-        assert filing.period_end  # Has period end
-        assert filing.filed_at is None  # ESEF doesn't have filing date
-        assert filing.accession_number is None  # No accession in ESEF
+        assert filing.period_end
+        assert filing.filed_at is None
+        assert filing.accession_number is None
         assert "filings.xbrl.org" in filing.document_url
 
     def test_parses_french_filing(self):

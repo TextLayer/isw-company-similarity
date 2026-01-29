@@ -1,31 +1,10 @@
-"""Shared parsing utilities for extracting data from SEC filing documents.
-
-This module provides reusable functions for parsing 10-K HTML filings.
-Used by both SECEdgarDataSource (fetches directly from SEC) and
-AzureBlobDataSource (fetches cached filings from Azure Blob Storage).
-"""
-
 import re
 
 from bs4 import BeautifulSoup
 
 
-def extract_item1_business(html_content: str) -> str | None:
-    """
-    Extract Item 1. Business text from a 10-K HTML filing.
-
-    Parses the HTML, finds the "Item 1. Business" section, and extracts
-    text up to "Item 1A. Risk Factors". Handles both table of contents
-    and actual content sections by detecting which is which.
-
-    Args:
-        html_content: Raw HTML content of a 10-K filing.
-
-    Returns:
-        Cleaned text of the Item 1. Business section, or None if:
-        - The Item 1 section cannot be found
-        - The extracted content is too short (<500 chars)
-    """
+def parse_10k_business_section(html_content: str) -> str | None:
+    """Extract Item 1. Business text from a 10-K HTML filing."""
     soup = BeautifulSoup(html_content, "lxml")
 
     # Remove script and style elements that shouldn't be parsed

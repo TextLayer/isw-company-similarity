@@ -1,4 +1,4 @@
-"""SEC EDGAR data source for fetching US company filings and business descriptions."""
+import logging
 
 import httpx
 
@@ -10,33 +10,27 @@ from isw.core.services.data_sources.base import (
     RateLimitError,
     RevenueData,
 )
-from isw.core.services.data_sources.parsers import extract_item1_business
+from isw.core.services.data_sources.parsers import parse_10k_business_section
 
-SEC_BASE_URL = "https://www.sec.gov"
-SEC_ARCHIVES_URL = f"{SEC_BASE_URL}/Archives/edgar/data"
-SEC_SUBMISSIONS_URL = "https://data.sec.gov/submissions"
-SEC_COMPANY_FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts"
-
-# Revenue tags to search for in company facts (in order of preference)
-# RevenueFromContractWithCustomerExcludingAssessedTax is the modern tag (ASC 606)
-# Revenues is an older tag that may have outdated data
-REVENUE_TAGS = [
-    "RevenueFromContractWithCustomerExcludingAssessedTax",
-    "Revenues",
-    "SalesRevenueNet",
-    "TotalRevenuesAndOtherIncome",
-]
+logger = logging.getLogger(__name__)
 
 
 class SECEdgarDataSource(BaseDataSource):
-    """
-    Data source for SEC EDGAR filings.
+    """Data source for SEC EDGAR filings."""
 
-    Fetches US company filings and extracts business descriptions from
-    10-K annual reports by parsing HTML and extracting Item 1. Business.
+    BASE_URL = "https://www.sec.gov"
+    ARCHIVES_URL = f"{BASE_URL}/Archives/edgar/data"
+    SUBMISSIONS_URL = "https://data.sec.gov/submissions"
+    COMPANY_FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts"
 
-    Revenue data is extracted from the SEC XBRL company facts API.
-    """
+    # Revenue tags to search for in company facts (in order of preference)
+    # RevenueFromContractWithCustomerExcludingAssessedTax is the modern tag (ASC 606)
+    REVENUE_TAGS = [
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "Revenues",
+        "SalesRevenueNet",
+        "TotalRevenuesAndOtherIncome",
+    ]
 
     def __init__(self, user_agent: str, timeout: float = 30.0):
         """
@@ -86,7 +80,7 @@ class SECEdgarDataSource(BaseDataSource):
         if not html_content:
             return None
 
-        text = extract_item1_business(html_content)
+        text = parse_10k_business_section(html_content)
         if not text:
             return None
 
@@ -100,7 +94,7 @@ class SECEdgarDataSource(BaseDataSource):
     def get_revenue(self, identifier: str) -> RevenueData | None:
         """Get the most recent annual revenue from SEC company facts API."""
         cik = self._normalize_cik(identifier)
-        facts_url = f"{SEC_COMPANY_FACTS_URL}/CIK{cik}.json"
+        facts_url = f"{self.COMPANY_FACTS_URL}/CIK{cik}.json"
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
@@ -122,12 +116,10 @@ class SECEdgarDataSource(BaseDataSource):
         except httpx.RequestError as e:
             raise DataSourceError(f"Request failed: {e}") from e
 
-    def list_filings(
-        self, identifier: str, filing_type: str | None = None, limit: int = 10
-    ) -> list[Filing]:
+    def list_filings(self, identifier: str, filing_type: str | None = None, limit: int = 10) -> list[Filing]:
         """List available filings for an entity by CIK."""
         cik = self._normalize_cik(identifier)
-        submissions_url = f"{SEC_SUBMISSIONS_URL}/CIK{cik}.json"
+        submissions_url = f"{self.SUBMISSIONS_URL}/CIK{cik}.json"
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
@@ -153,9 +145,7 @@ class SECEdgarDataSource(BaseDataSource):
         """Normalize CIK to 10-digit zero-padded format."""
         return cik.zfill(10)
 
-    def _parse_filings(
-        self, data: dict, cik: str, filing_type: str | None, limit: int
-    ) -> list[Filing]:
+    def _parse_filings(self, data: dict, cik: str, filing_type: str | None, limit: int) -> list[Filing]:
         """Parse filings from SEC submissions API response."""
         recent = data.get("filings", {}).get("recent", {})
         if not recent:
@@ -184,7 +174,7 @@ class SECEdgarDataSource(BaseDataSource):
             if primary_doc:
                 # Use CIK without leading zeros for URL
                 cik_for_url = cik.lstrip("0") or "0"
-                document_url = f"{SEC_ARCHIVES_URL}/{cik_for_url}/{accession_no_dashes}/{primary_doc}"
+                document_url = f"{self.ARCHIVES_URL}/{cik_for_url}/{accession_no_dashes}/{primary_doc}"
 
             filing = Filing(
                 identifier=cik,
@@ -214,11 +204,16 @@ class SECEdgarDataSource(BaseDataSource):
                     headers={"User-Agent": self.user_agent},
                 )
                 if response.status_code == 404:
+                    logger.debug("Filing not found: %s", url)
                     return None
                 response.raise_for_status()
                 return response.text
 
-        except httpx.HTTPError:
+        except httpx.HTTPStatusError as e:
+            logger.warning("HTTP error fetching filing %s: %s", url, e.response.status_code)
+            return None
+        except httpx.RequestError as e:
+            logger.warning("Request error fetching filing %s: %s", url, e)
             return None
 
     def _extract_revenue_from_facts(self, facts_data: dict) -> RevenueData | None:
@@ -228,7 +223,7 @@ class SECEdgarDataSource(BaseDataSource):
             return None
 
         # Try each revenue tag in order of preference
-        for tag in REVENUE_TAGS:
+        for tag in self.REVENUE_TAGS:
             if tag in us_gaap:
                 revenue_data = us_gaap[tag]
                 units = revenue_data.get("units", {})
@@ -239,11 +234,7 @@ class SECEdgarDataSource(BaseDataSource):
                     continue
 
                 # Find most recent 10-K value (annual, not quarterly)
-                annual_values = [
-                    v
-                    for v in usd_values
-                    if v.get("form") == "10-K" and v.get("val") is not None
-                ]
+                annual_values = [v for v in usd_values if v.get("form") == "10-K" and v.get("val") is not None]
 
                 if not annual_values:
                     continue

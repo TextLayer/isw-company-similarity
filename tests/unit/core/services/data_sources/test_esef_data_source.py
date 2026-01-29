@@ -1,12 +1,6 @@
-"""Unit tests for FilingsXBRLDataSource internal methods."""
-
 import unittest
 
-from isw.core.services.data_sources.esef_data_source import (
-    BUSINESS_DESCRIPTION_TAG,
-    REVENUE_TAG,
-    FilingsXBRLDataSource,
-)
+from isw.core.services.data_sources.esef_data_source import FilingsXBRLDataSource
 
 
 class TestSupportsIdentifier(unittest.TestCase):
@@ -41,12 +35,12 @@ class TestExtractFactByConcept(unittest.TestCase):
             "facts": {
                 "fact-1": {
                     "value": "Company provides digital services.",
-                    "dimensions": {"concept": BUSINESS_DESCRIPTION_TAG},
+                    "dimensions": {"concept": self.source.BUSINESS_DESCRIPTION_TAG},
                 }
             }
         }
 
-        result = self.source._extract_fact_by_concept(xbrl_data, BUSINESS_DESCRIPTION_TAG)
+        result = self.source._extract_fact_by_concept(xbrl_data, self.source.BUSINESS_DESCRIPTION_TAG)
         assert result == "Company provides digital services."
 
     def test_returns_none_when_concept_not_found(self):
@@ -59,12 +53,12 @@ class TestExtractFactByConcept(unittest.TestCase):
             }
         }
 
-        result = self.source._extract_fact_by_concept(xbrl_data, BUSINESS_DESCRIPTION_TAG)
+        result = self.source._extract_fact_by_concept(xbrl_data, self.source.BUSINESS_DESCRIPTION_TAG)
         assert result is None
 
     def test_returns_none_for_empty_facts(self):
         xbrl_data = {"facts": {}}
-        result = self.source._extract_fact_by_concept(xbrl_data, BUSINESS_DESCRIPTION_TAG)
+        result = self.source._extract_fact_by_concept(xbrl_data, self.source.BUSINESS_DESCRIPTION_TAG)
         assert result is None
 
 
@@ -77,7 +71,7 @@ class TestFindMostRecentRevenueFact(unittest.TestCase):
             "fact-10": {
                 "value": "100000000",
                 "dimensions": {
-                    "concept": REVENUE_TAG,
+                    "concept": self.source.REVENUE_TAG,
                     "period": "2020-04-01T00:00:00/2021-04-01T00:00:00",
                     "unit": "iso4217:GBP",
                 },
@@ -85,7 +79,7 @@ class TestFindMostRecentRevenueFact(unittest.TestCase):
             "fact-11": {
                 "value": "150000000",
                 "dimensions": {
-                    "concept": REVENUE_TAG,
+                    "concept": self.source.REVENUE_TAG,
                     "period": "2021-04-01T00:00:00/2022-04-01T00:00:00",
                     "unit": "iso4217:GBP",
                 },
@@ -111,8 +105,8 @@ class TestFindMostRecentRevenueFact(unittest.TestCase):
             "fact-10": {
                 "value": "100000000",
                 "dimensions": {
-                    "concept": REVENUE_TAG,
-                    "period": "2022-04-01T00:00:00",  # Point in time, no slash
+                    "concept": self.source.REVENUE_TAG,
+                    "period": "2022-04-01T00:00:00",
                 },
             }
         }
@@ -129,7 +123,7 @@ class TestParseRevenueFact(unittest.TestCase):
         fact = {
             "value": "302632000",
             "dimensions": {
-                "concept": REVENUE_TAG,
+                "concept": self.source.REVENUE_TAG,
                 "unit": "iso4217:GBP",
             },
         }
@@ -139,13 +133,13 @@ class TestParseRevenueFact(unittest.TestCase):
         assert result.amount == 302632000
         assert result.currency == "GBP"
         assert result.period_end == "2022-03-31"
-        assert result.source_tag == REVENUE_TAG
+        assert result.source_tag == self.source.REVENUE_TAG
 
     def test_parses_float_revenue_value(self):
         fact = {
             "value": "367246000.0",
             "dimensions": {
-                "concept": REVENUE_TAG,
+                "concept": self.source.REVENUE_TAG,
                 "unit": "iso4217:GBP",
             },
         }

@@ -1,5 +1,3 @@
-"""Data source services for fetching filing data from various sources."""
-
 from .base import (
     BaseDataSource,
     BusinessDescription,
@@ -11,7 +9,7 @@ from .base import (
 )
 from .edgar_data_source import SECEdgarDataSource
 from .esef_data_source import FilingsXBRLDataSource
-from .parsers import clean_extracted_text, extract_item1_business
+from .parsers import clean_extracted_text, parse_10k_business_section
 
 __all__ = [
     "BaseDataSource",
@@ -25,5 +23,5 @@ __all__ = [
     "SECEdgarDataSource",
     # Shared parsing utilities
     "clean_extracted_text",
-    "extract_item1_business",
+    "parse_10k_business_section",
 ]

@@ -1,5 +1,3 @@
-"""ESEF data source for fetching EU/UK company filings from filings.xbrl.org."""
-
 import httpx
 
 from isw.core.services.data_sources.base import (
@@ -11,24 +9,16 @@ from isw.core.services.data_sources.base import (
     RevenueData,
 )
 
-API_BASE_URL = "https://filings.xbrl.org"
-API_FILINGS_URL = f"{API_BASE_URL}/api/filings"
-
-# IFRS XBRL tags for extracting data
-BUSINESS_DESCRIPTION_TAG = "ifrs-full:DescriptionOfNatureOfEntitysOperationsAndPrincipalActivities"
-REVENUE_TAG = "ifrs-full:Revenue"
-
 
 class FilingsXBRLDataSource(BaseDataSource):
-    """
-    Data source for ESEF filings via filings.xbrl.org.
+    """Data source for ESEF filings via filings.xbrl.org."""
 
-    Fetches EU/UK company filings and extracts business descriptions
-    and financial data from XBRL-tagged annual reports.
+    BASE_URL = "https://filings.xbrl.org"
+    FILINGS_URL = f"{BASE_URL}/api/filings"
 
-    The business description is extracted from the IFRS tag:
-    ifrs-full:DescriptionOfNatureOfEntitysOperationsAndPrincipalActivities
-    """
+    # IFRS XBRL tags for extracting data
+    BUSINESS_DESCRIPTION_TAG = "ifrs-full:DescriptionOfNatureOfEntitysOperationsAndPrincipalActivities"
+    REVENUE_TAG = "ifrs-full:Revenue"
 
     def __init__(self, timeout: float = 30.0):
         self.timeout = timeout
@@ -66,7 +56,7 @@ class FilingsXBRLDataSource(BaseDataSource):
         if not xbrl_data:
             return None
 
-        text = self._extract_fact_by_concept(xbrl_data, BUSINESS_DESCRIPTION_TAG)
+        text = self._extract_fact_by_concept(xbrl_data, self.BUSINESS_DESCRIPTION_TAG)
         if not text:
             return None
 
@@ -103,7 +93,7 @@ class FilingsXBRLDataSource(BaseDataSource):
                     "page[size]": limit,
                     "sort": "-period_end",
                 }
-                response = client.get(API_FILINGS_URL, params=params)
+                response = client.get(self.FILINGS_URL, params=params)
                 response.raise_for_status()
                 data = response.json()
 
@@ -133,7 +123,7 @@ class FilingsXBRLDataSource(BaseDataSource):
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
-                full_url = f"{API_BASE_URL}{json_url}"
+                full_url = f"{self.BASE_URL}{json_url}"
                 response = client.get(full_url)
                 response.raise_for_status()
                 return response.json()
@@ -173,7 +163,7 @@ class FilingsXBRLDataSource(BaseDataSource):
         revenue_facts = []
         for fact in facts.values():
             dimensions = fact.get("dimensions", {})
-            if dimensions.get("concept") == REVENUE_TAG:
+            if dimensions.get("concept") == self.REVENUE_TAG:
                 period = dimensions.get("period", "")
                 if "/" in period:
                     revenue_facts.append((period, fact))
@@ -203,7 +193,7 @@ class FilingsXBRLDataSource(BaseDataSource):
             amount=amount,
             currency=currency,
             period_end=period_end,
-            source_tag=REVENUE_TAG,
+            source_tag=self.REVENUE_TAG,
         )
 
     def _extract_currency_from_unit(self, unit: str) -> str:

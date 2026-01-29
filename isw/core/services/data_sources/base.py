@@ -1,5 +1,3 @@
-"""Base data source abstraction for fetching filing data."""
-
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
