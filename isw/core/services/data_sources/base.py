@@ -23,8 +23,9 @@ class Filing:
 
     identifier: str
     filing_type: str
-    filing_date: str
-    accession_number: str | None = None
+    period_end: str  # Fiscal period end date (YYYY-MM-DD)
+    filed_at: str | None = None  # When the filing was submitted (SEC has this, ESEF may not)
+    accession_number: str | None = None  # SEC-specific identifier
     document_url: str | None = None
     raw_data: dict[str, Any] | None = None
 

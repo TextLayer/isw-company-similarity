@@ -37,32 +37,45 @@ class ConcreteDataSource(BaseDataSource):
 
 
 class TestFiling(unittest.TestCase):
-    def test_creates_filing_with_required_fields(self):
+    def test_creates_sec_filing(self):
         filing = Filing(
             identifier="0000320193",
             filing_type="10-K",
-            filing_date="2024-10-31",
+            period_end="2024-09-28",
+            filed_at="2024-10-31",
+            accession_number="0000320193-24-000123",
+            document_url="https://sec.gov/Archives/edgar/data/320193/...",
         )
 
         assert filing.identifier == "0000320193"
         assert filing.filing_type == "10-K"
-        assert filing.filing_date == "2024-10-31"
-        assert filing.accession_number is None
-        assert filing.document_url is None
+        assert filing.period_end == "2024-09-28"
+        assert filing.filed_at == "2024-10-31"
+        assert filing.accession_number == "0000320193-24-000123"
 
-    def test_creates_filing_with_all_fields(self):
+    def test_creates_esef_filing(self):
+        filing = Filing(
+            identifier="213800H2PQMIF3OVZY47",
+            filing_type="AFR",
+            period_end="2022-03-31",
+            document_url="/213800H2PQMIF3OVZY47/2022-03-31/ESEF/GB/0/report.xhtml",
+        )
+
+        assert filing.identifier == "213800H2PQMIF3OVZY47"
+        assert filing.filing_type == "AFR"
+        assert filing.period_end == "2022-03-31"
+        assert filing.filed_at is None
+        assert filing.accession_number is None
+
+    def test_filing_with_raw_data(self):
         filing = Filing(
             identifier="0000320193",
             filing_type="10-K",
-            filing_date="2024-10-31",
-            accession_number="0000320193-24-000123",
-            document_url="https://sec.gov/...",
-            raw_data={"key": "value"},
+            period_end="2024-09-28",
+            raw_data={"form": "10-K", "size": 15000000},
         )
 
-        assert filing.accession_number == "0000320193-24-000123"
-        assert filing.document_url == "https://sec.gov/..."
-        assert filing.raw_data == {"key": "value"}
+        assert filing.raw_data == {"form": "10-K", "size": 15000000}
 
 
 class TestBusinessDescription(unittest.TestCase):
