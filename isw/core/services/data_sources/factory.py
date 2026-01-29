@@ -1,5 +1,3 @@
-import logging
-
 from isw.core.services.data_sources.base import (
     BaseDataSource,
     BusinessDescription,
@@ -9,8 +7,6 @@ from isw.core.services.data_sources.base import (
 )
 from isw.core.services.data_sources.edgar_data_source import SECEdgarDataSource
 from isw.core.services.data_sources.esef_data_source import FilingsXBRLDataSource
-
-logger = logging.getLogger(__name__)
 
 
 class DataSourceFactory:
