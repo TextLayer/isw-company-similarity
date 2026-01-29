@@ -97,7 +97,5 @@ class BaseConfig:
             database_max_overflow=cls.get_env("DATABASE_MAX_OVERFLOW", default=10, type=int),
             database_echo=cls.get_env("DATABASE_ECHO", default=False, type=bool),
             # SEC EDGAR
-            sec_user_agent=cls.get_env(
-                "SEC_USER_AGENT", default="isw-company-similarity/1.0 (spencer@textlayer.ai)"
-            ),
+            sec_user_agent=cls.get_env("SEC_USER_AGENT", default="isw-company-similarity/1.0 (spencer@textlayer.ai)"),
         )
