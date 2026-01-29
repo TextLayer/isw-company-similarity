@@ -13,14 +13,17 @@ class DatabaseError(BaseAPIException):
 
 class DatabaseConnectionError(DatabaseError):
     """Exception raised when database connection fails."""
+
     pass
 
 
 class DatabaseTransactionError(DatabaseError):
     """Exception raised when a database transaction fails."""
+
     pass
 
 
 class DatabaseQueryError(DatabaseError):
     """Exception raised when a database query fails."""
+
     pass

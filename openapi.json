@@ -3,7 +3,7 @@
   "info": {
     "title": "ISW Company Similarity API",
     "version": "1.0.0",
-    "description": "Company similarity search and XBRL tag anomaly detection using vector embeddings"
+    "description": "Company similarity search using vector embeddings"
   },
   "servers": [
     {
@@ -121,83 +121,6 @@
           }
         }
       }
-    },
-    "/company_routes/{cik}/reports": {
-      "get": {
-        "summary": "Get Company Reports",
-        "description": "Get financial facts/reports for a company",
-        "tags": ["Reports"],
-        "parameters": [
-          {
-            "name": "cik",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompanyReportsRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CompanyReportsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/company_routes/{cik}/reports/anomalies": {
-      "get": {
-        "summary": "Detect Report Anomalies",
-        "description": "Detect missing or extra XBRL tags by comparing against similar peers",
-        "tags": ["Reports", "Anomaly Detection"],
-        "parameters": [
-          {
-            "name": "cik",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AnomalyDetectionRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnomalyDetectionResponse"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -210,12 +133,9 @@
           "company_name": {"type": "string"},
           "description": {"type": "string"},
           "total_revenue": {"type": "number"},
-          "sic": {"type": "string"},
-          "market_cap": {"type": "number"},
-          "full_time_employees": {"type": "integer"},
+          "norm_tot_rev": {"type": "integer"},
           "cluster": {"type": "integer"},
-          "leiden_community": {"type": "integer"},
-          "louvain_community": {"type": "integer"}
+          "leiden_community": {"type": "integer"}
         }
       },
       "CompanyListResponse": {
@@ -280,137 +200,7 @@
           },
           "status": {"type": "integer"}
         }
-      },
-      "CompanyReportsRequest": {
-        "type": "object",
-        "properties": {
-          "fiscal_year": {"type": "string"},
-          "filing_period": {
-            "type": "string",
-            "enum": ["Q1", "Q2", "Q3", "FY"]
-          },
-          "form_type": {
-            "type": "string",
-            "enum": ["10-K", "10-Q"]
-          }
-        }
-      },
-      "CompanyReportsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {"type": "integer"},
-                "cik": {"type": "integer"},
-                "fact": {"type": "string"},
-                "value": {"type": "string"},
-                "fiscal_year": {"type": "string"},
-                "filing_period": {"type": "string"},
-                "form_type": {"type": "string"}
-              }
-            }
-          },
-          "status": {"type": "integer"}
-        }
-      },
-      "AnomalyDetectionRequest": {
-        "type": "object",
-        "required": ["form_type"],
-        "properties": {
-          "form_type": {
-            "type": "string",
-            "enum": ["10-K", "10-Q"]
-          },
-          "fiscal_year": {"type": "string"},
-          "filing_period": {"type": "string"},
-          "n_peers": {
-            "type": "integer",
-            "default": 10
-          },
-          "similarity_threshold": {
-            "type": "number",
-            "default": 0.5
-          },
-          "filter_community": {
-            "type": "boolean",
-            "default": true
-          },
-          "common_threshold": {
-            "type": "number",
-            "default": 0.70,
-            "description": "Tags present in ≥70% of peers are considered 'expected'"
-          },
-          "rare_threshold": {
-            "type": "number",
-            "default": 0.25,
-            "description": "Tags present in ≤25% of peers are considered 'unexpected'"
-          }
-        }
-      },
-      "AnomalyDetectionResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "missing_tags": {
-                "type": "array",
-                "description": "Tags common in peers but absent in target",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "tag": {"type": "string"},
-                    "peer_frequency": {"type": "number"},
-                    "peer_count": {"type": "integer"},
-                    "confidence_lower": {"type": "number"},
-                    "severity": {"type": "number"}
-                  }
-                }
-              },
-              "extra_tags": {
-                "type": "array",
-                "description": "Tags rare in peers but present in target",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "tag": {"type": "string"},
-                    "peer_frequency": {"type": "number"},
-                    "peer_count": {"type": "integer"},
-                    "confidence_upper": {"type": "number"},
-                    "severity": {"type": "number"}
-                  }
-                }
-              },
-              "summary": {
-                "type": "object",
-                "properties": {
-                  "target_cik": {"type": "integer"},
-                  "form_type": {"type": "string"},
-                  "n_peers": {"type": "integer"},
-                  "n_missing_tags": {"type": "integer"},
-                  "n_extra_tags": {"type": "integer"},
-                  "peer_companies": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "cik": {"type": "integer"},
-                        "company_name": {"type": "string"},
-                        "similarity": {"type": "number"}
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "status": {"type": "integer"}
-        }
       }
     }
   }
 }
-

@@ -1,14 +1,12 @@
 # ISW Company Similarity
 
-A Python backend service for company similarity search and XBRL tag anomaly detection using vector embeddings and PostgreSQL with pgvector.
+A Python backend service for company similarity search using vector embeddings and PostgreSQL with pgvector.
 
 ## Features
 
 - **Vector Similarity Search**: Find similar companies using embeddings
 - **Community-Based Clustering**: Leiden community detection
-- **XBRL Anomaly Detection**: Identify missing or extra financial reporting tags
-- **Company Financial Data**: financial facts from SEC filings
-- **RESTful API**: Clean API with pagination, filtering, and search
+- **RESTful API**: Clean API with pagination and search
 - **PostgreSQL + pgvector**: High-performance vector operations
 
 ## Quick Start
@@ -31,12 +29,6 @@ docker-compose up -d
 # Run Alembic migrations
 source .venv/bin/activate
 alembic upgrade head
-
-# Load company data
-isw-company-similarity-cli database load-companies data/security.csv
-
-# Load financial facts (takes ~5 minutes)
-isw-company-similarity-cli database load-facts data/companyfacts.csv
 
 # Check status
 isw-company-similarity-cli database status
@@ -81,30 +73,6 @@ curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/similar \
   -d '{"filter_community": false}'
 ```
 
-### 4. Get Company Reports
-
-```bash
-# All reports
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports \
-  -H "Content-Type: application/json" \
-  -d '{}'
-
-# Filtered by fiscal year and form type
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports \
-  -H "Content-Type: application/json" \
-  -d '{"fiscal_year": "2019", "filing_period": "FY", "form_type": "10-K"}'
-```
-
-### 5. Detect Report Anomalies
-
-```bash
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/reports/anomalies \
-  -H "Content-Type: application/json" \
-  -d '{"form_type": "10-K"}'
-```
-
-Detects missing XBRL tags (common in peers but absent in target) and extra tags (rare in peers but present in target).
-
 ## Database
 
 ### PostgreSQL with pgvector
@@ -115,17 +83,12 @@ The application uses PostgreSQL 17 with the pgvector extension for efficient vec
 
 **Tables**:
 - `companies`
-- `company_facts`
 
 ### Database CLI Commands
 
 ```bash
 # Initialize tables
 isw-company-similarity-cli database init
-
-# Load data
-isw-company-similarity-cli database load-companies security.csv
-isw-company-similarity-cli database load-facts companyfacts.csv
 
 # Check status
 isw-company-similarity-cli database status
@@ -160,8 +123,7 @@ isw/
 │   ├── schemas/          # Marshmallow validation
 │   └── services/         # Core services
 │       ├── database/     # Database connection & queries
-│       ├── vector_search.py  # pgvector similarity search
-│       └── anomaly_detection/  # XBRL tag anomaly detection
+│       └── vector_search.py  # pgvector similarity search
 ├── interfaces/
 │   ├── api/              # Flask routes & middleware
 │   └── cli/              # Click CLI commands
@@ -220,10 +182,3 @@ SECRET_KEY=your-secret-key
 # Logging
 DEBUG=true
 ```
-
-## Data Sources
-
-Place your data files in the `data/` directory (gitignored):
-
-- **data/security.csv**: Company profiles with vector embedding
-- **data/companyfacts.csv**: Financial facts from SEC filings

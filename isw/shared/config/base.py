@@ -7,7 +7,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 # Load .env file from project root
-env_path = Path(__file__).resolve().parents[3] / '.env'
+env_path = Path(__file__).resolve().parents[3] / ".env"
 load_dotenv(dotenv_path=env_path)
 
 
@@ -67,7 +67,6 @@ class BaseConfig:
 
         return type(value)
 
-
     @classmethod
     def from_env(cls):
         """Create config from environment variables"""
@@ -88,7 +87,9 @@ class BaseConfig:
             rabbitmq_username=cls.get_env("RABBITMQ_USERNAME", default="textlayer"),
             rabbitmq_password=cls.get_env("RABBITMQ_PASSWORD", default="admin"),
             # Database
-            database_url=cls.get_env("DATABASE_URL", default="postgresql://insight_user:insight_password@localhost:5432/insight_db"),
+            database_url=cls.get_env(
+                "DATABASE_URL", default="postgresql://insight_user:insight_password@localhost:5432/insight_db"
+            ),
             database_pool_size=cls.get_env("DATABASE_POOL_SIZE", default=5, type=int),
             database_max_overflow=cls.get_env("DATABASE_MAX_OVERFLOW", default=10, type=int),
             database_echo=cls.get_env("DATABASE_ECHO", default=False, type=bool),
