@@ -42,14 +42,16 @@ class TestEmbeddingServiceDimensions(unittest.TestCase):
         assert service.dimensions == 3072
 
     @patch("isw.core.services.embeddings.service.OpenAI")
-    def test_ada_model_dimensions(self, mock_openai):
-        service = EmbeddingService(api_key="test-key", model="text-embedding-ada-002")
-        assert service.dimensions == 1536
-
-    @patch("isw.core.services.embeddings.service.OpenAI")
     def test_unknown_model_defaults_to_1536(self, mock_openai):
         service = EmbeddingService(api_key="test-key", model="unknown-model")
         assert service.dimensions == 1536
+
+    @patch("isw.core.services.embeddings.service.logger")
+    @patch("isw.core.services.embeddings.service.OpenAI")
+    def test_unknown_model_logs_warning(self, mock_openai, mock_logger):
+        EmbeddingService(api_key="test-key", model="unknown-model")
+        mock_logger.warning.assert_called_once()
+        assert "unknown-model" in str(mock_logger.warning.call_args)
 
 
 class TestEmbedText(unittest.TestCase):
@@ -72,6 +74,11 @@ class TestEmbedText(unittest.TestCase):
             input="test text",
             model="text-embedding-3-small",
         )
+
+    def test_raises_for_none_text(self):
+        with self.assertRaises(EmbeddingServiceError) as ctx:
+            self.service.embed_text(None)
+        assert "cannot be empty" in str(ctx.exception)
 
     def test_raises_for_empty_text(self):
         with self.assertRaises(EmbeddingServiceError) as ctx:
@@ -105,7 +112,7 @@ class TestEmbedTexts(unittest.TestCase):
     def test_returns_embeddings_for_multiple_texts(self):
         embeddings = [[0.1, 0.2], [0.3, 0.4]]
         mock_response = MagicMock()
-        mock_response.data = [MagicMock(embedding=emb) for emb in embeddings]
+        mock_response.data = [MagicMock(embedding=emb, index=i) for i, emb in enumerate(embeddings)]
         self.mock_client.embeddings.create.return_value = mock_response
 
         result = self.service.embed_texts(["text 1", "text 2"])
@@ -120,7 +127,8 @@ class TestEmbedTexts(unittest.TestCase):
     def test_handles_mixed_empty_and_valid_texts(self):
         embedding = [0.1, 0.2]
         mock_response = MagicMock()
-        mock_response.data = [MagicMock(embedding=embedding)]
+        # Index 0 in valid_texts maps to original index 1 (second element)
+        mock_response.data = [MagicMock(embedding=embedding, index=0)]
         self.mock_client.embeddings.create.return_value = mock_response
 
         result = self.service.embed_texts(["", "valid text", "   "])

@@ -10,11 +10,9 @@ class EmbeddingServiceError(Exception):
 class EmbeddingService:
     """Service for generating text embeddings using OpenAI's API."""
 
-    # Embedding dimensions by model
     MODEL_DIMENSIONS = {
         "text-embedding-3-small": 1536,
         "text-embedding-3-large": 3072,
-        "text-embedding-ada-002": 1536,
     }
 
     def __init__(self, api_key: str, model: str = "text-embedding-3-small"):
@@ -26,6 +24,9 @@ class EmbeddingService:
         """
         if not api_key:
             raise EmbeddingServiceError("OpenAI API key is required")
+
+        if model not in self.MODEL_DIMENSIONS:
+            logger.warning("Unknown embedding model '%s', using fallback dimension of 1536", model)
 
         self.model = model
         self._client = OpenAI(api_key=api_key)
@@ -47,7 +48,7 @@ class EmbeddingService:
         Raises:
             EmbeddingServiceError: If embedding generation fails.
         """
-        if not text or not text.strip():
+        if text is None or not text.strip():
             raise EmbeddingServiceError("Text cannot be empty")
 
         try:
@@ -93,10 +94,10 @@ class EmbeddingService:
                 model=self.model,
             )
 
-            # Map embeddings back to original indices
+            # Map embeddings back to original indices using response index
             embeddings: list[list[float] | None] = [None] * len(texts)
-            for j, embedding_data in enumerate(response.data):
-                original_index = valid_indices[j]
+            for embedding_data in response.data:
+                original_index = valid_indices[embedding_data.index]
                 embeddings[original_index] = embedding_data.embedding
 
             # Fill in empty texts with zero vectors
