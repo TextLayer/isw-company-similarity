@@ -9,7 +9,9 @@ from .base import (
     RateLimitError,
     RevenueData,
 )
+from .edgar_data_source import SECEdgarDataSource
 from .esef_data_source import FilingsXBRLDataSource
+from .parsers import clean_extracted_text, extract_item1_business
 
 __all__ = [
     "BaseDataSource",
@@ -20,4 +22,8 @@ __all__ = [
     "FilingsXBRLDataSource",
     "RateLimitError",
     "RevenueData",
+    "SECEdgarDataSource",
+    # Shared parsing utilities
+    "clean_extracted_text",
+    "extract_item1_business",
 ]
