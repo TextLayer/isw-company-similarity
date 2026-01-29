@@ -14,6 +14,6 @@ class CompanyController(Controller):
         command = GetCompaniesCommand(**kwargs)
         return self.executor.execute_read(command)
 
-    def get_company_by_cik(self, **kwargs):
+    def get_company_by_identifier(self, **kwargs):
         command = GetCompanyCommand(**kwargs)
         return self.executor.execute_read(command)
