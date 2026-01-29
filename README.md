@@ -1,4 +1,4 @@
-# Insight Software Backend
+# ISW Company Similarity
 
 A Python backend service for company similarity search and XBRL tag anomaly detection using vector embeddings and PostgreSQL with pgvector.
 
@@ -33,13 +33,13 @@ source .venv/bin/activate
 alembic upgrade head
 
 # Load company data
-insight-software-backend-cli database load-companies data/security.csv
+isw-company-similarity-cli database load-companies data/security.csv
 
 # Load financial facts (takes ~5 minutes)
-insight-software-backend-cli database load-facts data/companyfacts.csv
+isw-company-similarity-cli database load-facts data/companyfacts.csv
 
 # Check status
-insight-software-backend-cli database status
+isw-company-similarity-cli database status
 ```
 
 ### Run API Server
@@ -121,14 +121,14 @@ The application uses PostgreSQL 17 with the pgvector extension for efficient vec
 
 ```bash
 # Initialize tables
-insight-software-backend-cli database init
+isw-company-similarity-cli database init
 
 # Load data
-insight-software-backend-cli database load-companies security.csv
-insight-software-backend-cli database load-facts companyfacts.csv
+isw-company-similarity-cli database load-companies security.csv
+isw-company-similarity-cli database load-facts companyfacts.csv
 
 # Check status
-insight-software-backend-cli database status
+isw-company-similarity-cli database status
 ```
 
 ### Migrations

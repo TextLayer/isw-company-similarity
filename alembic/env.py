@@ -1,4 +1,4 @@
-"""Alembic environment configuration for insight-software-backend."""
+"""Alembic environment configuration for isw-company-similarity."""
 
 import os
 import sys

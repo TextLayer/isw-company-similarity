@@ -62,7 +62,7 @@ run:
 
 cli:
 	@echo "Database commands:"
-	@echo "  insight-software-backend-cli database init"
-	@echo "  insight-software-backend-cli database load-companies data/security.csv"
-	@echo "  insight-software-backend-cli database load-facts data/companyfacts.csv"
-	@echo "  insight-software-backend-cli database status"
+	@echo "  isw-company-similarity-cli database init"
+	@echo "  isw-company-similarity-cli database load-companies data/security.csv"
+	@echo "  isw-company-similarity-cli database load-facts data/companyfacts.csv"
+	@echo "  isw-company-similarity-cli database status"
