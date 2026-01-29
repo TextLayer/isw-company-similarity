@@ -79,16 +79,29 @@ class TestFiling(unittest.TestCase):
 
 
 class TestBusinessDescription(unittest.TestCase):
-    def test_creates_business_description(self):
+    def test_creates_sec_business_description(self):
         desc = BusinessDescription(
-            text="Apple designs, manufactures...",
-            source_filing="10-K",
+            text="Apple Inc. designs, manufactures, and markets smartphones...",
+            source_filing_type="10-K",
+            source_accession="0000320193-24-000123",
             extraction_method="html_parse",
         )
 
-        assert desc.text == "Apple designs, manufactures..."
-        assert desc.source_filing == "10-K"
+        assert "Apple" in desc.text
+        assert desc.source_filing_type == "10-K"
+        assert desc.source_accession == "0000320193-24-000123"
         assert desc.extraction_method == "html_parse"
+
+    def test_creates_esef_business_description(self):
+        desc = BusinessDescription(
+            text="Siemens AG is a global technology company...",
+            source_filing_type="AFR",
+            source_accession=None,  # ESEF has no accession
+            extraction_method="xbrl_extract",
+        )
+
+        assert desc.source_accession is None
+        assert desc.source_filing_type == "AFR"
 
 
 class TestRevenueData(unittest.TestCase):

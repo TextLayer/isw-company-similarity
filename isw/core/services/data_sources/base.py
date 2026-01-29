@@ -32,11 +32,21 @@ class Filing:
 
 @dataclass
 class BusinessDescription:
-    """Extracted business description from a filing."""
+    """Raw business description text extracted from a filing.
+
+    This is the unprocessed text from the filing (e.g., Item 1 from SEC 10-K).
+    LLM summarization/processing happens separately in the LLM Extraction Service.
+
+    Note: Not all filings have a business description section.
+    - SEC 10-K: Has "Item 1. Business" (required)
+    - SEC 10-Q: Does NOT have Item 1
+    - ESEF: May have equivalent section, varies by jurisdiction
+    """
 
     text: str
-    source_filing: str
-    extraction_method: str
+    source_filing_type: str  # e.g., "10-K", "AFR"
+    source_accession: str | None  # SEC accession number if applicable
+    extraction_method: str  # e.g., "html_parse", "xbrl_extract"
 
 
 @dataclass
@@ -105,16 +115,22 @@ class BaseDataSource(ABC):
     @abstractmethod
     def get_business_description(self, identifier: str) -> BusinessDescription | None:
         """
-        Extract the business description from the latest annual filing.
+        Extract raw business description text from the latest annual filing.
 
-        For SEC filings, this is Item 1 of the 10-K. For ESEF filings,
-        the equivalent business overview section.
+        Returns the unprocessed text from the filing. For SEC 10-K filings,
+        this is "Item 1. Business". For ESEF, the equivalent section if available.
+
+        This is RAW text extraction only. LLM summarization/processing
+        happens separately in the LLM Extraction Service.
 
         Args:
             identifier: Entity identifier.
 
         Returns:
-            BusinessDescription if extraction succeeds, None otherwise.
+            BusinessDescription with raw text if available, None if:
+            - No annual filing exists
+            - Filing type doesn't have a business description section
+            - Extraction fails
         """
         ...
 
