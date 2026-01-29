@@ -46,6 +46,9 @@ class BaseConfig:
     openai_api_key: str = ""
     openai_embedding_model: str = "text-embedding-3-small"
 
+    # LLM
+    llm_model: str = "gpt-4o-mini"
+
     @staticmethod
     def get_env(key: str, default: Any = None, required: bool = False, type: Any = str):
         """Utility method for getting environment variables with type conversion"""
@@ -105,4 +108,6 @@ class BaseConfig:
             # OpenAI
             openai_api_key=cls.get_env("OPENAI_API_KEY", default=""),
             openai_embedding_model=cls.get_env("OPENAI_EMBEDDING_MODEL", default="text-embedding-3-small"),
+            # LLM
+            llm_model=cls.get_env("LLM_MODEL", default="gpt-4o-mini"),
         )
