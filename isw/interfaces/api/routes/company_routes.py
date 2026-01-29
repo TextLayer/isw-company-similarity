@@ -18,17 +18,17 @@ def get_companies():
     return Response.make(companies, Response.HTTP_SUCCESS)
 
 
-@company_routes.get("/<string:cik>")
-def get_company_by_cik(cik):
-    company_data = company_controller.get_company_by_cik(cik=cik)
+@company_routes.get("/<string:identifier>")
+def get_company_by_identifier(identifier):
+    company_data = company_controller.get_company_by_identifier(identifier=identifier)
     return Response.make(company_data, Response.HTTP_SUCCESS)
 
 
-@company_routes.get("/<string:cik>/similar")
-def get_similar_companies(cik):
+@company_routes.get("/<string:identifier>/similar")
+def get_similar_companies(identifier):
     validated_request_data = similar_company_search_schema.load(request.get_json())
     companies = company_controller.get_similar_companies(
-        cik=cik,
+        identifier=identifier,
         similarity_threshold=validated_request_data["similarity_threshold"],
         max_results=validated_request_data["max_results"],
         filter_community=validated_request_data["filter_community"],

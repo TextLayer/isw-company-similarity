@@ -5,14 +5,14 @@ from ...services.database.service import DatabaseService
 
 
 class GetCompanyCommand(ReadCommand):
-    def __init__(self, cik: str):
-        self.cik = cik
+    def __init__(self, identifier: str):
+        self.identifier = identifier
 
     def validate(self):
-        if not self.cik:
-            raise ValidationException("CIK is required")
+        if not self.identifier:
+            raise ValidationException("Identifier is required")
 
     def execute(self):
         with DatabaseService.get_instance().session_scope() as session:
-            company = session.query(Company).filter(Company.cik == self.cik).first()
+            company = session.query(Company).filter(Company.identifier == self.identifier).first()
             return company.to_dict() if company else None

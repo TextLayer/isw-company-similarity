@@ -1,0 +1,298 @@
+{
+  "data": [
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/213800H2PQMIF3OVZY47"
+          },
+          "data": {
+            "type": "entity",
+            "id": "2670"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/3629/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/213800H2PQMIF3OVZY47/2022-03-31/ESEF/GB/0/213800H2PQMIF3OVZY47-2022-03-31.zip",
+        "date_added": "2022-08-02 00:00:00",
+        "error_count": 0,
+        "sha256": "9ea9039fa4b87cd573eb7a917521457cd4aa55980d11eb728526369774eafef1",
+        "report_url": "/213800H2PQMIF3OVZY47/2022-03-31/ESEF/GB/0/213800H2PQMIF3OVZY47-2022-03-31/reports/213800H2PQMIF3OVZY47-2022-03-31-T01.xhtml",
+        "period_end": "2022-03-31",
+        "json_url": "/213800H2PQMIF3OVZY47/2022-03-31/ESEF/GB/0/213800H2PQMIF3OVZY47-2022-03-31-T01.json",
+        "warning_count": 6,
+        "country": "GB",
+        "fxo_id": "213800H2PQMIF3OVZY47-2022-03-31-ESEF-GB-0",
+        "processed": "2023-04-20 00:39:09.026903",
+        "inconsistency_count": 0,
+        "viewer_url": "/213800H2PQMIF3OVZY47/2022-03-31/ESEF/GB/0/213800H2PQMIF3OVZY47-2022-03-31/reports/ixbrlviewer.html"
+      },
+      "id": "3629",
+      "links": {
+        "self": "/api/filings/3629"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/5493003DJ1G01IMQ7S28"
+          },
+          "data": {
+            "type": "entity",
+            "id": "929"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/4923/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/5493003DJ1G01IMQ7S28/2022-12-31/ESEF/GB/0/5493003DJ1G01IMQ7S28-2022-12-31-en.zip",
+        "date_added": "2023-04-04 21:49:41.847103",
+        "error_count": 0,
+        "sha256": "cc7deff17d86cbffea5e40ec2477c0b26e701a0171d8da913a352ef4ae68f678",
+        "report_url": "/5493003DJ1G01IMQ7S28/2022-12-31/ESEF/GB/0/5493003DJ1G01IMQ7S28-2022-12-31-en/reports/5493003DJ1G01IMQ7S28-2022-12-31-en.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/5493003DJ1G01IMQ7S28/2022-12-31/ESEF/GB/0/5493003DJ1G01IMQ7S28-2022-12-31-en.json",
+        "warning_count": 2,
+        "country": "GB",
+        "fxo_id": "5493003DJ1G01IMQ7S28-2022-12-31-ESEF-GB-0",
+        "processed": "2023-04-19 18:24:48.073804",
+        "inconsistency_count": 0,
+        "viewer_url": "/5493003DJ1G01IMQ7S28/2022-12-31/ESEF/GB/0/5493003DJ1G01IMQ7S28-2022-12-31-en/reports/ixbrlviewer.html"
+      },
+      "id": "4923",
+      "links": {
+        "self": "/api/filings/4923"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/2138007JN9NUWKKTS790"
+          },
+          "data": {
+            "type": "entity",
+            "id": "3220"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5767/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/2138007JN9NUWKKTS790/2022-12-31/ESEF/GB/0/2138007JN9NUWKKTS790-2022-12-31.zip",
+        "date_added": "2023-05-09 10:52:28.607833",
+        "error_count": 0,
+        "sha256": "30884281013136949ab71d227b4f96383ac5eda83649645af3644c754c562f2c",
+        "report_url": "/2138007JN9NUWKKTS790/2022-12-31/ESEF/GB/0/2138007JN9NUWKKTS790-2022-12-31/reports/2138007JN9NUWKKTS790-2022-12-31-T01.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/2138007JN9NUWKKTS790/2022-12-31/ESEF/GB/0/2138007JN9NUWKKTS790-2022-12-31-T01.json",
+        "warning_count": 2,
+        "country": "GB",
+        "fxo_id": "2138007JN9NUWKKTS790-2022-12-31-ESEF-GB-0",
+        "processed": "2023-05-09 11:11:38.285505",
+        "inconsistency_count": 0,
+        "viewer_url": "/2138007JN9NUWKKTS790/2022-12-31/ESEF/GB/0/2138007JN9NUWKKTS790-2022-12-31/reports/ixbrlviewer.html"
+      },
+      "id": "5767",
+      "links": {
+        "self": "/api/filings/5767"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/549300L5FZ06J1914B44"
+          },
+          "data": {
+            "type": "entity",
+            "id": "965"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5769/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/549300L5FZ06J1914B44/2022-12-31/ESEF/GB/0/549300L5FZ06J1914B44-2022-12-31.zip",
+        "date_added": "2023-05-09 10:52:42.102948",
+        "error_count": 0,
+        "sha256": "d525e4daccbbf45dcd65287fcdf194898aaffd9097d3087ead54500d4f2ee1e7",
+        "report_url": "/549300L5FZ06J1914B44/2022-12-31/ESEF/GB/0/549300L5FZ06J1914B44-2022-12-31/reports/549300L5FZ06J1914B44-2022-12-31-T01.xhtml",
+        "period_end": "2022-12-31",
+        "json_url": "/549300L5FZ06J1914B44/2022-12-31/ESEF/GB/0/549300L5FZ06J1914B44-2022-12-31-T01.json",
+        "warning_count": 3,
+        "country": "GB",
+        "fxo_id": "549300L5FZ06J1914B44-2022-12-31-ESEF-GB-0",
+        "processed": "2023-05-09 11:12:31.236180",
+        "inconsistency_count": 0,
+        "viewer_url": "/549300L5FZ06J1914B44/2022-12-31/ESEF/GB/0/549300L5FZ06J1914B44-2022-12-31/reports/ixbrlviewer.html"
+      },
+      "id": "5769",
+      "links": {
+        "self": "/api/filings/5769"
+      }
+    },
+    {
+      "type": "filing",
+      "relationships": {
+        "entity": {
+          "links": {
+            "related": "/api/entities/213800MELPBPHIR1PO04"
+          },
+          "data": {
+            "type": "entity",
+            "id": "3217"
+          }
+        },
+        "validation_messages": {
+          "links": {
+            "related": "/api/filings/5763/validation_messages"
+          }
+        }
+      },
+      "attributes": {
+        "package_url": "/213800MELPBPHIR1PO04/2022-12-31/ESEF/GB/0/213800MELPBPHIR1PO04-2022-12-31.zip",
+        "date_added": "2023-05-09 10:52:20.284964",
+        "error_count": 0,
+        "sha256": "319adcf95b501d6fe9db5cebf33b405b7a8a77e50232198eeab212c5e93a8ee4",
+        "report_url": "/213800MELPBPHIR1PO04/2022-12-31/ESEF/GB/0/213800MELPBPHIR1PO04-2022-12-31/reports/213800MELPBPHIR1PO04-2022-12-31.html",
+        "period_end": "2022-12-31",
+        "json_url": "/213800MELPBPHIR1PO04/2022-12-31/ESEF/GB/0/213800MELPBPHIR1PO04-2022-12-31.json",
+        "warning_count": 1,
+        "country": "GB",
+        "fxo_id": "213800MELPBPHIR1PO04-2022-12-31-ESEF-GB-0",
+        "processed": "2023-05-09 11:09:57.096695",
+        "inconsistency_count": 0,
+        "viewer_url": "/213800MELPBPHIR1PO04/2022-12-31/ESEF/GB/0/213800MELPBPHIR1PO04-2022-12-31/reports/ixbrlviewer.html"
+      },
+      "id": "5763",
+      "links": {
+        "self": "/api/filings/5763"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=5&filter%5Bcountry%5D=GB&include=entity",
+    "first": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=5&filter%5Bcountry%5D=GB&include=entity",
+    "last": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=5&filter%5Bcountry%5D=GB&include=entity&page%5Bnumber%5D=494",
+    "next": "https://filings.xbrl.org/api/filings?page%5Bsize%5D=5&filter%5Bcountry%5D=GB&include=entity&page%5Bnumber%5D=2"
+  },
+  "included": [
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "213800H2PQMIF3OVZY47",
+        "name": "KAINOS GROUP PLC"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/213800H2PQMIF3OVZY47/filings"
+          }
+        }
+      },
+      "id": "2670",
+      "links": {
+        "self": "/api/entities/213800H2PQMIF3OVZY47"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "5493003DJ1G01IMQ7S28",
+        "name": "JUPITER FUND MANAGEMENT PLC"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/5493003DJ1G01IMQ7S28/filings"
+          }
+        }
+      },
+      "id": "929",
+      "links": {
+        "self": "/api/entities/5493003DJ1G01IMQ7S28"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "2138007JN9NUWKKTS790",
+        "name": "INTEGRATED DIAGNOSTICS HOLDINGS PLC"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/2138007JN9NUWKKTS790/filings"
+          }
+        }
+      },
+      "id": "3220",
+      "links": {
+        "self": "/api/entities/2138007JN9NUWKKTS790"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "549300L5FZ06J1914B44",
+        "name": "NOTTINGHAM BUILDING SOCIETY"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/549300L5FZ06J1914B44/filings"
+          }
+        }
+      },
+      "id": "965",
+      "links": {
+        "self": "/api/entities/549300L5FZ06J1914B44"
+      }
+    },
+    {
+      "type": "entity",
+      "attributes": {
+        "identifier": "213800MELPBPHIR1PO04",
+        "name": "ALTYNGOLD PLC"
+      },
+      "relationships": {
+        "filings": {
+          "links": {
+            "related": "/api/entities/213800MELPBPHIR1PO04/filings"
+          }
+        }
+      },
+      "id": "3217",
+      "links": {
+        "self": "/api/entities/213800MELPBPHIR1PO04"
+      }
+    }
+  ],
+  "meta": {
+    "count": 2470
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

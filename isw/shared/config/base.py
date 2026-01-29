@@ -39,6 +39,9 @@ class BaseConfig:
     database_max_overflow: int = 10
     database_echo: bool = False
 
+    # SEC EDGAR
+    sec_user_agent: str = "isw-company-similarity/1.0 (spencer@textlayer.ai)"
+
     @staticmethod
     def get_env(key: str, default: Any = None, required: bool = False, type: Any = str):
         """Utility method for getting environment variables with type conversion"""
@@ -93,4 +96,6 @@ class BaseConfig:
             database_pool_size=cls.get_env("DATABASE_POOL_SIZE", default=5, type=int),
             database_max_overflow=cls.get_env("DATABASE_MAX_OVERFLOW", default=10, type=int),
             database_echo=cls.get_env("DATABASE_ECHO", default=False, type=bool),
+            # SEC EDGAR
+            sec_user_agent=cls.get_env("SEC_USER_AGENT", default="isw-company-similarity/1.0 (spencer@textlayer.ai)"),
         )
