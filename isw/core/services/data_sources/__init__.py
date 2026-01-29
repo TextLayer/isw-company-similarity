@@ -9,12 +9,14 @@ from .base import (
 )
 from .edgar_data_source import SECEdgarDataSource
 from .esef_data_source import FilingsXBRLDataSource
+from .factory import DataSourceFactory
 from .parsers import clean_extracted_text, parse_10k_business_section
 
 __all__ = [
     "BaseDataSource",
     "BusinessDescription",
     "DataSourceError",
+    "DataSourceFactory",
     "Filing",
     "FilingNotFoundError",
     "FilingsXBRLDataSource",
