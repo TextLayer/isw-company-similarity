@@ -193,3 +193,77 @@ class TestDynamicBuckets(unittest.TestCase):
 
         assert result.buckets.get_bucket_index(-100) == -1
         assert result.buckets.get_bucket_index(np.nan) == -1
+
+    def test_vectorized_bucket_indices(self):
+        """Vectorized bucket assignment should match individual calls."""
+        revenues = np.array([1_000, 10_000, 100_000, 1_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        # Compare vectorized vs individual
+        individual = [result.buckets.get_bucket_index(r) for r in revenues]
+        vectorized = result.buckets.get_bucket_indices(revenues)
+
+        np.testing.assert_array_equal(vectorized, individual)
+
+    def test_vectorized_handles_invalid(self):
+        """Vectorized assignment should handle invalid values."""
+        revenues = np.array([1_000_000, 10_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        test_revenues = np.array([1_000_000, -100, np.nan, 5_000_000])
+        indices = result.buckets.get_bucket_indices(test_revenues)
+
+        assert indices[0] >= 0  # Valid
+        assert indices[1] == -1  # Negative
+        assert indices[2] == -1  # NaN
+        assert indices[3] >= 0  # Valid
+
+
+class TestGetTopSimilar(unittest.TestCase):
+    """Tests for get_top_similar method."""
+
+    def setUp(self):
+        self.service = RevenueSimilarityService(n_buckets=5)
+
+    def test_returns_correct_number_of_results(self):
+        """Should return k results."""
+        revenues = np.array([1_000_000, 2_000_000, 10_000_000, 100_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        top = self.service.get_top_similar(result.similarity_matrix, index=0, k=2)
+
+        assert len(top) == 2
+
+    def test_results_sorted_by_similarity_descending(self):
+        """Results should be sorted by similarity in descending order."""
+        revenues = np.array([1_000_000, 2_000_000, 10_000_000, 100_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        top = self.service.get_top_similar(result.similarity_matrix, index=0, k=3)
+
+        similarities = [r[1] for r in top]
+        assert similarities == sorted(similarities, reverse=True)
+
+    def test_excludes_self_by_default(self):
+        """Should exclude the item itself from results by default."""
+        revenues = np.array([1_000_000, 2_000_000, 10_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        top = self.service.get_top_similar(result.similarity_matrix, index=0, k=3)
+
+        indices = [r[0] for r in top]
+        assert 0 not in indices
+
+    def test_includes_self_when_specified(self):
+        """Should include self when exclude_self=False."""
+        revenues = np.array([1_000_000, 2_000_000, 10_000_000])
+        result = self.service.compute_similarity(revenues)
+
+        top = self.service.get_top_similar(
+            result.similarity_matrix, index=0, k=3, exclude_self=False
+        )
+
+        indices = [r[0] for r in top]
+        assert 0 in indices
+        # Self should be first (highest similarity = 1.0)
+        assert top[0][0] == 0

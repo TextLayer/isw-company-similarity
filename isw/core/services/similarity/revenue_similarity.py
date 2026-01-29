@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
 
@@ -23,6 +24,18 @@ class RevenueBuckets:
         idx = int(np.searchsorted(self.log_boundaries[1:], log_rev, side="right"))
         return min(idx, self.n_buckets - 1)
 
+    def get_bucket_indices(self, revenues: np.ndarray) -> np.ndarray:
+        """Vectorized bucket assignment for multiple revenues."""
+        revenues = np.asarray(revenues, dtype=np.float64)
+        log_revs = np.log1p(np.maximum(revenues, 0))  # Clamp negatives to 0 for log
+        indices = np.searchsorted(self.log_boundaries[1:], log_revs, side="right")
+        indices = np.clip(indices, 0, self.n_buckets - 1)
+        # Mark invalid entries
+        invalid_mask = (revenues < 0) | np.isnan(revenues)
+        indices = indices.astype(np.int64)
+        indices[invalid_mask] = -1
+        return indices
+
 
 @dataclass
 class RevenueSimilarityResult:
@@ -43,7 +56,7 @@ class RevenueSimilarityService:
         self,
         n_buckets: int = 20,
         scale: float | None = None,
-        missing_value_strategy: str = "median",
+        missing_value_strategy: Literal["median", "exclude"] = "median",
     ):
         """
         Initialize revenue similarity service.
@@ -109,8 +122,8 @@ class RevenueSimilarityService:
         # Log transform (log1p handles zero revenue)
         log_revenues = np.log1p(processed_revenues)
 
-        # Assign bucket indices
-        bucket_assignments = np.array([buckets.get_bucket_index(r) for r in processed_revenues])
+        # Assign bucket indices (vectorized)
+        bucket_assignments = buckets.get_bucket_indices(processed_revenues)
 
         # Compute pairwise absolute differences in log space
         log_rev_i = log_revenues.reshape(-1, 1)
@@ -145,6 +158,40 @@ class RevenueSimilarityService:
             buckets=buckets,
             bucket_assignments=bucket_assignments,
         )
+
+    def get_top_similar(
+        self,
+        similarity_matrix: np.ndarray,
+        index: int,
+        k: int = 10,
+        exclude_self: bool = True,
+    ) -> list[tuple[int, float]]:
+        """
+        Get top-k most similar items for a given index.
+
+        Args:
+            similarity_matrix: Precomputed similarity matrix
+            index: Index of the item to find similar items for
+            k: Number of similar items to return
+            exclude_self: Whether to exclude the item itself from results
+
+        Returns:
+            List of (index, similarity_score) tuples, sorted by similarity descending
+        """
+        similarities = similarity_matrix[index]
+
+        # Get indices sorted by similarity (descending)
+        sorted_indices = np.argsort(similarities)[::-1]
+
+        results = []
+        for idx in sorted_indices:
+            if exclude_self and idx == index:
+                continue
+            results.append((int(idx), float(similarities[idx])))
+            if len(results) >= k:
+                break
+
+        return results
 
     def _compute_buckets(self, revenues: np.ndarray) -> RevenueBuckets:
         """Compute dynamic buckets from revenue data using log scale."""
