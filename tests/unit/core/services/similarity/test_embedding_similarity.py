@@ -9,6 +9,7 @@ class TestEmbeddingSimilarityService(unittest.TestCase):
     """Tests for EmbeddingSimilarityService."""
 
     def setUp(self):
+        np.random.seed(42)  # Seed for reproducible test data
         self.service = EmbeddingSimilarityService(
             n_components=10,
             n_neighbors=5,
@@ -52,9 +53,9 @@ class TestEmbeddingSimilarityService(unittest.TestCase):
 
     def test_similar_embeddings_have_high_similarity(self):
         """Similar embeddings should have high similarity scores."""
-        # Create two clusters of similar embeddings (larger for UMAP stability)
-        cluster1 = np.random.rand(15, 50) + np.array([1, 0, 0, 0, 0] + [0] * 45)
-        cluster2 = np.random.rand(15, 50) + np.array([0, 1, 0, 0, 0] + [0] * 45)
+        # Create two well-separated clusters (larger for UMAP stability)
+        cluster1 = np.random.rand(15, 50) + np.array([5, 0, 0, 0, 0] + [0] * 45)
+        cluster2 = np.random.rand(15, 50) + np.array([0, 5, 0, 0, 0] + [0] * 45)
         embeddings = np.vstack([cluster1, cluster2])
 
         result = self.service.compute_similarity(embeddings, random_state=42)
@@ -62,9 +63,10 @@ class TestEmbeddingSimilarityService(unittest.TestCase):
         # Items within cluster1 (indices 0-14) should be more similar to each other
         # than to items in cluster2 (indices 15-29)
         within_cluster1_sim = result.similarity_matrix[0, 1:15].mean()
+        cross_cluster_sim = result.similarity_matrix[0, 15:].mean()
 
-        # Within-cluster similarity should be positive (basic sanity check)
-        assert within_cluster1_sim > 0
+        # Within-cluster similarity should be higher than cross-cluster
+        assert within_cluster1_sim > cross_cluster_sim
 
     def test_noise_mask_identifies_noise_points(self):
         """Noise mask should be True where cluster label is -1."""
@@ -83,6 +85,24 @@ class TestEmbeddingSimilarityService(unittest.TestCase):
             self.service.compute_similarity(embeddings)
 
         assert "at least 2" in str(ctx.exception).lower()
+
+    def test_raises_for_1d_array(self):
+        """Should raise error for 1D input array."""
+        embeddings = np.random.rand(50)
+
+        with self.assertRaises(ValueError) as ctx:
+            self.service.compute_similarity(embeddings)
+
+        assert "2d" in str(ctx.exception).lower()
+
+    def test_raises_for_3d_array(self):
+        """Should raise error for 3D input array."""
+        embeddings = np.random.rand(10, 50, 3)
+
+        with self.assertRaises(ValueError) as ctx:
+            self.service.compute_similarity(embeddings)
+
+        assert "2d" in str(ctx.exception).lower()
 
     def test_handles_small_dataset(self):
         """Should handle small datasets by adjusting parameters."""
@@ -186,3 +206,29 @@ class TestGetTopSimilar(unittest.TestCase):
         # Most similar to index 0 should be index 1 (0.9), then index 2 (0.5)
         assert results[0] == (1, 0.9)
         assert results[1] == (2, 0.5)
+
+    def test_raises_for_index_out_of_bounds(self):
+        """Should raise error for out-of-bounds index."""
+        similarity_matrix = np.array([
+            [1.0, 0.9, 0.5],
+            [0.9, 1.0, 0.4],
+            [0.5, 0.4, 1.0],
+        ])
+
+        with self.assertRaises(ValueError) as ctx:
+            self.service.get_top_similar(similarity_matrix, index=5, k=2)
+
+        assert "out of bounds" in str(ctx.exception).lower()
+
+    def test_raises_for_negative_index(self):
+        """Should raise error for negative index."""
+        similarity_matrix = np.array([
+            [1.0, 0.9, 0.5],
+            [0.9, 1.0, 0.4],
+            [0.5, 0.4, 1.0],
+        ])
+
+        with self.assertRaises(ValueError) as ctx:
+            self.service.get_top_similar(similarity_matrix, index=-1, k=2)
+
+        assert "out of bounds" in str(ctx.exception).lower()

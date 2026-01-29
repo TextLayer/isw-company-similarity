@@ -49,6 +49,11 @@ class EmbeddingSimilarityService:
         """
         Compute embedding similarity using UMAP reduction and HDBSCAN clustering.
 
+        The similarity matrix is computed using cosine similarity in the UMAP-reduced
+        embedding space. HDBSCAN cluster labels and noise mask are provided as metadata
+        for callers to use as needed (e.g., filtering out noise points or analyzing
+        cluster structure), but do not directly influence the similarity scores.
+
         Args:
             embeddings: Matrix of shape (n_samples, n_features) containing embeddings
             random_state: Random seed for reproducibility (None for non-deterministic)
@@ -57,6 +62,8 @@ class EmbeddingSimilarityService:
             EmbeddingSimilarityResult containing similarity matrix, cluster labels,
             reduced embeddings, and noise mask
         """
+        if embeddings.ndim != 2:
+            raise ValueError(f"embeddings must be 2D array, got {embeddings.ndim}D")
         if embeddings.shape[0] < 2:
             raise ValueError("Need at least 2 embeddings to compute similarity")
 
@@ -140,6 +147,11 @@ class EmbeddingSimilarityService:
         Returns:
             List of (index, similarity_score) tuples, sorted by similarity descending
         """
+        if index < 0 or index >= similarity_matrix.shape[0]:
+            raise ValueError(
+                f"index {index} out of bounds for matrix with {similarity_matrix.shape[0]} rows"
+            )
+
         similarities = similarity_matrix[index]
 
         # Get indices sorted by similarity (descending)
