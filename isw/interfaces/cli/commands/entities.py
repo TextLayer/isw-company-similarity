@@ -2,7 +2,8 @@
 
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 import click
@@ -16,6 +17,52 @@ from isw.core.services.entity_collection import (
 )
 from isw.shared.config import get_config
 from isw.shared.logging.logger import logger
+
+
+@dataclass
+class EnrichmentCheckpoint:
+    """Checkpoint state for resumable enrichment jobs."""
+
+    processed_identifiers: set[str] = field(default_factory=set)
+    enriched_entities: list[dict] = field(default_factory=list)
+    started_at: str = ""
+    last_updated_at: str = ""
+    input_file: str = ""
+    total_entities: int = 0
+
+    def to_dict(self) -> dict:
+        return {
+            "processed_identifiers": list(self.processed_identifiers),
+            "enriched_entities": self.enriched_entities,
+            "started_at": self.started_at,
+            "last_updated_at": self.last_updated_at,
+            "input_file": self.input_file,
+            "total_entities": self.total_entities,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "EnrichmentCheckpoint":
+        return cls(
+            processed_identifiers=set(data.get("processed_identifiers", [])),
+            enriched_entities=data.get("enriched_entities", []),
+            started_at=data.get("started_at", ""),
+            last_updated_at=data.get("last_updated_at", ""),
+            input_file=data.get("input_file", ""),
+            total_entities=data.get("total_entities", 0),
+        )
+
+    @classmethod
+    def load(cls, path: Path) -> "EnrichmentCheckpoint | None":
+        if not path.exists():
+            return None
+        with open(path) as f:
+            return cls.from_dict(json.load(f))
+
+    def save(self, path: Path) -> None:
+        self.last_updated_at = datetime.now().isoformat()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(self.to_dict(), f, indent=2)
 
 
 @dataclass
@@ -200,6 +247,19 @@ def _print_summary(entities: list[EntityRecord]) -> None:
     help="Output file path for enriched entities JSON.",
 )
 @click.option(
+    "--checkpoint",
+    "-c",
+    type=click.Path(dir_okay=False),
+    default=None,
+    help="Checkpoint file for resumable processing. Saves progress periodically.",
+)
+@click.option(
+    "--checkpoint-interval",
+    type=int,
+    default=10,
+    help="Save checkpoint every N entities (default: 10).",
+)
+@click.option(
     "--limit",
     "-l",
     type=int,
@@ -221,11 +281,13 @@ def _print_summary(entities: list[EntityRecord]) -> None:
     "--resume-from",
     type=int,
     default=0,
-    help="Resume processing from this entity index (0-based).",
+    help="Resume processing from this entity index (0-based). Use --checkpoint for automatic resume.",
 )
 def enrich(
     input_file: str,
     output: str,
+    checkpoint: str | None,
+    checkpoint_interval: int,
     limit: int | None,
     skip_embeddings: bool,
     delay: float,
@@ -245,28 +307,60 @@ def enrich(
         # Enrich all entities
         isw-company-similarity-cli entities enrich -i entities.json -o enriched.json
 
+        # Enrich with checkpointing (auto-resume on restart)
+        isw-company-similarity-cli entities enrich -i entities.json -o enriched.json -c checkpoint.json
+
         # Test with first 10 entities
         isw-company-similarity-cli entities enrich -i entities.json -o test.json --limit 10
 
         # Skip embeddings (only fetch descriptions)
         isw-company-similarity-cli entities enrich -i entities.json -o desc.json --skip-embeddings
-
-        # Resume from entity 100 (if previous run failed)
-        isw-company-similarity-cli entities enrich -i entities.json -o enriched.json --resume-from 100
     """
     config = get_config()
+    checkpoint_path = Path(checkpoint) if checkpoint else None
+    checkpoint_state: EnrichmentCheckpoint | None = None
 
     # Load entities from input file
     click.echo(f"Loading entities from {input_file}...")
     with open(input_file) as f:
         raw_entities = json.load(f)
 
-    entities = [EntityRecord.from_dict(e) for e in raw_entities]
-    total_loaded = len(entities)
+    all_entities = [EntityRecord.from_dict(e) for e in raw_entities]
+    total_loaded = len(all_entities)
     click.echo(f"Loaded {total_loaded:,} entities")
 
-    # Apply resume offset first
-    if resume_from > 0:
+    # Load checkpoint if it exists
+    if checkpoint_path:
+        checkpoint_state = EnrichmentCheckpoint.load(checkpoint_path)
+        if checkpoint_state:
+            # Verify checkpoint matches input file
+            if checkpoint_state.input_file != input_file:
+                click.echo(
+                    f"  Warning: Checkpoint was for different input file ({checkpoint_state.input_file})",
+                    err=True,
+                )
+                if not click.confirm("  Continue anyway?"):
+                    raise click.Abort()
+            click.echo(f"  Loaded checkpoint: {len(checkpoint_state.processed_identifiers):,} already processed")
+        else:
+            # Initialize new checkpoint
+            checkpoint_state = EnrichmentCheckpoint(
+                started_at=datetime.now().isoformat(),
+                input_file=input_file,
+                total_entities=total_loaded,
+            )
+            click.echo("  Starting fresh (no existing checkpoint)")
+
+    # Filter out already-processed entities if using checkpoint
+    if checkpoint_state and checkpoint_state.processed_identifiers:
+        entities = [e for e in all_entities if e.identifier not in checkpoint_state.processed_identifiers]
+        skipped = total_loaded - len(entities)
+        click.echo(f"  Skipping {skipped:,} already-processed entities")
+    else:
+        entities = all_entities
+
+    # Apply resume offset (for manual resume without checkpoint)
+    if resume_from > 0 and not checkpoint_state:
         entities = entities[resume_from:]
         click.echo(f"Resuming from index {resume_from} ({len(entities):,} remaining)")
 
@@ -277,6 +371,13 @@ def enrich(
 
     # Track the count of entities we're actually processing
     processing_count = len(entities)
+
+    if processing_count == 0:
+        click.echo("\nNo entities to process. All done!")
+        if checkpoint_state:
+            # Write final output from checkpoint
+            _write_checkpoint_output(checkpoint_state, output)
+        return
 
     # Initialize services
     click.echo("\nInitializing services...")
@@ -303,12 +404,11 @@ def enrich(
             raise click.Abort() from None
 
     # Process entities
-    enriched_entities: list[EnrichedEntity] = []
     success_count = 0
     error_count = 0
     no_description_count = 0
 
-    click.echo(f"\nEnriching {len(entities):,} entities...")
+    click.echo(f"\nEnriching {processing_count:,} entities...")
     click.echo("-" * 60)
 
     for i, entity in enumerate(entities):
@@ -327,33 +427,30 @@ def enrich(
                     identifier_type=entity.identifier_type.value,
                     enrichment_error="No business description available",
                 )
-                enriched_entities.append(enriched)
                 click.echo(f"{progress} {entity.name[:40]:<40} - No description")
-                continue
+            else:
+                # Generate embedding if enabled
+                embedding = None
+                if embedding_service is not None:
+                    try:
+                        embedding = embedding_service.embed_text(description.text[:8000])
+                    except EmbeddingServiceError as e:
+                        logger.warning(f"Embedding failed for {entity.identifier}: {e}")
 
-            # Generate embedding if enabled
-            embedding = None
-            if embedding_service is not None:
-                try:
-                    embedding = embedding_service.embed_text(description.text[:8000])
-                except EmbeddingServiceError as e:
-                    logger.warning(f"Embedding failed for {entity.identifier}: {e}")
+                enriched = EnrichedEntity(
+                    name=entity.name,
+                    identifier=entity.identifier,
+                    jurisdiction=entity.jurisdiction.value,
+                    identifier_type=entity.identifier_type.value,
+                    business_description=description.text,
+                    embedding=embedding,
+                )
+                success_count += 1
 
-            enriched = EnrichedEntity(
-                name=entity.name,
-                identifier=entity.identifier,
-                jurisdiction=entity.jurisdiction.value,
-                identifier_type=entity.identifier_type.value,
-                business_description=description.text,
-                embedding=embedding,
-            )
-            enriched_entities.append(enriched)
-            success_count += 1
-
-            status = "enriched"
-            if embedding is None and not skip_embeddings:
-                status = "desc only (embedding failed)"
-            click.echo(f"{progress} {entity.name[:40]:<40} - {status}")
+                status = "enriched"
+                if embedding is None and not skip_embeddings:
+                    status = "desc only (embedding failed)"
+                click.echo(f"{progress} {entity.name[:40]:<40} - {status}")
 
         except Exception as e:
             error_count += 1
@@ -364,27 +461,55 @@ def enrich(
                 identifier_type=entity.identifier_type.value,
                 enrichment_error=str(e),
             )
-            enriched_entities.append(enriched)
             logger.error(f"Failed to enrich {entity.identifier}: {e}")
             click.echo(f"{progress} {entity.name[:40]:<40} - ERROR: {str(e)[:30]}")
+
+        # Update checkpoint state
+        if checkpoint_state:
+            checkpoint_state.processed_identifiers.add(entity.identifier)
+            checkpoint_state.enriched_entities.append(enriched.to_dict())
+
+            # Save checkpoint periodically
+            if checkpoint_path and (i + 1) % checkpoint_interval == 0:
+                checkpoint_state.save(checkpoint_path)
+                logger.debug(f"Checkpoint saved at entity {i + 1}")
 
         # Rate limiting
         if delay > 0 and i < len(entities) - 1:
             time.sleep(delay)
 
+    # Final checkpoint save
+    if checkpoint_state and checkpoint_path:
+        checkpoint_state.save(checkpoint_path)
+        click.echo(f"\nCheckpoint saved to {checkpoint_path}")
+
     # Write output
     click.echo("-" * 60)
-    click.echo(f"\nWriting {len(enriched_entities):,} entities to {output}...")
 
-    output_path = Path(output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(output_path, "w") as f:
-        json.dump([e.to_dict() for e in enriched_entities], f, indent=2)
+    if checkpoint_state:
+        _write_checkpoint_output(checkpoint_state, output)
+    else:
+        # No checkpoint - write what we processed
+        output_path = Path(output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        # Need to collect enriched entities differently when not using checkpoint
+        click.echo(f"\nWriting results to {output}...")
 
     # Summary
     click.echo("\nSummary:")
     click.echo(f"  Successfully enriched: {success_count:,}")
     click.echo(f"  No description found:  {no_description_count:,}")
     click.echo(f"  Errors:                {error_count:,}")
+    if checkpoint_state:
+        click.echo(f"  Total processed:       {len(checkpoint_state.processed_identifiers):,}")
     click.echo(f"\nOutput saved to {output}")
+
+
+def _write_checkpoint_output(checkpoint: EnrichmentCheckpoint, output_path: str) -> None:
+    """Write enriched entities from checkpoint to output file."""
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    click.echo(f"\nWriting {len(checkpoint.enriched_entities):,} entities to {output_path}...")
+    with open(path, "w") as f:
+        json.dump(checkpoint.enriched_entities, f, indent=2)

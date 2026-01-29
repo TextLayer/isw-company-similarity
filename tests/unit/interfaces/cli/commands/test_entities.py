@@ -1,8 +1,14 @@
+import tempfile
 import unittest
+from pathlib import Path
 
 from click.testing import CliRunner
 
-from isw.interfaces.cli.commands.entities import EnrichedEntity, entities
+from isw.interfaces.cli.commands.entities import (
+    EnrichedEntity,
+    EnrichmentCheckpoint,
+    entities,
+)
 
 
 class TestEnrichedEntity(unittest.TestCase):
@@ -104,6 +110,83 @@ class TestEnrichOptions(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(entities, ["enrich", "--help"])
         assert "--skip-embeddings" in result.output
+
+
+class TestEnrichmentCheckpoint(unittest.TestCase):
+    """Tests for EnrichmentCheckpoint class."""
+
+    def test_to_dict_and_from_dict_roundtrip(self):
+        """Checkpoint should serialize and deserialize correctly."""
+        checkpoint = EnrichmentCheckpoint(
+            processed_identifiers={"id1", "id2", "id3"},
+            enriched_entities=[{"name": "Company 1"}, {"name": "Company 2"}],
+            started_at="2024-01-01T00:00:00",
+            last_updated_at="2024-01-01T01:00:00",
+            input_file="entities.json",
+            total_entities=100,
+        )
+
+        data = checkpoint.to_dict()
+        restored = EnrichmentCheckpoint.from_dict(data)
+
+        assert restored.processed_identifiers == checkpoint.processed_identifiers
+        assert restored.enriched_entities == checkpoint.enriched_entities
+        assert restored.started_at == checkpoint.started_at
+        assert restored.input_file == checkpoint.input_file
+        assert restored.total_entities == checkpoint.total_entities
+
+    def test_save_and_load(self):
+        """Checkpoint should save and load from file correctly."""
+        checkpoint = EnrichmentCheckpoint(
+            processed_identifiers={"id1", "id2"},
+            enriched_entities=[{"name": "Test"}],
+            started_at="2024-01-01T00:00:00",
+            input_file="test.json",
+            total_entities=50,
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "checkpoint.json"
+
+            checkpoint.save(path)
+            assert path.exists()
+
+            loaded = EnrichmentCheckpoint.load(path)
+            assert loaded is not None
+            assert loaded.processed_identifiers == checkpoint.processed_identifiers
+            assert loaded.enriched_entities == checkpoint.enriched_entities
+
+    def test_load_nonexistent_returns_none(self):
+        """Loading nonexistent checkpoint should return None."""
+        result = EnrichmentCheckpoint.load(Path("/nonexistent/path/checkpoint.json"))
+        assert result is None
+
+    def test_save_creates_parent_directories(self):
+        """Save should create parent directories if they don't exist."""
+        checkpoint = EnrichmentCheckpoint()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "nested" / "dir" / "checkpoint.json"
+
+            checkpoint.save(path)
+            assert path.exists()
+
+
+class TestCheckpointOptions(unittest.TestCase):
+    """Test checkpoint-related CLI options."""
+
+    def test_checkpoint_option_documented(self):
+        """Verify --checkpoint option exists and is documented."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--checkpoint" in result.output
+        assert "Checkpoint file for resumable processing" in result.output
+
+    def test_checkpoint_interval_option_documented(self):
+        """Verify --checkpoint-interval option exists."""
+        runner = CliRunner()
+        result = runner.invoke(entities, ["enrich", "--help"])
+        assert "--checkpoint-interval" in result.output
 
 
 class TestCollectCommand(unittest.TestCase):
