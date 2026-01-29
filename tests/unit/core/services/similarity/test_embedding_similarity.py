@@ -117,12 +117,14 @@ class TestGetTopSimilar(unittest.TestCase):
     def test_returns_correct_number_of_results(self):
         """Should return k results."""
         # Create a simple similarity matrix
-        similarity_matrix = np.array([
-            [1.0, 0.9, 0.5, 0.3],
-            [0.9, 1.0, 0.4, 0.2],
-            [0.5, 0.4, 1.0, 0.8],
-            [0.3, 0.2, 0.8, 1.0],
-        ])
+        similarity_matrix = np.array(
+            [
+                [1.0, 0.9, 0.5, 0.3],
+                [0.9, 1.0, 0.4, 0.2],
+                [0.5, 0.4, 1.0, 0.8],
+                [0.3, 0.2, 0.8, 1.0],
+            ]
+        )
 
         results = self.service.get_top_similar(similarity_matrix, index=0, k=2)
 
@@ -130,12 +132,14 @@ class TestGetTopSimilar(unittest.TestCase):
 
     def test_results_sorted_by_similarity_descending(self):
         """Results should be sorted by similarity in descending order."""
-        similarity_matrix = np.array([
-            [1.0, 0.9, 0.5, 0.3],
-            [0.9, 1.0, 0.4, 0.2],
-            [0.5, 0.4, 1.0, 0.8],
-            [0.3, 0.2, 0.8, 1.0],
-        ])
+        similarity_matrix = np.array(
+            [
+                [1.0, 0.9, 0.5, 0.3],
+                [0.9, 1.0, 0.4, 0.2],
+                [0.5, 0.4, 1.0, 0.8],
+                [0.3, 0.2, 0.8, 1.0],
+            ]
+        )
 
         results = self.service.get_top_similar(similarity_matrix, index=0, k=3)
 
@@ -144,11 +148,13 @@ class TestGetTopSimilar(unittest.TestCase):
 
     def test_excludes_self_by_default(self):
         """Should exclude the item itself from results by default."""
-        similarity_matrix = np.array([
-            [1.0, 0.9, 0.5],
-            [0.9, 1.0, 0.4],
-            [0.5, 0.4, 1.0],
-        ])
+        similarity_matrix = np.array(
+            [
+                [1.0, 0.9, 0.5],
+                [0.9, 1.0, 0.4],
+                [0.5, 0.4, 1.0],
+            ]
+        )
 
         results = self.service.get_top_similar(similarity_matrix, index=0, k=3)
 
@@ -157,15 +163,15 @@ class TestGetTopSimilar(unittest.TestCase):
 
     def test_includes_self_when_specified(self):
         """Should include self when exclude_self=False."""
-        similarity_matrix = np.array([
-            [1.0, 0.9, 0.5],
-            [0.9, 1.0, 0.4],
-            [0.5, 0.4, 1.0],
-        ])
-
-        results = self.service.get_top_similar(
-            similarity_matrix, index=0, k=3, exclude_self=False
+        similarity_matrix = np.array(
+            [
+                [1.0, 0.9, 0.5],
+                [0.9, 1.0, 0.4],
+                [0.5, 0.4, 1.0],
+            ]
         )
+
+        results = self.service.get_top_similar(similarity_matrix, index=0, k=3, exclude_self=False)
 
         indices = [r[0] for r in results]
         assert 0 in indices
@@ -174,12 +180,14 @@ class TestGetTopSimilar(unittest.TestCase):
 
     def test_returns_correct_indices_and_scores(self):
         """Should return correct index-score pairs."""
-        similarity_matrix = np.array([
-            [1.0, 0.9, 0.5, 0.3],
-            [0.9, 1.0, 0.4, 0.2],
-            [0.5, 0.4, 1.0, 0.8],
-            [0.3, 0.2, 0.8, 1.0],
-        ])
+        similarity_matrix = np.array(
+            [
+                [1.0, 0.9, 0.5, 0.3],
+                [0.9, 1.0, 0.4, 0.2],
+                [0.5, 0.4, 1.0, 0.8],
+                [0.3, 0.2, 0.8, 1.0],
+            ]
+        )
 
         results = self.service.get_top_similar(similarity_matrix, index=0, k=2)
 

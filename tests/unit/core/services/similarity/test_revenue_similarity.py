@@ -259,9 +259,7 @@ class TestGetTopSimilar(unittest.TestCase):
         revenues = np.array([1_000_000, 2_000_000, 10_000_000])
         result = self.service.compute_similarity(revenues)
 
-        top = self.service.get_top_similar(
-            result.similarity_matrix, index=0, k=3, exclude_self=False
-        )
+        top = self.service.get_top_similar(result.similarity_matrix, index=0, k=3, exclude_self=False)
 
         indices = [r[0] for r in top]
         assert 0 in indices
