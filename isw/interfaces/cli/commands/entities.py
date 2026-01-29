@@ -55,14 +55,21 @@ class EnrichmentCheckpoint:
     def load(cls, path: Path) -> "EnrichmentCheckpoint | None":
         if not path.exists():
             return None
-        with open(path) as f:
-            return cls.from_dict(json.load(f))
+        try:
+            with open(path) as f:
+                return cls.from_dict(json.load(f))
+        except json.JSONDecodeError as e:
+            logger.warning(f"Corrupted checkpoint file {path}: {e}")
+            return None
 
     def save(self, path: Path) -> None:
+        """Save checkpoint atomically (write to temp, then rename)."""
         self.last_updated_at = datetime.now().isoformat()
         path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
+        tmp_path = path.with_suffix(".tmp")
+        with open(tmp_path, "w") as f:
             json.dump(self.to_dict(), f, indent=2)
+        tmp_path.rename(path)  # atomic on POSIX
 
 
 @dataclass
@@ -255,9 +262,9 @@ def _print_summary(entities: list[EntityRecord]) -> None:
 )
 @click.option(
     "--checkpoint-interval",
-    type=int,
+    type=click.IntRange(min=1),
     default=10,
-    help="Save checkpoint every N entities (default: 10).",
+    help="Save checkpoint every N entities (default: 10, minimum: 1).",
 )
 @click.option(
     "--limit",
@@ -330,11 +337,13 @@ def enrich(
     click.echo(f"Loaded {total_loaded:,} entities")
 
     # Load checkpoint if it exists
+    input_file_resolved = str(Path(input_file).resolve())
     if checkpoint_path:
         checkpoint_state = EnrichmentCheckpoint.load(checkpoint_path)
         if checkpoint_state:
-            # Verify checkpoint matches input file
-            if checkpoint_state.input_file != input_file:
+            # Verify checkpoint matches input file (compare resolved paths)
+            checkpoint_input_resolved = str(Path(checkpoint_state.input_file).resolve())
+            if checkpoint_input_resolved != input_file_resolved:
                 click.echo(
                     f"  Warning: Checkpoint was for different input file ({checkpoint_state.input_file})",
                     err=True,
@@ -346,7 +355,7 @@ def enrich(
             # Initialize new checkpoint
             checkpoint_state = EnrichmentCheckpoint(
                 started_at=datetime.now().isoformat(),
-                input_file=input_file,
+                input_file=input_file_resolved,
                 total_entities=total_loaded,
             )
             click.echo("  Starting fresh (no existing checkpoint)")
@@ -404,6 +413,7 @@ def enrich(
             raise click.Abort() from None
 
     # Process entities
+    enriched_entities: list[EnrichedEntity] = []
     success_count = 0
     error_count = 0
     no_description_count = 0
@@ -464,7 +474,10 @@ def enrich(
             logger.error(f"Failed to enrich {entity.identifier}: {e}")
             click.echo(f"{progress} {entity.name[:40]:<40} - ERROR: {str(e)[:30]}")
 
-        # Update checkpoint state
+        # Track enriched entity
+        enriched_entities.append(enriched)
+
+        # Update checkpoint state if enabled
         if checkpoint_state:
             checkpoint_state.processed_identifiers.add(entity.identifier)
             checkpoint_state.enriched_entities.append(enriched.to_dict())
@@ -489,11 +502,8 @@ def enrich(
     if checkpoint_state:
         _write_checkpoint_output(checkpoint_state, output)
     else:
-        # No checkpoint - write what we processed
-        output_path = Path(output)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        # Need to collect enriched entities differently when not using checkpoint
-        click.echo(f"\nWriting results to {output}...")
+        # No checkpoint - write enriched entities directly
+        _write_enriched_output(enriched_entities, output)
 
     # Summary
     click.echo("\nSummary:")
@@ -503,6 +513,16 @@ def enrich(
     if checkpoint_state:
         click.echo(f"  Total processed:       {len(checkpoint_state.processed_identifiers):,}")
     click.echo(f"\nOutput saved to {output}")
+
+
+def _write_enriched_output(entities: list[EnrichedEntity], output_path: str) -> None:
+    """Write enriched entities to output file."""
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    click.echo(f"\nWriting {len(entities):,} entities to {output_path}...")
+    with open(path, "w") as f:
+        json.dump([e.to_dict() for e in entities], f, indent=2)
 
 
 def _write_checkpoint_output(checkpoint: EnrichmentCheckpoint, output_path: str) -> None:

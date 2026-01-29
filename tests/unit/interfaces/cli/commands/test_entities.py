@@ -161,6 +161,15 @@ class TestEnrichmentCheckpoint(unittest.TestCase):
         result = EnrichmentCheckpoint.load(Path("/nonexistent/path/checkpoint.json"))
         assert result is None
 
+    def test_load_corrupted_returns_none(self):
+        """Loading corrupted checkpoint should return None with warning."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "corrupted.json"
+            path.write_text("{ invalid json }")
+
+            result = EnrichmentCheckpoint.load(path)
+            assert result is None
+
     def test_save_creates_parent_directories(self):
         """Save should create parent directories if they don't exist."""
         checkpoint = EnrichmentCheckpoint()
