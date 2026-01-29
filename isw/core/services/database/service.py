@@ -13,6 +13,7 @@ from .models import Base
 # Import pgvector registration
 try:
     from pgvector.psycopg2 import register_vector
+
     PGVECTOR_AVAILABLE = True
 except ImportError:
     PGVECTOR_AVAILABLE = False
@@ -147,6 +148,7 @@ class DatabaseService:
 
     def _register_vector_type(self) -> None:
         """Register pgvector type for all new connections."""
+
         @event.listens_for(self.engine, "connect")
         def connect(dbapi_connection, connection_record):
             try:

@@ -26,7 +26,7 @@ class GetCompaniesCommand(ReadCommand):
                 raise ValidationException("Page out of range")
 
             companies = session.query(Company).offset((self.page - 1) * self.page_size).limit(self.page_size).all()
-            
+
             return {
                 "companies": [company.to_dict() for company in companies],
                 "total_pages": total_pages,
@@ -36,5 +36,5 @@ class GetCompaniesCommand(ReadCommand):
                 "has_next": self.page < total_pages,
                 "has_previous": self.page > 1,
                 "next_page": self.page + 1,
-                "previous_page": self.page - 1
+                "previous_page": self.page - 1,
             }

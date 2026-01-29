@@ -25,7 +25,7 @@ class GetSimilarCompaniesCommand(ReadCommand):
             company = session.query(Company).filter(Company.cik == self.cik).first()
             if not company:
                 raise ValidationException("Company not found")
-            
+
             # Determine community filter
             community_filter = company.leiden_community if self.filter_community else None
 
@@ -35,17 +35,12 @@ class GetSimilarCompaniesCommand(ReadCommand):
                 query_embedding=company.embedded_description,
                 similarity_threshold=self.similarity_threshold,
                 max_results=self.max_results,
-                community_filter=community_filter
+                community_filter=community_filter,
             )
-            
+
             # Serialize results
             return [
-                {
-                    "company": similar_company.to_dict(),
-                    "similarity": float(similarity)
-                }
+                {"company": similar_company.to_dict(), "similarity": float(similarity)}
                 for similar_company, similarity in results
-                if similar_company.cik != company.cik 
+                if similar_company.cik != company.cik
             ]
-
-    

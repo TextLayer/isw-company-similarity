@@ -10,6 +10,7 @@ def cli():
     """ISW Company Similarity CLI"""
     pass
 
+
 set_config(get_cli_config())
 
 # Register command groups
