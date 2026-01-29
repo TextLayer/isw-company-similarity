@@ -148,9 +148,7 @@ class EmbeddingSimilarityService:
             List of (index, similarity_score) tuples, sorted by similarity descending
         """
         if index < 0 or index >= similarity_matrix.shape[0]:
-            raise ValueError(
-                f"index {index} out of bounds for matrix with {similarity_matrix.shape[0]} rows"
-            )
+            raise ValueError(f"index {index} out of bounds for matrix with {similarity_matrix.shape[0]} rows")
 
         similarities = similarity_matrix[index]
 
