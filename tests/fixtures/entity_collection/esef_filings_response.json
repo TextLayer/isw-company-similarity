@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "type": "filing",
+      "id": "12345",
+      "attributes": {
+        "country": "DE",
+        "filing_date": "2024-04-15",
+        "period_end": "2023-12-31",
+        "report_type": "AFR",
+        "entity_name": "Siemens AG",
+        "lei": "W38RGI023J3WT1HWRP32",
+        "processed": "2024-04-16T10:30:00Z"
+      }
+    },
+    {
+      "type": "filing",
+      "id": "12346",
+      "attributes": {
+        "country": "GB",
+        "filing_date": "2024-03-28",
+        "period_end": "2023-12-31",
+        "report_type": "AFR",
+        "entity_name": "BP p.l.c.",
+        "lei": "213800LH1BZH3DI6G760",
+        "processed": "2024-03-29T08:15:00Z"
+      }
+    },
+    {
+      "type": "filing",
+      "id": "12347",
+      "attributes": {
+        "country": "FR",
+        "filing_date": "2024-04-02",
+        "period_end": "2023-12-31",
+        "report_type": "AFR",
+        "entity_name": "TotalEnergies SE",
+        "lei": "529900S21EQ1BO4ESM68",
+        "processed": "2024-04-03T14:22:00Z"
+      }
+    },
+    {
+      "type": "filing",
+      "id": "12348",
+      "attributes": {
+        "country": "NL",
+        "filing_date": "2024-04-10",
+        "period_end": "2023-12-31",
+        "report_type": "AFR",
+        "entity_name": "Royal Philips N.V.",
+        "lei": "H1FJE8H61JGM1JSGM897",
+        "processed": "2024-04-11T09:45:00Z"
+      }
+    },
+    {
+      "type": "filing",
+      "id": "12349",
+      "attributes": {
+        "country": "DE",
+        "filing_date": "2024-03-20",
+        "period_end": "2023-12-31",
+        "report_type": "AFR",
+        "entity_name": "Siemens AG",
+        "lei": "W38RGI023J3WT1HWRP32",
+        "processed": "2024-03-21T11:00:00Z"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://filings.xbrl.org/api/filings?filter[report_type]=AFR&page[number]=1",
+    "next": null
+  },
+  "meta": {
+    "count": 5
+  }
+}

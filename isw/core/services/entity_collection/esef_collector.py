@@ -175,21 +175,25 @@ class ESEFCollector(EntityCollector):
         """
         Parse a filing record into an EntityRecord.
 
+        Handles both flat format and JSON API format (with attributes nested).
+
         Args:
             filing: Filing record from the API.
 
         Returns:
             EntityRecord if valid, None otherwise.
         """
-        lei = filing.get("lei") or filing.get("entity_lei")
+        attrs = filing.get("attributes", filing)
+
+        lei = attrs.get("lei") or attrs.get("entity_lei")
         if not lei or not self._is_valid_lei(lei):
             return None
 
-        name = filing.get("entity_name") or filing.get("name", "").strip()
+        name = attrs.get("entity_name") or attrs.get("name", "").strip()
         if not name:
             return None
 
-        country = filing.get("country") or filing.get("entity_country", "")
+        country = attrs.get("country") or attrs.get("entity_country", "")
         jurisdiction = self._get_jurisdiction(country)
 
         return EntityRecord(
