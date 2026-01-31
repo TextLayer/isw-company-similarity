@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "ISW Company Similarity API",
-    "version": "1.0.0",
-    "description": "Company similarity search using vector embeddings"
+    "version": "2.0.0",
+    "description": "Multi-jurisdiction entity similarity search using vector embeddings and revenue data"
   },
   "servers": [
     {
@@ -12,41 +12,76 @@
     }
   ],
   "paths": {
-    "/company_routes/": {
+    "/entities": {
       "get": {
-        "summary": "Get Companies",
-        "description": "Get paginated list of companies",
-        "tags": ["Companies"],
+        "summary": "List Entities",
+        "description": "Get paginated list of entities",
+        "tags": ["Entities"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Entity",
+        "description": "Add a new entity to the database",
+        "tags": ["Entities"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "page": {
-                    "type": "integer",
-                    "default": 1,
-                    "minimum": 1
-                  },
-                  "page_size": {
-                    "type": "integer",
-                    "default": 10,
-                    "minimum": 1,
-                    "maximum": 100
-                  }
-                }
+                "$ref": "#/components/schemas/CreateEntityRequest"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Success",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyListResponse"
+                  "$ref": "#/components/schemas/CreateEntityResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Entity already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEntityResponse"
                 }
               }
             }
@@ -54,20 +89,20 @@
         }
       }
     },
-    "/company_routes/{cik}": {
+    "/entities/{identifier}": {
       "get": {
-        "summary": "Get Company by CIK",
-        "description": "Get detailed information for a specific company",
-        "tags": ["Companies"],
+        "summary": "Get Entity",
+        "description": "Get detailed information for a specific entity",
+        "tags": ["Entities"],
         "parameters": [
           {
-            "name": "cik",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Central Index Key (CIK) of the company"
+            "description": "CIK (US) or LEI (EU/UK) identifier"
           }
         ],
         "responses": {
@@ -76,34 +111,36 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyResponse"
+                  "$ref": "#/components/schemas/EntityResponse"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Entity not found"
           }
         }
-      }
-    },
-    "/company_routes/{cik}/similar": {
-      "get": {
-        "summary": "Find Similar Companies",
-        "description": "Find companies similar to target using vector embeddings",
-        "tags": ["Companies", "Vector Search"],
+      },
+      "patch": {
+        "summary": "Update Entity",
+        "description": "Update an existing entity's data",
+        "tags": ["Entities"],
         "parameters": [
           {
-            "name": "cik",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SimilaritySearchRequest"
+                "$ref": "#/components/schemas/UpdateEntityRequest"
               }
             }
           }
@@ -114,10 +151,110 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimilarCompaniesResponse"
+                  "$ref": "#/components/schemas/UpdateEntityResponse"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Entity not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Entity",
+        "description": "Remove an entity from the database",
+        "tags": ["Entities"],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteEntityResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found"
+          }
+        }
+      }
+    },
+    "/entities/{identifier}/search": {
+      "get": {
+        "summary": "Search Similar Entities",
+        "description": "Find entities similar to target using vector embeddings",
+        "tags": ["Entities", "Similarity Search"],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "CIK or LEI of the source entity"
+          },
+          {
+            "name": "similarity_threshold",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "default": 0.7,
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "Minimum cosine similarity score"
+          },
+          {
+            "name": "max_results",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "filter_community",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Only return entities in the same Leiden community"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarEntitiesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Source entity not found"
+          },
+          "400": {
+            "description": "Source entity has no embedding"
           }
         }
       }
@@ -125,67 +262,224 @@
   },
   "components": {
     "schemas": {
-      "Company": {
+      "Entity": {
         "type": "object",
         "properties": {
-          "id": {"type": "integer"},
-          "cik": {"type": "integer"},
-          "company_name": {"type": "string"},
-          "description": {"type": "string"},
-          "total_revenue": {"type": "number"},
-          "norm_tot_rev": {"type": "integer"},
-          "cluster": {"type": "integer"},
-          "leiden_community": {"type": "integer"}
+          "id": {
+            "type": "integer",
+            "description": "Internal database ID"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "CIK (10-digit) or LEI (20-char)"
+          },
+          "identifier_type": {
+            "type": "string",
+            "enum": ["CIK", "LEI"],
+            "description": "Type of identifier"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "enum": ["US", "EU", "UK"],
+            "description": "Regulatory jurisdiction"
+          },
+          "name": {
+            "type": "string",
+            "description": "Legal entity name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Business description"
+          },
+          "revenue_raw": {
+            "type": "number",
+            "description": "Revenue in source currency"
+          },
+          "revenue_currency": {
+            "type": "string",
+            "description": "ISO currency code (USD, EUR, GBP, etc.)"
+          },
+          "revenue_usd": {
+            "type": "number",
+            "description": "Revenue converted to USD"
+          },
+          "revenue_period_end": {
+            "type": "string",
+            "description": "Fiscal period end date (YYYY-MM-DD)"
+          },
+          "revenue_source_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "XBRL tags used for revenue extraction"
+          },
+          "norm_tot_rev": {
+            "type": "integer",
+            "description": "Revenue percentile bucket (1-100)"
+          },
+          "cluster": {
+            "type": "integer",
+            "description": "HDBSCAN cluster assignment"
+          },
+          "leiden_community": {
+            "type": "integer",
+            "description": "Leiden community assignment"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
-      "CompanyListResponse": {
+      "CreateEntityRequest": {
+        "type": "object",
+        "required": ["identifier", "identifier_type", "jurisdiction", "name"],
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "CIK or LEI"
+          },
+          "identifier_type": {
+            "type": "string",
+            "enum": ["CIK", "LEI"]
+          },
+          "jurisdiction": {
+            "type": "string",
+            "enum": ["US", "EU", "UK"]
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEntityResponse": {
         "type": "object",
         "properties": {
           "data": {
             "type": "object",
             "properties": {
-              "companies": {
-                "type": "array",
-                "items": {"$ref": "#/components/schemas/Company"}
+              "identifier": {
+                "type": "string"
               },
-              "total_pages": {"type": "integer"},
-              "total_count": {"type": "integer"},
-              "page": {"type": "integer"},
-              "page_size": {"type": "integer"}
+              "created": {
+                "type": "boolean"
+              }
             }
           },
-          "status": {"type": "integer"}
-        }
-      },
-      "CompanyResponse": {
-        "type": "object",
-        "properties": {
-          "data": {"$ref": "#/components/schemas/Company"},
-          "status": {"type": "integer"}
-        }
-      },
-      "SimilaritySearchRequest": {
-        "type": "object",
-        "properties": {
-          "similarity_threshold": {
-            "type": "number",
-            "default": 0.7,
-            "minimum": 0,
-            "maximum": 1
-          },
-          "max_results": {
-            "type": "integer",
-            "default": 10,
-            "minimum": 1,
-            "maximum": 100
-          },
-          "filter_community": {
-            "type": "boolean",
-            "default": true
+          "status": {
+            "type": "integer"
           }
         }
       },
-      "SimilarCompaniesResponse": {
+      "UpdateEntityRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "revenue_raw": {
+            "type": "number"
+          },
+          "revenue_currency": {
+            "type": "string"
+          },
+          "revenue_usd": {
+            "type": "number"
+          },
+          "revenue_period_end": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateEntityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              },
+              "updated": {
+                "type": "boolean"
+              }
+            }
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "DeleteEntityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              },
+              "deleted": {
+                "type": "boolean"
+              }
+            }
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "EntityResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Entity"
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "EntityListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "entities": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Entity"
+                }
+              },
+              "total_pages": {
+                "type": "integer"
+              },
+              "total_count": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "page_size": {
+                "type": "integer"
+              }
+            }
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "SimilarEntitiesResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -193,12 +487,19 @@
             "items": {
               "type": "object",
               "properties": {
-                "company": {"$ref": "#/components/schemas/Company"},
-                "similarity": {"type": "number"}
+                "entity": {
+                  "$ref": "#/components/schemas/Entity"
+                },
+                "similarity": {
+                  "type": "number",
+                  "description": "Cosine similarity score (0-1)"
+                }
               }
             }
           },
-          "status": {"type": "integer"}
+          "status": {
+            "type": "integer"
+          }
         }
       }
     }
