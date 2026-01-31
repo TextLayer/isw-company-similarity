@@ -6,16 +6,16 @@ from ...worker.registry import task_registry
 from ..middleware.logger_middleware import log_request_info, log_response_info
 from ..utils.messages import Error
 from ..utils.response import Response
-from .company_routes import company_routes
+from .entity_routes import entity_routes
 
 
 def stop(env, resp):
     resp("200 OK", [("Content-Type", "text/plain")])
-    return [b"ISW Company Similarity API. Basepath /v1/"]
+    return [b"ISW Entity Similarity API. Basepath /v1/"]
 
 
 blueprints = {
-    "/company_routes": company_routes,
+    "/entities": entity_routes,
 }
 
 
