@@ -1,13 +1,16 @@
 # ISW Company Similarity
 
-A Python backend service for company similarity search using vector embeddings and PostgreSQL with pgvector.
+A Python service for discovering similar public companies across jurisdictions using vector embeddings, revenue data, and PostgreSQL with pgvector.
 
 ## Features
 
-- **Vector Similarity Search**: Find similar companies using embeddings
-- **Community-Based Clustering**: Leiden community detection
-- **RESTful API**: Clean API with pagination and search
-- **PostgreSQL + pgvector**: High-performance vector operations
+- **Multi-Jurisdiction Entity Collection**: Collect entities from SEC EDGAR (US) and ESEF (EU/UK)
+- **Automated Enrichment**: Extract business descriptions from filings, web search fallback with LLM synthesis
+- **Revenue Extraction**: Parse XBRL data with automatic currency conversion to USD
+- **Vector Similarity Search**: Find similar entities using OpenAI embeddings and pgvector
+- **Community Detection**: Leiden clustering for grouping similar entities
+- **RESTful API**: CRUD operations with pagination and search
+- **Resumable Operations**: Skip already-enriched entities, resume interrupted jobs
 
 ## Quick Start
 
@@ -15,7 +18,7 @@ A Python backend service for company similarity search using vector embeddings a
 
 - Python 3.12+
 - Docker Desktop
-- PostgreSQL (via Docker)
+- API Keys: OpenAI, Perplexity (optional), Firecrawl (optional)
 
 ### Installation
 
@@ -26,128 +29,190 @@ uv sync
 # Start PostgreSQL with pgvector
 docker-compose up -d
 
-# Run Alembic migrations
-source .venv/bin/activate
-alembic upgrade head
+# Run migrations
+uv run alembic upgrade head
 
-# Check status
-isw-company-similarity-cli database status
+# Check database status
+uv run isw-cli database status
 ```
 
-### Run API Server
+### Configuration
+
+Create a `.env` file:
 
 ```bash
-export FLASK_APP=isw.applications.api:app
-flask run
+# Database
+DATABASE_URL=postgresql://insight_user:insight_password@localhost:5432/insight_db
+
+# Required
+SEC_USER_AGENT="YourCompany admin@yourcompany.com"
+OPENAI_API_KEY=sk-...
+
+# Optional (for web search fallback)
+PERPLEXITY_API_KEY=pplx-...
+FIRECRAWL_API_KEY=fc-...
+
+# Flask
+FLASK_APP=isw.applications.api:app
+FLASK_CONFIG=DEV
 ```
 
-API will be available at `http://127.0.0.1:5000/v1/`
+## CLI Usage
+
+### Collect Entities
+
+```bash
+# Collect from SEC EDGAR (US companies)
+uv run isw-cli entities collect --source edgar --limit 100
+
+# Collect from ESEF (EU/UK companies)
+uv run isw-cli entities collect --source esef --limit 100
+```
+
+### Enrich Entities
+
+```bash
+# Enrich all entities (descriptions, embeddings, revenue)
+uv run isw-cli entities enrich
+
+# Enrich specific jurisdiction
+uv run isw-cli entities enrich --jurisdiction US --limit 50
+
+# Force re-enrich (overwrite existing data)
+uv run isw-cli entities enrich --force
+
+# Skip specific enrichment steps
+uv run isw-cli entities enrich --skip-descriptions --skip-embeddings
+uv run isw-cli entities enrich --skip-revenue
+```
+
+### Normalize Revenue
+
+```bash
+# Calculate revenue percentile buckets for similarity scoring
+uv run isw-cli entities normalize-revenue
+```
 
 ## API Endpoints
 
-### 1. Get Companies (Paginated)
+### List Entities
 
 ```bash
-curl -X GET http://127.0.0.1:5000/v1/company_routes/ \
+curl "http://127.0.0.1:5000/v1/entities?page=1&page_size=10"
+```
+
+### Get Entity
+
+```bash
+curl "http://127.0.0.1:5000/v1/entities/0000001800"
+```
+
+### Search Similar Entities
+
+```bash
+# Find entities similar to a given entity
+curl "http://127.0.0.1:5000/v1/entities/0000001800/search?similarity_threshold=0.5&max_results=10"
+
+# Search across all communities
+curl "http://127.0.0.1:5000/v1/entities/0000001800/search?filter_community=false"
+```
+
+### Create Entity
+
+```bash
+curl -X POST "http://127.0.0.1:5000/v1/entities" \
   -H "Content-Type: application/json" \
-  -d '{"page": 1, "page_size": 10}'
+  -d '{"identifier": "0000001234", "name": "Example Corp", "jurisdiction": "US"}'
 ```
 
-### 2. Get Company by CIK
+### Update Entity
 
 ```bash
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961
-```
-
-### 3. Find Similar Companies
-
-```bash
-# Within same community
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/similar \
+curl -X PATCH "http://127.0.0.1:5000/v1/entities/0000001234" \
   -H "Content-Type: application/json" \
-  -d '{"similarity_threshold": 0.5, "max_results": 10, "filter_community": true}'
-
-# Across all communities
-curl -X GET http://127.0.0.1:5000/v1/company_routes/1961/similar \
-  -H "Content-Type: application/json" \
-  -d '{"filter_community": false}'
+  -d '{"description": "Updated description"}'
 ```
 
-## Database
-
-### PostgreSQL with pgvector
-
-The application uses PostgreSQL 17 with the pgvector extension for efficient vector similarity search.
-
-**Connection**: `postgresql://insight_user:insight_password@localhost:5432/insight_db`
-
-**Tables**:
-- `companies`
-
-### Database CLI Commands
+### Delete Entity
 
 ```bash
-# Initialize tables
-isw-company-similarity-cli database init
-
-# Check status
-isw-company-similarity-cli database status
-```
-
-### Migrations
-
-```bash
-# Create migration
-alembic revision --autogenerate -m "Description"
-
-# Apply migrations
-alembic upgrade head
-
-# Rollback
-alembic downgrade -1
+curl -X DELETE "http://127.0.0.1:5000/v1/entities/0000001234"
 ```
 
 ## Architecture
 
 ```
 isw/
-├── applications/          # Application entry points
-│   ├── api.py            # Flask API
-│   ├── cli.py            # CLI interface
-│   └── worker.py         # Celery worker
+├── applications/           # Entry points
+│   ├── api.py             # Flask API
+│   ├── cli.py             # CLI interface
+│   └── worker.py          # Celery worker
 ├── core/
-│   ├── commands/         # Business logic (command pattern)
-│   │   └── company/
-│   ├── controllers/      # Request handlers
-│   ├── models/           # SQLAlchemy models
-│   ├── schemas/          # Marshmallow validation
-│   └── services/         # Core services
-│       ├── database/     # Database connection & queries
-│       └── vector_search.py  # pgvector similarity search
+│   ├── commands/          # CRUD commands (command pattern)
+│   │   └── entity/        # add, update, delete, get, search
+│   ├── controllers/       # Request dispatchers
+│   ├── models/            # SQLAlchemy models
+│   ├── schemas/           # Marshmallow validation
+│   ├── services/
+│   │   ├── database/      # PostgreSQL + pgvector
+│   │   ├── embeddings/    # OpenAI embeddings
+│   │   ├── entities/      # Entity domain
+│   │   │   ├── extractors/  # Description & revenue extraction
+│   │   │   ├── registry/    # EDGAR & ESEF registries
+│   │   │   └── storage/     # Filing data access
+│   │   ├── exchange_rate/ # Currency conversion (Frankfurter API)
+│   │   ├── llm/           # LLM service (OpenAI)
+│   │   ├── similarity/    # Embedding & revenue similarity
+│   │   └── web_search/    # Perplexity & Firecrawl
+│   └── utils/             # Shared utilities
 ├── interfaces/
-│   ├── api/              # Flask routes & middleware
-│   └── cli/              # Click CLI commands
+│   ├── api/               # Flask routes & middleware
+│   │   └── routes/        # entity_routes.py
+│   └── cli/               # Click commands
+│       └── commands/      # entities/, database.py
 └── shared/
-    ├── config/           # Configuration management
-    └── logging/          # Logging setup
+    ├── config/            # Configuration adapters
+    └── logging/           # Logging setup
 ```
+
+## Data Model
+
+### Entity Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `identifier` | string | CIK (US) or LEI (EU/UK) |
+| `name` | string | Company name |
+| `jurisdiction` | string | US, EU, or UK |
+| `description` | text | Business description |
+| `embedded_description` | vector(1536) | OpenAI embedding |
+| `revenue_raw` | float | Revenue in source currency |
+| `revenue_currency` | string | Source currency (USD, EUR, GBP, etc.) |
+| `revenue_usd` | float | Revenue converted to USD |
+| `revenue_period_end` | string | Fiscal period end date |
+| `revenue_source_tags` | array | XBRL tags used for extraction |
+| `norm_tot_rev` | int | Percentile bucket (1-100) |
+| `leiden_community` | int | Cluster assignment |
 
 ## Development
 
 ### Running Tests
 
 ```bash
-pytest
+uv run pytest
+
+# With coverage
+uv run pytest --cov=isw
 ```
 
 ### Linting
 
 ```bash
-ruff check .
-ruff format .
+uv run ruff check .
+uv run ruff format .
 ```
 
-### Docker Commands
+### Database Commands
 
 ```bash
 # Start database
@@ -159,26 +224,40 @@ docker-compose down
 # Reset database (removes all data)
 docker-compose down -v
 
-# View logs
-docker logs insight-postgres-pgvector
-
-# Connect to database
+# Connect directly
 docker exec -it insight-postgres-pgvector psql -U insight_user -d insight_db
 ```
 
-## Configuration
-
-Environment variables (set in `.env` or export):
+### Migrations
 
 ```bash
-# Database
-DATABASE_URL=postgresql://insight_user:insight_password@localhost:5432/insight_db
+# Create migration
+uv run alembic revision --autogenerate -m "Description"
 
-# Flask
-FLASK_APP=isw.applications.api:app
-FLASK_CONFIG=DEV
-SECRET_KEY=your-secret-key
+# Apply migrations
+uv run alembic upgrade head
 
-# Logging
-DEBUG=true
+# Rollback
+uv run alembic downgrade -1
 ```
+
+## Data Sources
+
+### SEC EDGAR (US)
+- Source: SEC company submissions API
+- Identifier: CIK (Central Index Key)
+- Filings: 10-K annual reports
+- Revenue: US-GAAP XBRL tags
+
+### ESEF (EU/UK)
+- Source: XBRL.org filings index
+- Identifier: LEI (Legal Entity Identifier)
+- Filings: Annual Financial Reports
+- Revenue: IFRS XBRL tags
+
+## Currency Conversion
+
+Revenue amounts are automatically converted to USD using the Frankfurter API:
+- Historical rates based on fiscal period end date
+- Rates cached locally (24h for latest, indefinite for historical)
+- Supported currencies: USD, EUR, GBP, CHF, SEK, NOK, DKK, PLN, JPY, CAD, AUD
