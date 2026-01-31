@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Literal
 
 import numpy as np
 
@@ -30,6 +29,7 @@ class RevenueBuckets:
         log_revs = np.log1p(np.maximum(revenues, 0))  # Clamp negatives to 0 for log
         indices = np.searchsorted(self.log_boundaries[1:], log_revs, side="right")
         indices = np.clip(indices, 0, self.n_buckets - 1)
+
         # Mark invalid entries
         invalid_mask = (revenues < 0) | np.isnan(revenues)
         indices = indices.astype(np.int64)
@@ -56,7 +56,7 @@ class RevenueSimilarityService:
         self,
         n_buckets: int = 20,
         scale: float | None = None,
-        missing_value_strategy: Literal["median", "exclude"] = "median",
+        missing_value_strategy: str = "median",
     ):
         """
         Initialize revenue similarity service.

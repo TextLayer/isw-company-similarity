@@ -1,0 +1,52 @@
+{
+  "documentInfo": {
+    "documentType": "https://xbrl.org/2021/xbrl-json",
+    "features": {
+      "xbrl:canonicalValues": true
+    },
+    "namespaces": {
+      "ifrs-full": "http://xbrl.ifrs.org/taxonomy/2020-03-16/ifrs-full",
+      "iso4217": "http://www.xbrl.org/2003/iso4217",
+      "scheme": "http://standards.iso.org/iso/17442"
+    }
+  },
+  "facts": {
+    "fact-general-info": {
+      "value": "<h2 class=\"pt-Nagwek2\">Legal Form and Business Activities</h2><p class=\"pt-Normalny\">The parent company of ML System S.A. Capital Group (hereinafter referred to as the \"Group\") is ML System Spółka Akcyjna with its registered office at Zaczernie 190G, 36-062, Poland (hereinafter referred to as the \"Parent Company\"), registered in Poland in the National Court Register of Entrepreneurs maintained by the District Court in Rzeszów, Poland, XII Commercial Division of the National Court Register under number 0000565236.</p><p class=\"pt-Normalny\">The Company has statistical number REGON 180206288. The Company is registered under tax identification number 5170204997.</p><p class=\"pt-Normalny\">The primary business activity of the Capital Group is the production of flat glass (production of glass products - photovoltaic panels). The Group specializes in Building-Integrated Photovoltaics (BIPV) technology, combining architectural glass with renewable energy generation.</p><p class=\"pt-Normalny\">Since June 28, 2018, ML System S.A. shares have been listed on the Warsaw Stock Exchange. The Group operates manufacturing facilities in Poland and has sales offices across Europe.</p><p class=\"pt-Normalny\">The Group consists of ML System S.A. (the ultimate parent company) and its subsidiaries: ML System + Sp. z o.o., ML Genetic Sp. z o.o., ML Nordic AS, and ML System Inc., all established for an indefinite period.</p>",
+      "dimensions": {
+        "concept": "ifrs-full:DisclosureOfGeneralInformationAboutFinancialStatementsExplanatory",
+        "language": "en",
+        "entity": "scheme:259400G1XM5GQU4K4G26",
+        "period": "2022-01-01T00:00:00/2022-12-31T00:00:00"
+      }
+    },
+    "fact-nature-operations": {
+      "value": "The primary business activity of the Capital Group is the production of flat glass (production of glass products - photovoltaic panels).",
+      "dimensions": {
+        "concept": "ifrs-full:DescriptionOfNatureOfEntitysOperationsAndPrincipalActivities",
+        "language": "en",
+        "entity": "scheme:259400G1XM5GQU4K4G26",
+        "period": "2022-01-01T00:00:00/2022-12-31T00:00:00"
+      }
+    },
+    "fact-segments": {
+      "value": "<h3 class=\"pt-Nagwek3\">Operating Segments</h3><p class=\"pt-Normalny\">The Group operates in two main segments:</p><ul><li><strong>BIPV Products:</strong> Building-integrated photovoltaic glass panels for architectural applications. Revenue from this segment was PLN 156 million in 2022.</li><li><strong>Photovoltaic Modules:</strong> Standard photovoltaic modules for residential and commercial installations. Revenue from this segment was PLN 89 million in 2022.</li></ul><p class=\"pt-Normalny\">Geographic markets served include Poland (45%), Germany (25%), France (15%), and other European markets (15%).</p>",
+      "dimensions": {
+        "concept": "ifrs-full:DisclosureOfEntitysReportableSegmentsExplanatory",
+        "language": "en",
+        "entity": "scheme:259400G1XM5GQU4K4G26",
+        "period": "2022-01-01T00:00:00/2022-12-31T00:00:00"
+      }
+    },
+    "fact-revenue": {
+      "value": "245000000",
+      "decimals": -3,
+      "dimensions": {
+        "concept": "ifrs-full:Revenue",
+        "entity": "scheme:259400G1XM5GQU4K4G26",
+        "period": "2022-01-01T00:00:00/2022-12-31T00:00:00",
+        "unit": "iso4217:PLN"
+      }
+    }
+  }
+}

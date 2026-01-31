@@ -8,8 +8,8 @@ import pytest
 from isw.core.services.embeddings import EmbeddingService
 from tests.conftest import get_fixture_path
 
-SEC_FIXTURES = get_fixture_path("data_sources", "sec_data")
-XBRL_FIXTURES = get_fixture_path("data_sources", "xbrl_json")
+SEC_FIXTURES = get_fixture_path("entity_storage", "sec_data")
+XBRL_FIXTURES = get_fixture_path("entity_storage", "xbrl_json")
 
 
 def cosine_similarity(vec1: list[float], vec2: list[float]) -> float:

@@ -12,7 +12,7 @@ from alembic import context
 # Add the project root to the Python path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from isw.core.models.company_models import Company  # noqa: F401 - Import to register model
+from isw.core.models.entity_models import Entity  # noqa: F401 - Import to register model
 from isw.core.services.database import Base
 
 # this is the Alembic Config object

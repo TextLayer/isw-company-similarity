@@ -196,3 +196,6 @@ Thumbs.db
 # Data files
 data/
 *.csv
+
+# Cache files
+exchange_rate_cache.json

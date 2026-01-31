@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from isw.core.services.llm import LLMService
 from tests.conftest import get_fixture_path
 
-SEC_FIXTURES = get_fixture_path("data_sources", "sec_data")
-XBRL_FIXTURES = get_fixture_path("data_sources", "xbrl_json")
+SEC_FIXTURES = get_fixture_path("entity_storage", "sec_data")
+XBRL_FIXTURES = get_fixture_path("entity_storage", "xbrl_json")
 
 
 def load_apple_business_description() -> str:
